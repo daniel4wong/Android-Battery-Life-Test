@@ -1,0 +1,221 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ui.home.HomeFragment">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/lineChart">
+        <LinearLayout
+            android:id="@+id/layout_test_config"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <TextView
+                    android:id="@+id/textViewDate"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:text="@string/label_for_text_test_date" />
+
+                <Button
+                    android:id="@+id/buttonPickDate"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:tag="@string/tag_picker_test_bgn_date"
+                    android:text="@string/button_pick_date" />
+            </RelativeLayout>
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <TextView
+                    android:id="@+id/textViewTime"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:text="@string/label_for_text_test_time" />
+
+                <Button
+                    android:id="@+id/buttonPickTime"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:tag="@string/tag_picker_test_bgn_time"
+                    android:text="@string/button_pick_time" />
+            </RelativeLayout>
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true" >
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/label_for_text_test_frequency" />
+                    <TextView
+                        android:id="@+id/textViewTestFrequency"
+                        style="@style/InputValueTextView"
+                        android:text="0"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+                </LinearLayout>
+
+                <Button
+                    android:id="@+id/buttonTestFrequency"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:tag="@string/tag_input_test_frequency"
+                    android:text="@string/button_input" />
+            </RelativeLayout>
+            <com.google.android.material.divider.MaterialDivider
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+            <Switch
+                android:id="@+id/switchScreenAlwaysOn"
+                android:tag="@string/tag_switch_screen_always_on"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/label_for_switch_screen_always_on"
+                android:textOn="on"
+                android:textOff="off"
+                android:checked="false"
+                style="@style/BaseSwitchStyle" />
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true" >
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/label_for_text_screen_time" />
+                    <TextView
+                        android:id="@+id/textViewScreenTime"
+                        style="@style/InputValueTextView"
+                        android:text="0"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+                </LinearLayout>
+
+                <Button
+                    android:id="@+id/buttonScreenTime"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:tag="@string/tag_input_screen_seconds"
+                    android:text="@string/button_input" />
+            </RelativeLayout>
+            <com.google.android.material.divider.MaterialDivider
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+            <Switch
+                android:visibility="gone"
+                android:id="@+id/switchCpuAlwaysOn"
+                android:tag="@string/tag_switch_cpu_always_on"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="CPU always on?"
+                android:textOn="on"
+                android:textOff="off"
+                android:checked="false"
+                style="@style/BaseSwitchStyle" />
+            <Switch
+                android:id="@+id/switchWebRequest"
+                android:tag="@string/tag_switch_web_request"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/label_for_switch_web_request"
+                android:textOn="on"
+                android:textOff="off"
+                android:checked="false"
+                style="@style/BaseSwitchStyle" />
+            <Switch
+                android:id="@+id/switchGpsRequest"
+                android:tag="@string/tag_switch_gps_request"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/label_for_switch_gps_request"
+                android:textOn="on"
+                android:textOff="off"
+                android:checked="false"
+                style="@style/BaseSwitchStyle" />
+            <Switch
+                android:id="@+id/switchBleRequest"
+                android:tag="@string/tag_switch_ble_request"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/label_for_switch_ble_request"
+                android:textOn="on"
+                android:textOff="off"
+                android:checked="false"
+                style="@style/BaseSwitchStyle" />
+            <com.google.android.material.divider.MaterialDivider
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true">
+                    <Button
+                        android:id="@+id/buttonPlanTest"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/button_plan" />
+                    <TextView
+                        android:layout_width="10dp"
+                        android:layout_height="wrap_content" />
+                    <Button
+                        android:id="@+id/buttonStartTest"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/button_start" />
+                    <TextView
+                        android:layout_width="10dp"
+                        android:layout_height="wrap_content" />
+                    <Button
+                        android:id="@+id/buttonStopTest"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/button_stop" />
+                </LinearLayout>
+            </RelativeLayout>
+            <com.google.android.material.divider.MaterialDivider
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+        </LinearLayout>
+    </ScrollView>
+
+    <com.github.mikephil.charting.charts.LineChart
+        android:id="@+id/lineChart"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintHeight_percent="0.4">
+        <TextView
+            android:id="@+id/textViewXMax"
+            android:layout_width="50dp"
+            android:layout_height="wrap_content"
+            android:gravity="right" />
+    </com.github.mikephil.charting.charts.LineChart>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

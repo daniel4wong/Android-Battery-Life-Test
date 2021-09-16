@@ -1,0 +1,42 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="app_name">Battery Test</string>
+    <string name="title_home">Home</string>
+    <string name="title_config">Config</string>
+    <string name="title_dashboard">Dashboard</string>
+    <string name="title_notifications">Notifications</string>
+
+    <string name="button_pick_date">Pick Date</string>
+    <string name="button_pick_time">Pick Time</string>
+    <string name="button_input">Input</string>
+    <string name="button_plan">Plan</string>
+    <string name="button_start">Start</string>
+    <string name="button_stop">Stop</string>
+    <string name="button_confirm">Confirm</string>
+    <string name="button_cancel">Cancel</string>
+
+    <string name="header_input_number">Input Number</string>
+
+    <string name="label_for_text_test_date">Plan date</string>
+    <string name="label_for_text_test_time">Plan time</string>
+    <string name="label_for_text_test_frequency">Frequency [Per hour] : </string>
+    <string name="label_for_switch_screen_always_on">Keep screen always on?</string>
+    <string name="label_for_text_screen_time">Screen time [Seconds] : </string>
+    <string name="label_for_switch_web_request">Make WEB request?</string>
+    <string name="label_for_switch_gps_request">Make GSP request?</string>
+    <string name="label_for_switch_ble_request">Make BLE request?</string>
+
+    <string name="msg_past_time_warning">Cannot plan for past time</string>
+    <string name="msg_frequency_warning">Frequency must greater than zero</string>
+    <string name="msg_test_start">Battery test has been started.</string>
+    <string name="msg_test_stop">Battery test has been stopped.</string>
+
+    <string name="tag_switch_screen_always_on" translatable="false">screen_always_on</string>
+    <string name="tag_switch_cpu_always_on" translatable="false">screen_always_on</string>
+    <string name="tag_switch_web_request" translatable="false">web_request</string>
+    <string name="tag_switch_gps_request" translatable="false">gps_request</string>
+    <string name="tag_switch_ble_request" translatable="false">ble_request</string>
+    <string name="tag_picker_test_bgn_date" translatable="false">test_bgn_date</string>
+    <string name="tag_picker_test_bgn_time" translatable="false">test_bgn_time</string>
+    <string name="tag_input_test_frequency" translatable="false">test_frequency</string>
+    <string name="tag_input_screen_seconds" translatable="false">screen_seconds</string>
+</resources>

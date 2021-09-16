@@ -1,0 +1,2 @@
+rootProject.name = "Android-Battery-Life-Test"
+include ':app'
