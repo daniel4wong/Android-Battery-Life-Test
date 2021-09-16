@@ -1,7 +1,6 @@
-package com.melsontech.batterytest;
+package com.melsontech.batterytest.db;
 
 import android.content.Context;
-import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
 import androidx.room.Database;
@@ -12,10 +11,6 @@ import androidx.sqlite.db.SupportSQLiteDatabase;
 import com.amitshekhar.DebugDB;
 import com.melsontech.batterytest.dao.*;
 import com.melsontech.batterytest.model.*;
-
-import java.io.File;
-import java.nio.file.Files;
-import java.nio.file.LinkOption;
 
 @Database(entities =  {BatteryHistory.class}, version = 1)
 public abstract class AppDatabase extends RoomDatabase {

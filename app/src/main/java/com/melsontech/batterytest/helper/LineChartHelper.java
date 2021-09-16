@@ -10,6 +10,7 @@ import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.*;
 import com.github.mikephil.charting.data.*;
 import com.github.mikephil.charting.utils.ColorTemplate;
+import com.melsontech.batterytest.R;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,11 +28,11 @@ public class LineChartHelper {
 
         int textColor = ColorTemplate.getHoloBlue();
         int lineColor = LineColor;
-        float textSize = 10f;
+        float textSize = 12f;
         float padding = 5f;
         float[] xRange = { 0f, 60f, 5f };
         float[] yRange = { 00f, 100f, 10f };
-        boolean[] gridlines = { false, true };
+        boolean[] gridlines = { true, true };
 
         chart.setDrawGridBackground(true);
         chart.setBackgroundColor(Color.WHITE);
@@ -41,16 +42,18 @@ public class LineChartHelper {
         chart.setExtraOffsets(padding, padding, padding, padding);
 
         Description description = chart.getDescription();
-        description.setText("Power percentage over recent hour");
+        description.setText(activity.getString(R.string.chart_description));
+        description.setTextSize(textSize);
 
-        LegendEntry legendEntry = new LegendEntry("minutes", Legend.LegendForm.LINE, 0f, 0f, null, lineColor);
+        LegendEntry legendEntry = new LegendEntry(activity.getString(R.string.chart_minutes), Legend.LegendForm.LINE, 0f, 0f, null, lineColor);
         Legend legend = chart.getLegend();
+        legend.setTextSize(textSize);
         legend.setHorizontalAlignment(Legend.LegendHorizontalAlignment.CENTER);
         legend.setCustom(new LegendEntry[] {legendEntry});
 
         XAxis xAxis = chart.getXAxis();
         xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
-        xAxis.setTypeface(Typeface.DEFAULT_BOLD);
+        xAxis.setTypeface(Typeface.DEFAULT);
         xAxis.setTextColor(textColor);
         xAxis.setTextSize(textSize);
         xAxis.setDrawGridLines(gridlines[0]);
@@ -60,7 +63,7 @@ public class LineChartHelper {
 
         YAxis yAxis = chart.getAxisLeft();
         yAxis.setPosition(YAxis.YAxisLabelPosition.OUTSIDE_CHART);
-        yAxis.setTypeface(Typeface.DEFAULT_BOLD);
+        yAxis.setTypeface(Typeface.DEFAULT);
         yAxis.setTextColor(textColor);
         yAxis.setTextSize(textSize);
         yAxis.setDrawGridLines(gridlines[1]);

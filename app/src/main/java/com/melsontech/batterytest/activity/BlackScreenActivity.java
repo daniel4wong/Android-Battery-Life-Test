@@ -1,9 +1,11 @@
-package com.melsontech.batterytest;
+package com.melsontech.batterytest.activity;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
 import android.view.View;
+
+import com.melsontech.batterytest.R;
 
 public class BlackScreenActivity extends AppCompatActivity {
 

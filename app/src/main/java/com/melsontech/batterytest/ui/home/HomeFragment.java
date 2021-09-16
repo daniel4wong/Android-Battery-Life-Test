@@ -3,7 +3,6 @@ package com.melsontech.batterytest.ui.home;
 import android.annotation.SuppressLint;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
@@ -11,51 +10,39 @@ import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
-import android.view.WindowManager;
 import android.widget.Button;
-import android.widget.DatePicker;
 import android.widget.LinearLayout;
 import android.widget.Switch;
 import android.widget.TextView;
-import android.widget.TimePicker;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.RequiresApi;
-import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.ViewModelProvider;
 
 import com.melsontech.batterytest.AppContext;
-import com.melsontech.batterytest.AppDatabase;
+import com.melsontech.batterytest.db.AppDatabase;
 import com.melsontech.batterytest.BackgroundService;
 import com.melsontech.batterytest.R;
 import com.melsontech.batterytest.helper.DialogHelper;
 import com.melsontech.batterytest.helper.LayoutHelper;
 import com.melsontech.batterytest.helper.LineChartHelper;
 import com.melsontech.batterytest.databinding.FragmentHomeBinding;
-import com.melsontech.batterytest.helper.WebRequestHelper;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.Duration;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
-import java.util.function.Function;
 
 import io.reactivex.rxjava3.schedulers.Schedulers;
 
 public class HomeFragment extends Fragment {
     private static String TAG = HomeFragment.class.getName();
 
-    private boolean drawGraph = false;
+    private boolean isShowChart = false;
     private FragmentHomeBinding binding;
 
     private Timer chartUpdateTimer;
@@ -186,7 +173,7 @@ public class HomeFragment extends Fragment {
         buttonStopTest = binding.buttonStopTest;
         buttonStopTest.setOnClickListener(view -> stopTest());
 
-        if (drawGraph) {
+        if (AppContext.getInstance().preferences.getBoolean(getString(R.string.pref_show_chart), false)) {
             this.lineChartHelper = new LineChartHelper();
             this.lineChartHelper.initChart(getActivity(), binding.lineChart);
         } else {
@@ -217,7 +204,7 @@ public class HomeFragment extends Fragment {
             aSwitch.setChecked(AppContext.getInstance().preferences.getBoolean(aSwitch.getTag().toString(), false));
         }
 
-        if (drawGraph) {
+        if (AppContext.getInstance().preferences.getBoolean(getString(R.string.pref_show_chart), false)) {
             startChartUpdateTimer();
         }
     }
@@ -297,7 +284,7 @@ public class HomeFragment extends Fragment {
         if (!checkConfig())
             return;
 
-        Integer testFrequency = AppContext.getInstance().preferences.getInt(getString(R.string.tag_input_test_frequency), 0);
+        Integer testFrequency = AppContext.getInstance().preferences.getInt(getString(R.string.pref_test_frequency), 0);
 
         LayoutHelper.setTouchablesEnable(layoutTestConfig, false);
         buttonStopTest.setEnabled(true);
@@ -314,7 +301,7 @@ public class HomeFragment extends Fragment {
     }
 
     public boolean checkConfig() {
-        Integer testFrequency = AppContext.getInstance().preferences.getInt(getString(R.string.tag_input_test_frequency), 0);
+        Integer testFrequency = AppContext.getInstance().preferences.getInt(getString(R.string.pref_test_frequency), 0);
         if (testFrequency == null || testFrequency < 1) {
             Toast.makeText(getActivity(), getString(R.string.msg_frequency_warning), Toast.LENGTH_LONG).show();
             return false;

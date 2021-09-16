@@ -4,6 +4,9 @@
     <string name="title_config">設定</string>
     <string name="title_dashboard">概觀</string>
     <string name="title_notifications">通知</string>
+    <string name="title_language">語言</string>
+    <string name="title_chart_on">顯示圖表</string>
+    <string name="title_chart_off">隱藏圖表</string>
 
     <string name="button_pick_date">輸入日期</string>
     <string name="button_pick_time">輸入時間</string>
@@ -29,4 +32,7 @@
     <string name="msg_frequency_warning">頻率必須大於零</string>
     <string name="msg_test_start">電量測試已開始。</string>
     <string name="msg_test_stop">電量測試已停止。</string>
+
+    <string name="chart_minutes">分鐘</string>
+    <string name="chart_description">當前小時的電量百分比</string>
 </resources>

@@ -54,11 +54,16 @@ public class BackgroundService extends Service {
     }
 
     public void start(Integer testFrequency) {
-        Integer screenTime = AppContext.getInstance().preferences.getInt(getString(R.string.tag_input_screen_seconds), 0);
+        Integer screenTime = AppContext.getInstance().preferences.getInt(getString(R.string.pref_screen_seconds), 0);
         Integer testInterval = 3600 / testFrequency;
 
         if (!isRunning) {
             runnable = () -> {
+                if (!isRunning) {
+                    batteryTestHelper.reset();
+                    return;
+                }
+
                 Toast.makeText(context, getString(R.string.msg_test_start), Toast.LENGTH_LONG).show();
                 Log.d(TAG, "Service is still running.");
                 batteryTestHelper.runTestOnce(screenTime);
@@ -70,9 +75,10 @@ public class BackgroundService extends Service {
     }
 
     public void stop() {
+        batteryTestHelper.reset();
         isRunning = false;
         runnable = () -> { };
-        Toast.makeText(context,getString(R.string.msg_test_stop), Toast.LENGTH_LONG).show();
+        Toast.makeText(context, getString(R.string.msg_test_stop), Toast.LENGTH_LONG).show();
     }
 
 }

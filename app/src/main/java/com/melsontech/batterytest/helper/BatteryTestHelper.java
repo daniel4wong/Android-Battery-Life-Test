@@ -15,6 +15,7 @@ public class BatteryTestHelper {
     private Context context;
     private Handler handler;
     private DeviceManager deviceManager;
+    private boolean isReset = false;
 
     public BatteryTestHelper(Context context) {
         this.context = context;
@@ -23,6 +24,8 @@ public class BatteryTestHelper {
     }
 
     public void runTestOnce(Integer screenTime) {
+        this.isReset = false;
+
         if (!canRunTest())
             return;
 
@@ -46,9 +49,15 @@ public class BatteryTestHelper {
         //screen
         if (Check.isControlScreenOnOff()) {
             handler.postDelayed(() -> {
-                this.deviceManager.screenOff();
+                if (!this.isReset)
+                    this.deviceManager.screenOff();
             }, screenTime * 1000);
         }
+    }
+
+    public void reset() {
+        this.deviceManager.screenOn();
+        this.isReset = true;
     }
 
     public static boolean canRunTest() { return Check.isReadyWebRequest();
@@ -57,19 +66,19 @@ public class BatteryTestHelper {
     public static class Check {
         public static boolean isRunWebRequest() {
             return AppContext.getInstance().preferences.getBoolean(
-                    AppContext.getInstance().context.getString(R.string.tag_switch_web_request), false);
+                    AppContext.getInstance().context.getString(R.string.pref_web_request), false);
         }
         public static boolean isRunGpsRequest() {
             return AppContext.getInstance().preferences.getBoolean(
-                    AppContext.getInstance().context.getString(R.string.tag_switch_gps_request), false);
+                    AppContext.getInstance().context.getString(R.string.pref_gps_request), false);
         }
         public static boolean isRunBleRequest() {
             return AppContext.getInstance().preferences.getBoolean(
-                    AppContext.getInstance().context.getString(R.string.tag_switch_ble_request), false);
+                    AppContext.getInstance().context.getString(R.string.pref_ble_request), false);
         }
         public static boolean isControlScreenOnOff() {
             return !AppContext.getInstance().preferences.getBoolean(
-                    AppContext.getInstance().context.getString(R.string.tag_switch_cpu_always_on), false);
+                    AppContext.getInstance().context.getString(R.string.pref_cpu_always_on), false);
         }
         public static boolean isReadyWebRequest() {
             try {

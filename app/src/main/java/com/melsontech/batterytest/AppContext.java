@@ -18,6 +18,7 @@ public class AppContext {
     public Context context;
     public PowerManager.WakeLock wakeLock;
     public SharedPreferences preferences;
+    public String languageCode = "en";
 
     private static AppContext instance;
     public static AppContext getInstance() {
@@ -34,8 +35,8 @@ public class AppContext {
 
         PowerManager powerManager = (PowerManager) context.getSystemService(Context.POWER_SERVICE);
         instance.wakeLock = powerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "MainInstance::WakelockTag");
-
         instance.preferences = PreferenceManager.getDefaultSharedPreferences(context);
+        instance.languageCode = instance.preferences.getString(context.getString(R.string.pref_language_code), "en");
     }
 
     public void savePreference(Function<SharedPreferences.Editor, Void> func) {

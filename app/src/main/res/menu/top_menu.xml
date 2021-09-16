@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item android:id="@+id/menu_chart_on"
+        android:icon="@drawable/ic_chart_on_white_24dp"
+        android:title="@string/title_language"
+        app:showAsAction="always" />
+    <item android:id="@+id/menu_chart_off"
+        android:icon="@drawable/ic_chart_off_white_24dp"
+        android:title="@string/title_language"
+    app:showAsAction="always" />
+    <item android:id="@+id/menu_language"
+        android:icon="@drawable/ic_language_white_24dp"
+        android:title="@string/title_language"
+        app:showAsAction="always" />
+</menu>

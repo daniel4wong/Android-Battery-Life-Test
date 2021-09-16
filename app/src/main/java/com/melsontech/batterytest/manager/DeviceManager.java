@@ -5,7 +5,7 @@ import android.content.Intent;
 import android.view.WindowManager;
 
 import com.melsontech.batterytest.AppContext;
-import com.melsontech.batterytest.BlackScreenActivity;
+import com.melsontech.batterytest.activity.BlackScreenActivity;
 
 public class DeviceManager {
     private static final String TAG = DeviceManager.class.getName();

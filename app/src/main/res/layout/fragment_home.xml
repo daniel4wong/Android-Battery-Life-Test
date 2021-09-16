@@ -33,7 +33,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
-                    android:tag="@string/tag_picker_test_bgn_date"
+                    android:tag="@string/pref_test_bgn_date"
                     android:text="@string/button_pick_date" />
             </RelativeLayout>
             <RelativeLayout
@@ -51,7 +51,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
-                    android:tag="@string/tag_picker_test_bgn_time"
+                    android:tag="@string/pref_test_bgn_time"
                     android:text="@string/button_pick_time" />
             </RelativeLayout>
             <RelativeLayout
@@ -78,7 +78,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
-                    android:tag="@string/tag_input_test_frequency"
+                    android:tag="@string/pref_test_frequency"
                     android:text="@string/button_input" />
             </RelativeLayout>
             <com.google.android.material.divider.MaterialDivider
@@ -86,7 +86,7 @@
                 android:layout_height="wrap_content" />
             <Switch
                 android:id="@+id/switchScreenAlwaysOn"
-                android:tag="@string/tag_switch_screen_always_on"
+                android:tag="@string/pref_screen_always_on"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/label_for_switch_screen_always_on"
@@ -119,7 +119,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
-                    android:tag="@string/tag_input_screen_seconds"
+                    android:tag="@string/pref_screen_seconds"
                     android:text="@string/button_input" />
             </RelativeLayout>
             <com.google.android.material.divider.MaterialDivider
@@ -128,7 +128,7 @@
             <Switch
                 android:visibility="gone"
                 android:id="@+id/switchCpuAlwaysOn"
-                android:tag="@string/tag_switch_cpu_always_on"
+                android:tag="@string/pref_cpu_always_on"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="CPU always on?"
@@ -138,7 +138,7 @@
                 style="@style/BaseSwitchStyle" />
             <Switch
                 android:id="@+id/switchWebRequest"
-                android:tag="@string/tag_switch_web_request"
+                android:tag="@string/pref_web_request"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/label_for_switch_web_request"
@@ -148,7 +148,7 @@
                 style="@style/BaseSwitchStyle" />
             <Switch
                 android:id="@+id/switchGpsRequest"
-                android:tag="@string/tag_switch_gps_request"
+                android:tag="@string/pref_gps_request"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/label_for_switch_gps_request"
@@ -158,7 +158,7 @@
                 style="@style/BaseSwitchStyle" />
             <Switch
                 android:id="@+id/switchBleRequest"
-                android:tag="@string/tag_switch_ble_request"
+                android:tag="@string/pref_ble_request"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/label_for_switch_ble_request"

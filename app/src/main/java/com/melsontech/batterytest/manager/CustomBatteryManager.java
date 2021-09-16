@@ -6,10 +6,9 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.BatteryManager;
 
-import com.melsontech.batterytest.AppDatabase;
+import com.melsontech.batterytest.db.AppDatabase;
 import com.melsontech.batterytest.model.BatteryHistory;
 
-import java.time.LocalDateTime;
 import java.util.Calendar;
 
 public class CustomBatteryManager {
