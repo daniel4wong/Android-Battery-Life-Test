@@ -177,7 +177,7 @@ public class HomeFragment extends Fragment {
             this.lineChartHelper = new LineChartHelper();
             this.lineChartHelper.initChart(getActivity(), binding.lineChart);
         } else {
-            binding.lineChart.setVisibility(View.GONE);
+            binding.layoutLineChart.setVisibility(View.GONE);
         }
 
         return root;

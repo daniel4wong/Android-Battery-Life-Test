@@ -11,6 +11,7 @@ import android.widget.Toast;
 import androidx.annotation.Nullable;
 
 import com.daniel4wong.AndroidBatteryLifeTest.helper.BatteryTestHelper;
+import com.daniel4wong.AndroidBatteryLifeTest.helper.LocaleHelper;
 
 public class BackgroundService extends Service {
     private static final String TAG = BackgroundService.class.getName();
@@ -36,9 +37,8 @@ public class BackgroundService extends Service {
     @Override
     public void onCreate() {
         Log.d(TAG, "Service is created.");
-
         BackgroundService.instance = this;
-
+        LocaleHelper.setLocale(context, AppContext.getInstance().languageCode);
         batteryTestHelper = new BatteryTestHelper(context);
         handler = new Handler();
     }
