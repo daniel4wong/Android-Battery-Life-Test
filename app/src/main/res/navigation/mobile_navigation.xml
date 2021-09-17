@@ -7,25 +7,25 @@
 
     <fragment
         android:id="@+id/navigation_home"
-        android:name="com.melsontech.batterytest.ui.home.HomeFragment"
+        android:name="com.daniel4wong.AndroidBatteryLifeTest.ui.home.HomeFragment"
         android:label="@string/title_home"
         tools:layout="@layout/fragment_home" />
 
     <fragment
         android:id="@+id/navigation_config"
-        android:name="com.melsontech.batterytest.ui.config.ConfigFragment"
+        android:name="com.daniel4wong.AndroidBatteryLifeTest.ui.config.ConfigFragment"
         android:label="@string/title_config"
         tools:layout="@layout/fragment_config" />
 
     <fragment
         android:id="@+id/navigation_dashboard"
-        android:name="com.melsontech.batterytest.ui.dashboard.DashboardFragment"
+        android:name="com.daniel4wong.AndroidBatteryLifeTest.ui.dashboard.DashboardFragment"
         android:label="@string/title_dashboard"
         tools:layout="@layout/fragment_dashboard" />
 
     <fragment
         android:id="@+id/navigation_notifications"
-        android:name="com.melsontech.batterytest.ui.notifications.NotificationsFragment"
+        android:name="com.daniel4wong.AndroidBatteryLifeTest.ui.notifications.NotificationsFragment"
         android:label="@string/title_notifications"
         tools:layout="@layout/fragment_notifications" />
 </navigation>

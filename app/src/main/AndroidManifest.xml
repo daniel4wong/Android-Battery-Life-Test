@@ -1,15 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.melsontech.batterytest">
+    package="com.daniel4wong.AndroidBatteryLifeTest">
 
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <!-- GPS -->
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <!-- Bluetooth -->
     <uses-permission android:name="android.permission.BLUETOOTH" />
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
+    <!-- Network -->
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
 
     <application
         android:name=".App"
@@ -21,20 +26,27 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.BatteryTest">
-        <activity
-            android:name=".activity.BlackScreenActivity"
-            android:theme="@style/Theme.FullScreen"
-            android:exported="true" />
-
         <service android:name=".BackgroundService" />
         <service android:name=".MainService" />
+
+        <receiver android:name=".core.broadcastReceiver.BatteryTestBroadcastReceiver">
+            <intent-filter>
+                <action android:name="com.daniel4wong.OnTestStateChanged" />
+            </intent-filter>
+        </receiver>
+
+        <activity
+            android:name=".activity.BlackScreenActivity"
+            android:exported="true"
+            android:theme="@style/Theme.FullScreen" />
 
         <activity
             android:name=".activity.MainActivity"
             android:label="@string/app_name">
             <intent-filter>
-                <action android:name="android.intent.action.VIEW"/>
+                <action android:name="android.intent.action.VIEW" />
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>

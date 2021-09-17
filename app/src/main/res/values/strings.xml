@@ -7,6 +7,7 @@
     <string name="title_language">Language</string>
     <string name="title_chart_on">Show Chart</string>
     <string name="title_chart_off">Hide Chart</string>
+    <string name="title_download">Download</string>
 
     <string name="button_pick_date">Pick Date</string>
     <string name="button_pick_time">Pick Time</string>
@@ -32,7 +33,7 @@
     <string name="msg_frequency_warning">Frequency must greater than zero</string>
     <string name="msg_test_start">Battery test has been started.</string>
     <string name="msg_test_stop">Battery test has been stopped.</string>
-
+    <string name="msg_database_downloaded_success">Database has been downloaded.</string>
 
     <string name="button_language_chinese" translatable="false">中文</string>
     <string name="button_language_english" translatable="false">English</string>

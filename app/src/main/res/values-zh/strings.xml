@@ -16,6 +16,7 @@
     <string name="button_stop">停止</string>
     <string name="button_confirm">確認</string>
     <string name="button_cancel">取消</string>
+    <string name="title_download">下載</string>
 
     <string name="header_input_number">輸入數字</string>
 
@@ -32,6 +33,7 @@
     <string name="msg_frequency_warning">頻率必須大於零</string>
     <string name="msg_test_start">電量測試已開始。</string>
     <string name="msg_test_stop">電量測試已停止。</string>
+    <string name="msg_database_downloaded_success">數據庫已下載。</string>
 
     <string name="chart_minutes">分鐘</string>
     <string name="chart_description">當前小時的電量百分比</string>
