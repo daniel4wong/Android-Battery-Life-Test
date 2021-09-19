@@ -7,7 +7,7 @@ import android.view.View;
 
 import com.daniel4wong.AndroidBatteryLifeTest.R;
 
-public class BlackScreenActivity extends AppCompatActivity {
+public class BlackScreenActivity extends BaseActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

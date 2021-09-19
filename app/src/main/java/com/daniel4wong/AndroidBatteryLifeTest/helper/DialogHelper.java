@@ -27,7 +27,11 @@ public class DialogHelper {
         builder.setView(editText);
         builder.setPositiveButton(activity.getString(R.string.button_confirm), (dialogInterface, i) -> {
             String text = editText.getText().toString();
-            onClick.apply(Integer.parseInt(text));
+            try {
+                onClick.apply(Integer.parseInt(text));
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
             KeyboardHelper.closeKeyboard(activity);
             return;
         });

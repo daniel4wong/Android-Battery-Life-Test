@@ -4,6 +4,9 @@ import android.content.Context;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 
+import com.daniel4wong.AndroidBatteryLifeTest.AppContext;
+import com.daniel4wong.AndroidBatteryLifeTest.MainApplication;
+
 import java.util.Locale;
 
 public class LocaleHelper {
@@ -16,4 +19,9 @@ public class LocaleHelper {
         configuration.setLocale(locale);
         resources.updateConfiguration(configuration, resources.getDisplayMetrics());
     }
+
+    public static void updateLocale() {
+        setLocale(MainApplication.currentActivity, AppContext.getInstance().getLanguageCode());
+    }
+
 }

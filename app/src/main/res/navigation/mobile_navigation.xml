@@ -19,9 +19,9 @@
 
     <fragment
         android:id="@+id/navigation_dashboard"
-        android:name="com.daniel4wong.AndroidBatteryLifeTest.ui.dashboard.DashboardFragment"
-        android:label="@string/title_dashboard"
-        tools:layout="@layout/fragment_dashboard" />
+        android:name="com.daniel4wong.AndroidBatteryLifeTest.ui.chart.ChartFragment"
+        android:label="@string/title_chart"
+        tools:layout="@layout/fragment_chart" />
 
     <fragment
         android:id="@+id/navigation_notifications"

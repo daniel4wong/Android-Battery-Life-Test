@@ -8,8 +8,13 @@ import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.daniel4wong.AndroidBatteryLifeTest.manager.DeviceManager;
 
-public class WebRequestHelper {
+import java.util.function.Consumer;
+
+import androidx.annotation.Nullable;
+
+public class WebRequestHelper extends AbstractTestHelper {
     private static final String TAG = "=BT= " + WebRequestHelper.class.getName();
 
     private Context context;
@@ -18,12 +23,16 @@ public class WebRequestHelper {
         this.context = context;
     }
 
-    public void httpGet(String url) {
+    public void httpGet(String url, @Nullable Consumer<String> consumer) {
         RequestQueue queue = Volley.newRequestQueue(context);
 
         StringRequest request = new StringRequest(Request.Method.GET, url, response -> {
+            if (consumer != null)
+                consumer.accept(response);
             Log.i(TAG, response);
         }, error -> {
+            if (consumer != null)
+                consumer.accept(null);
             Log.i(TAG, error.toString());
         });
         request.setRetryPolicy(new DefaultRetryPolicy(5000,
@@ -31,5 +40,15 @@ public class WebRequestHelper {
         );
         Log.i(TAG, "Making a web request...");
         queue.add(request);
+    }
+
+    @Override
+    public String[] getRequiredPermissions() {
+        return new String[0];
+    }
+
+    @Override
+    public boolean check() {
+        return DeviceManager.getInstance().isWiFiEnabled(true);
     }
 }

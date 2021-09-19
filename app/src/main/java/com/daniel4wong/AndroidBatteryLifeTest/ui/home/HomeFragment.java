@@ -5,8 +5,6 @@ import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.os.Bundle;
 import android.os.Handler;
-import android.util.Log;
-import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,32 +18,20 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
 import com.daniel4wong.AndroidBatteryLifeTest.R;
-import com.daniel4wong.AndroidBatteryLifeTest.AppContext;
-import com.daniel4wong.AndroidBatteryLifeTest.db.AppDatabase;
-import com.daniel4wong.AndroidBatteryLifeTest.BackgroundService;
-import com.daniel4wong.AndroidBatteryLifeTest.helper.DialogHelper;
-import com.daniel4wong.AndroidBatteryLifeTest.helper.LayoutHelper;
-import com.daniel4wong.AndroidBatteryLifeTest.helper.LineChartHelper;
+import com.daniel4wong.AndroidBatteryLifeTest.core.AppPreferences;
+import com.daniel4wong.AndroidBatteryLifeTest.helper.*;
 import com.daniel4wong.AndroidBatteryLifeTest.databinding.FragmentHomeBinding;
+import com.daniel4wong.AndroidBatteryLifeTest.manager.BatteryTestManager;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.List;
-import java.util.Timer;
-import java.util.TimerTask;
-
-import io.reactivex.rxjava3.schedulers.Schedulers;
 
 public class HomeFragment extends Fragment {
     private static String TAG = HomeFragment.class.getName();
 
-    private boolean isShowChart = false;
     private FragmentHomeBinding binding;
-
-    private Timer chartUpdateTimer;
 
     private Handler planTestHandler;
 
@@ -66,8 +52,6 @@ public class HomeFragment extends Fragment {
     private TextView textViewScreenTime;
     private Button buttonTestFrequency;
     private TextView textViewTestFrequency;
-
-    private LineChartHelper lineChartHelper;
 
     @SuppressLint("InvalidWakeLockTag")
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -93,9 +77,7 @@ public class HomeFragment extends Fragment {
         };
         for (Switch aSwitch : switches) {
             aSwitch.setOnCheckedChangeListener((compoundButton, b) -> {
-                AppContext.getInstance().savePreference(
-                        compoundButton.getTag().toString(),
-                        compoundButton.isChecked());
+                AppPreferences.getInstance().savePreference(compoundButton, compoundButton.isChecked());
             });
         }
 
@@ -109,8 +91,9 @@ public class HomeFragment extends Fragment {
         textViewScreenTime = binding.textViewScreenTime;
         textViewTestFrequency = binding.textViewTestFrequency;
 
-        String textDate = AppContext.getInstance().preferences.getString(buttonPickDate.getTag().toString(), null);
-        if (textDate != null) textViewDate.setText(textDate);
+        String textDate = AppPreferences.getInstance().getPreference(buttonPickDate, "");
+        if (!textDate.isEmpty())
+            textViewDate.setText(textDate);
         buttonPickDate.setOnClickListener(view -> {
             final Calendar calendar = Calendar.getInstance();
             int year = calendar.get(Calendar.YEAR);
@@ -120,14 +103,15 @@ public class HomeFragment extends Fragment {
             DatePickerDialog dialog = new DatePickerDialog(getActivity(), (datePicker, y, m, d) -> {
                 calendar.set(y, m, d);
                 final String date = new SimpleDateFormat("yyyy-MM-dd").format(calendar.getTime());
-                AppContext.getInstance().savePreference(buttonPickDate.getTag().toString(), date);
+                AppPreferences.getInstance().savePreference(buttonPickDate, date);
                 textViewDate.setText(date);
             }, year, month, day);
             dialog.show();
         });
 
-        String textTime = AppContext.getInstance().preferences.getString(buttonPickTime.getTag().toString(), null);
-        if (textTime != null) textViewTime.setText(textTime);
+        String textTime = AppPreferences.getInstance().getPreference(buttonPickTime, "");
+        if (!textTime.isEmpty())
+            textViewTime.setText(textTime);
         buttonPickTime.setOnClickListener(view -> {
             final Calendar calendar = Calendar.getInstance();
             calendar.add(Calendar.HOUR, 1);
@@ -140,45 +124,39 @@ public class HomeFragment extends Fragment {
                 date.setMinutes(m);
                 calendar.setTime(date);
                 final String time = new SimpleDateFormat("HH:mm").format(calendar.getTime());
-                AppContext.getInstance().savePreference(buttonPickTime.getTag().toString(), time);
+                AppPreferences.getInstance().savePreference(buttonPickTime, time);
                 textViewTime.setText(time);
             }, hour, minute, true);
             dialog.show();
         });
 
-        Integer frequency =  AppContext.getInstance().preferences.getInt(buttonTestFrequency.getTag().toString(), 0);
+        Integer frequency = AppPreferences.getInstance().getPreference(buttonTestFrequency, 0);
         textViewTestFrequency.setText(frequency.toString());
         buttonTestFrequency.setOnClickListener(view -> DialogHelper.NumberInputDialog(getActivity(), integer -> {
             if (integer == null)
                 return null;
-            AppContext.getInstance().savePreference(buttonTestFrequency.getTag().toString(), integer);
+            AppPreferences.getInstance().savePreference(buttonTestFrequency, integer);
             textViewTestFrequency.setText(integer.toString());
             return null;
         }));
 
-        Integer screenTime =  AppContext.getInstance().preferences.getInt(buttonScreenTime.getTag().toString(), 0);
+        Integer screenTime =  AppPreferences.getInstance().getPreference(buttonScreenTime, 0);
         textViewScreenTime.setText(screenTime.toString());
         buttonScreenTime.setOnClickListener(view -> DialogHelper.NumberInputDialog(getActivity(), integer -> {
             if (integer == null)
                 return null;
-            AppContext.getInstance().savePreference(buttonScreenTime.getTag().toString(), integer);
+            AppPreferences.getInstance().savePreference(buttonScreenTime, integer);
             textViewScreenTime.setText(integer.toString());
             return null;
         }));
 
+        // test buttons
         buttonPlanTest = binding.buttonPlanTest;
         buttonPlanTest.setOnClickListener(view -> planTest());
         buttonStartTest = binding.buttonStartTest;
         buttonStartTest.setOnClickListener(view -> startTest());
         buttonStopTest = binding.buttonStopTest;
         buttonStopTest.setOnClickListener(view -> stopTest());
-
-        if (AppContext.getInstance().preferences.getBoolean(getString(R.string.pref_show_chart), false)) {
-            this.lineChartHelper = new LineChartHelper();
-            this.lineChartHelper.initChart(getActivity(), binding.lineChart);
-        } else {
-            binding.layoutLineChart.setVisibility(View.GONE);
-        }
 
         return root;
     }
@@ -201,52 +179,13 @@ public class HomeFragment extends Fragment {
                 switchBleRequest
         };
         for (Switch aSwitch : switches) {
-            aSwitch.setChecked(AppContext.getInstance().preferences.getBoolean(aSwitch.getTag().toString(), false));
-        }
-
-        if (AppContext.getInstance().preferences.getBoolean(getString(R.string.pref_show_chart), false)) {
-            startChartUpdateTimer();
+            aSwitch.setChecked(AppPreferences.getInstance().getPreference(aSwitch, false));
         }
     }
 
     @Override
     public void onStop() {
         super.onStop();
-
-        if (chartUpdateTimer != null) {
-            chartUpdateTimer.cancel();
-            chartUpdateTimer = null;
-        }
-    }
-
-    public void startChartUpdateTimer() {
-        chartUpdateTimer = new Timer();
-        chartUpdateTimer.scheduleAtFixedRate(new TimerTask() {
-            @Override
-            public void run() {
-                Date begin = new Date();
-                begin.setMinutes(0);
-                begin.setSeconds(0);
-                Calendar calendar = Calendar.getInstance();
-                calendar.setTime(begin);
-                Date fromDate = calendar.getTime();
-                calendar.add(Calendar.HOUR, 1);
-                Date toDate = calendar.getTime();
-                Log.d(TAG, String.format("Query data: from %tT to %tT", fromDate, toDate));
-
-                AppDatabase.getInstance().batteryHistoryDao().getList(fromDate, toDate)
-                        .subscribeOn(Schedulers.computation())
-                        .subscribe(models -> {
-                            List<Pair<Integer, Integer>> data = new ArrayList<>();
-                            models.forEach(i -> {
-                                if (data.stream().anyMatch(d -> d.first == i.logTs.getMinutes()))
-                                    return;
-                                data.add(new Pair<>(i.logTs.getMinutes(), i.level.intValue()));
-                            });
-                            lineChartHelper.setData(data);
-                        }, e -> System.out.println("RoomWithRx: " + e.getMessage()));
-            }
-        }, 1000, 5000);
     }
 
     private Runnable planTestRunnable = () -> startTest();
@@ -254,9 +193,11 @@ public class HomeFragment extends Fragment {
     public void planTest() {
         if (!checkConfig())
             return;
+        if (!BatteryTestManager.canRunTest())
+            return;
 
-        String textDate = AppContext.getInstance().preferences.getString(buttonPickDate.getTag().toString(), null);
-        String textTime = AppContext.getInstance().preferences.getString(buttonPickTime.getTag().toString(), null);
+        String textDate = AppPreferences.getInstance().getPreference(buttonPickDate, "");
+        String textTime = AppPreferences.getInstance().getPreference(buttonPickTime, "");
 
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm");
         Calendar planTime = Calendar.getInstance();
@@ -283,12 +224,14 @@ public class HomeFragment extends Fragment {
     public void startTest() {
         if (!checkConfig())
             return;
-
-        Integer testFrequency = AppContext.getInstance().preferences.getInt(getString(R.string.pref_test_frequency), 0);
+        if (!BatteryTestManager.canRunTest())
+            return;
 
         LayoutHelper.setTouchablesEnable(layoutTestConfig, false);
         buttonStopTest.setEnabled(true);
-        BackgroundService.getInstance().start(testFrequency);
+
+        Integer testFrequency = AppPreferences.getInstance().getPreference(R.string.pref_test_frequency, 0);
+        BatteryTestManager.getInstance().start(testFrequency);
     }
 
     public void stopTest() {
@@ -296,12 +239,12 @@ public class HomeFragment extends Fragment {
             planTestHandler.removeCallbacks(planTestRunnable);
             planTestHandler = null;
         }
-        BackgroundService.getInstance().stop();
+        BatteryTestManager.getInstance().stop();
         LayoutHelper.setTouchablesEnable(layoutTestConfig, true);
     }
 
     public boolean checkConfig() {
-        Integer testFrequency = AppContext.getInstance().preferences.getInt(getString(R.string.pref_test_frequency), 0);
+        Integer testFrequency = AppPreferences.getInstance().getPreference(R.string.pref_test_frequency, 0);
         if (testFrequency == null || testFrequency < 1) {
             Toast.makeText(getActivity(), getString(R.string.msg_frequency_warning), Toast.LENGTH_LONG).show();
             return false;

@@ -6,6 +6,7 @@ import android.graphics.Typeface;
 import android.util.Log;
 import android.util.Pair;
 
+import com.daniel4wong.AndroidBatteryLifeTest.db.AppDatabase;
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.*;
 import com.github.mikephil.charting.data.*;
@@ -13,7 +14,13 @@ import com.github.mikephil.charting.utils.ColorTemplate;
 import com.daniel4wong.AndroidBatteryLifeTest.R;
 
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
+
+import io.reactivex.rxjava3.schedulers.Schedulers;
 
 public class LineChartHelper {
     private static final String TAG = LineChartHelper.class.getName();
@@ -21,6 +28,10 @@ public class LineChartHelper {
     private int LineColor = Color.RED;
     private Activity activity;
     private LineChart chart;
+    private Timer timer;
+
+    private Date bgnTime;
+    private Date endTime;
 
     public void initChart(Activity activity, LineChart chart) {
         this.activity = activity;
@@ -98,4 +109,59 @@ public class LineChartHelper {
         });
     }
 
+    public Timer startDataTimer() {
+        Timer timer = new Timer();
+        timer.scheduleAtFixedRate(new TimerTask() {
+            @Override
+            public void run() {
+                refreshData();
+            }
+        }, 1000, 5000);
+
+        this.timer = timer;
+        return timer;
+    }
+
+    public void stopDataTimer() {
+        if (timer != null) {
+            timer.cancel();
+            timer = null;
+        }
+    }
+
+    public void refreshData() {
+        Date begin = new Date();
+        begin.setMinutes(0);
+        begin.setSeconds(0);
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(begin);
+        Date fromDate = calendar.getTime();
+        calendar.add(Calendar.HOUR, 1);
+        Date toDate = calendar.getTime();
+
+        if (bgnTime != null && endTime != null) {
+            fromDate = bgnTime;
+            toDate = endTime;
+        }
+
+        Log.d(TAG, String.format("Query data: from %tT to %tT", fromDate, toDate));
+
+        AppDatabase.getInstance().batteryHistoryDao().getList(fromDate, toDate)
+                .subscribeOn(Schedulers.computation())
+                .subscribe(models -> {
+                    List<Pair<Integer, Integer>> data = new ArrayList<>();
+                    models.forEach(i -> {
+                        if (data.stream().anyMatch(d -> d.first == i.logTs.getMinutes()))
+                            return;
+                        data.add(new Pair<>(i.logTs.getMinutes(), i.level.intValue()));
+                    });
+                    setData(data);
+                }, e -> System.out.println("RoomWithRx: " + e.getMessage()));
+    }
+
+    public void setTimeRange(Date bgnTime, Date endTime) {
+        this.bgnTime = bgnTime;
+        this.endTime = endTime;
+        refreshData();
+    }
 }

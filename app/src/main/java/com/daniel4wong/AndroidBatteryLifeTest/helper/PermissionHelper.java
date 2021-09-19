@@ -1,7 +1,12 @@
 package com.daniel4wong.AndroidBatteryLifeTest.helper;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.pm.PackageManager;
+
+import com.daniel4wong.AndroidBatteryLifeTest.MainApplication;
+import com.daniel4wong.AndroidBatteryLifeTest.activity.BaseActivity;
+import com.daniel4wong.AndroidBatteryLifeTest.activity.MainActivity;
 
 import androidx.core.app.ActivityCompat;
 
@@ -18,5 +23,11 @@ public class PermissionHelper {
         }
 
         return noPermissions.size() == 0;
+    }
+
+    public static void requirePermission(String[] permissions, Runnable allowRunnable, Runnable denyRunnable) {
+        if (!checkPermissions(MainApplication.currentActivity, permissions)) {
+            ((BaseActivity)MainApplication.currentActivity).requestPermissions(permissions, allowRunnable, denyRunnable);
+        }
     }
 }

@@ -12,11 +12,12 @@ import android.os.Handler;
 import android.util.Log;
 
 import com.daniel4wong.AndroidBatteryLifeTest.AppContext;
+import com.daniel4wong.AndroidBatteryLifeTest.MainApplication;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class BleDeviceHelper {
+public class BleDeviceHelper extends AbstractTestHelper {
     private static final String TAG = "=BT= " + BleDeviceHelper.class.getName();
 
     public static final int REQUEST_ENABLE_BT = 1;
@@ -33,7 +34,7 @@ public class BleDeviceHelper {
         bluetoothAdapter = bluetoothManager.getAdapter();
         if (bluetoothAdapter == null || !bluetoothAdapter.isEnabled()) {
             Intent intent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
-            AppContext.getInstance().currentActivity.startActivityForResult(intent, REQUEST_ENABLE_BT);
+            MainApplication.currentActivity.startActivityForResult(intent, REQUEST_ENABLE_BT);
         }
         devices = new ArrayList<>();
     }
@@ -75,5 +76,15 @@ public class BleDeviceHelper {
             scanner.stopScan(stopScanCallback);
             Log.i(TAG, String.format("Number of BLE devices: %d", devices.size()));
         }
+    }
+
+    @Override
+    public String[] getRequiredPermissions() {
+        return new String[0];
+    }
+
+    @Override
+    public boolean check() {
+        return true;
     }
 }

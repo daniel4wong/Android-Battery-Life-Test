@@ -11,7 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toTopOf="@+id/layoutLineChart">
+        app:layout_constraintBottom_toTopOf="@+id/layoutHomeLineChart">
         <LinearLayout
             android:id="@+id/layout_test_config"
             android:layout_width="match_parent"
@@ -205,19 +205,11 @@
     </ScrollView>
 
     <LinearLayout
-        android:id="@+id/layoutLineChart"
+        android:id="@+id/layoutHomeLineChart"
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        app:layout_constraintHeight_percent="0.4"
         app:layout_constraintBottom_toBottomOf="parent">
-        <com.google.android.material.divider.MaterialDivider
-            android:layout_width="match_parent"
-            android:layout_height="2dp" />
-        <com.github.mikephil.charting.charts.LineChart
-            android:id="@+id/lineChart"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" />
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

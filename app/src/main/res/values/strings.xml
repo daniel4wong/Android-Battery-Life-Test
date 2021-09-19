@@ -2,7 +2,7 @@
     <string name="app_name">Battery Test</string>
     <string name="title_home">Home</string>
     <string name="title_config">Config</string>
-    <string name="title_dashboard">Dashboard</string>
+    <string name="title_chart">Chart</string>
     <string name="title_notifications">Notifications</string>
     <string name="title_language">Language</string>
     <string name="title_chart_on">Show Chart</string>
@@ -33,6 +33,7 @@
     <string name="msg_frequency_warning">Frequency must greater than zero</string>
     <string name="msg_test_start">Battery test has been started.</string>
     <string name="msg_test_stop">Battery test has been stopped.</string>
+    <string name="msg_permissions_not_grant">Permissions do not grant.</string>
     <string name="msg_database_downloaded_success">Database has been downloaded.</string>
 
     <string name="button_language_chinese" translatable="false">中文</string>

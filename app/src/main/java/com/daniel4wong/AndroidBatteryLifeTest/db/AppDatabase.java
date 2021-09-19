@@ -13,7 +13,7 @@ import androidx.room.RoomDatabase;
 import androidx.sqlite.db.SupportSQLiteDatabase;
 
 import com.amitshekhar.DebugDB;
-import com.daniel4wong.AndroidBatteryLifeTest.AppContext;
+import com.daniel4wong.AndroidBatteryLifeTest.MainApplication;
 import com.daniel4wong.AndroidBatteryLifeTest.R;
 import com.daniel4wong.AndroidBatteryLifeTest.dao.*;
 import com.daniel4wong.AndroidBatteryLifeTest.model.*;
@@ -21,8 +21,9 @@ import com.daniel4wong.AndroidBatteryLifeTest.model.*;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.lang.reflect.Method;
 import java.nio.channels.FileChannel;
+
+import static android.os.Environment.DIRECTORY_DOWNLOADS;
 
 @Database(entities =  {BatteryHistory.class}, version = 1)
 public abstract class AppDatabase extends RoomDatabase {
@@ -37,6 +38,7 @@ public abstract class AppDatabase extends RoomDatabase {
 
         if (instance == null) {
             instance = Room.databaseBuilder(context, AppDatabase.class, DB_NAME)
+                    .fallbackToDestructiveMigration()
                     .allowMainThreadQueries()
                     .build();
 
@@ -67,7 +69,7 @@ public abstract class AppDatabase extends RoomDatabase {
     public void copyDatabase() {
         synchronized (AppDatabase.class) {
             try {
-                File extDir = Environment.getExternalStorageDirectory();
+                File extDir = Environment.getExternalStoragePublicDirectory(DIRECTORY_DOWNLOADS);
 
                 if (extDir.canWrite()) {
                     File currentDbFile = new File(getPath());
@@ -95,15 +97,17 @@ public abstract class AppDatabase extends RoomDatabase {
                             @Override
                             public void onScanCompleted(String s, Uri uri) {
                                 Log.i(TAG, extDbFile.getAbsolutePath());
-                                AppContext.getInstance().currentActivity.runOnUiThread(() ->
+                                MainApplication.currentActivity.runOnUiThread(() ->
                                         Toast.makeText(
                                                 context,
-                                                AppContext.getInstance().currentActivity.getString(R.string.msg_database_downloaded_success),
+                                                MainApplication.currentActivity.getString(R.string.msg_database_downloaded_success),
                                                 Toast.LENGTH_LONG
                                         ).show());
                             }
                         });
                     }
+                } else {
+                    Log.d(TAG, "Fail to write database.");
                 }
             } catch (Exception e) {
                 e.printStackTrace();

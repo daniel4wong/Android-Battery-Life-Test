@@ -1,20 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
+
     <item android:id="@+id/menu_download"
         android:icon="@drawable/ic_download_white_24dp"
         android:title="@string/title_download"
         app:showAsAction="always" />
+
     <item android:id="@+id/menu_chart_on"
         android:icon="@drawable/ic_chart_on_white_24dp"
-        android:title="@string/title_language"
-        app:showAsAction="always" />
+        android:title="@string/title_chart_on"
+        app:showAsAction="always"
+        android:visible="false" />
+
     <item android:id="@+id/menu_chart_off"
         android:icon="@drawable/ic_chart_off_white_24dp"
-        android:title="@string/title_language"
-    app:showAsAction="always" />
+        android:title="@string/title_chart_off"
+        app:showAsAction="always"
+        android:visible="false" />
+
     <item android:id="@+id/menu_language"
         android:icon="@drawable/ic_language_white_24dp"
         android:title="@string/title_language"
         app:showAsAction="always" />
+
 </menu>

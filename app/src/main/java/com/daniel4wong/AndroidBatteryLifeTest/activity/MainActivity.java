@@ -6,30 +6,29 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Button;
+import android.widget.Toast;
 
+import com.daniel4wong.AndroidBatteryLifeTest.core.AppPreferences;
 import com.daniel4wong.AndroidBatteryLifeTest.core.broadcastReceiver.BatteryTestBroadcastReceiver;
 import com.daniel4wong.AndroidBatteryLifeTest.helper.LayoutHelper;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
-import androidx.core.app.ActivityCompat;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
 import com.google.android.material.bottomsheet.BottomSheetDialog;
-import com.daniel4wong.AndroidBatteryLifeTest.App;
+import com.daniel4wong.AndroidBatteryLifeTest.MainApplication;
 import com.daniel4wong.AndroidBatteryLifeTest.AppContext;
 import com.daniel4wong.AndroidBatteryLifeTest.R;
 import com.daniel4wong.AndroidBatteryLifeTest.databinding.ActivityMainBinding;
 import com.daniel4wong.AndroidBatteryLifeTest.db.AppDatabase;
 import com.daniel4wong.AndroidBatteryLifeTest.helper.LocaleHelper;
-import com.daniel4wong.AndroidBatteryLifeTest.helper.PermissionHelper;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends BaseActivity {
 
     private ActivityMainBinding binding;
     private Menu optionMenu;
@@ -56,16 +55,7 @@ public class MainActivity extends AppCompatActivity {
         NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
         NavigationUI.setupWithNavController(binding.navView, navController);
 
-        isShowChart = AppContext.getInstance().preferences.getBoolean(getString(R.string.pref_show_chart), false);
-
-        String[] permissions = {
-                Manifest.permission.ACCESS_FINE_LOCATION,
-                Manifest.permission.ACCESS_COARSE_LOCATION,
-                Manifest.permission.WRITE_EXTERNAL_STORAGE,
-        };
-
-        if (!PermissionHelper.checkPermissions(this, permissions))
-            ActivityCompat.requestPermissions(this, permissions, 1);
+        isShowChart = AppPreferences.getInstance().getPreference(R.string.pref_show_chart, false);
 
         IntentFilter filter = new IntentFilter();
         filter.addAction(BatteryTestBroadcastReceiver.ACTION);
@@ -92,8 +82,6 @@ public class MainActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.top_menu, menu);
         optionMenu = menu;
-        optionMenu.findItem(R.id.menu_chart_on).setVisible(!isShowChart);
-        optionMenu.findItem(R.id.menu_chart_off).setVisible(isShowChart);
         return true;
     }
 
@@ -107,25 +95,23 @@ public class MainActivity extends AppCompatActivity {
                 buttonLanguageChinese.setOnClickListener(view -> {
                     dialog.cancel();
 
-                    if (AppContext.getInstance().languageCode.equals(getString(R.string.lang_chinese)))
+                    if (AppContext.getInstance().getLanguageCode().equals(getString(R.string.lang_chinese)))
                         return;
 
-                    AppContext.getInstance().languageCode = getString(R.string.lang_chinese);
-                    AppContext.getInstance().savePreference(buttonLanguageChinese.getTag().toString(), AppContext.getInstance().languageCode);
-                    LocaleHelper.setLocale(AppContext.getInstance().currentActivity, AppContext.getInstance().languageCode);
-                    App.restart(this);
+                    AppPreferences.getInstance().savePreference(buttonLanguageChinese, getString(R.string.lang_chinese));
+                    LocaleHelper.updateLocale();
+                    MainApplication.restart(this);
                 });
                 Button buttonLanguageEnglish = dialog.findViewById(R.id.button_language_english);
                 buttonLanguageEnglish.setOnClickListener(view -> {
                     dialog.cancel();
 
-                    if (AppContext.getInstance().languageCode.equals(getString(R.string.lang_english)))
+                    if (AppContext.getInstance().getLanguageCode().equals(getString(R.string.lang_english)))
                         return;
 
-                    AppContext.getInstance().languageCode = getString(R.string.lang_english);
-                    AppContext.getInstance().savePreference(buttonLanguageEnglish.getTag().toString(), AppContext.getInstance().languageCode);
-                    LocaleHelper.setLocale(AppContext.getInstance().currentActivity, AppContext.getInstance().languageCode);
-                    App.restart(this);
+                    AppPreferences.getInstance().savePreference(buttonLanguageEnglish, getString(R.string.lang_english));
+                    LocaleHelper.updateLocale();
+                    MainApplication.restart(this);
                 });
                 dialog.show();
                 break;
@@ -133,14 +119,14 @@ public class MainActivity extends AppCompatActivity {
             case R.id.menu_chart_on: {
                 item.setVisible(false);
                 optionMenu.findItem(R.id.menu_chart_off).setVisible(true);
-                AppContext.getInstance().savePreference(getString(R.string.pref_show_chart), true);
+                AppPreferences.getInstance().savePreference(getString(R.string.pref_show_chart), true);
                 recreate();
                 break;
             }
             case R.id.menu_chart_off: {
                 item.setVisible(false);
                 optionMenu.findItem(R.id.menu_chart_on).setVisible(true);
-                AppContext.getInstance().savePreference(getString(R.string.pref_show_chart), false);
+                AppPreferences.getInstance().savePreference(getString(R.string.pref_show_chart), false);
                 recreate();
                 break;
             }
@@ -154,10 +140,5 @@ public class MainActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
     }
 }
