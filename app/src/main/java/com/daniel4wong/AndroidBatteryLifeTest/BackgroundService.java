@@ -7,7 +7,7 @@ import android.util.Log;
 
 import androidx.annotation.Nullable;
 
-import com.daniel4wong.AndroidBatteryLifeTest.helper.LocaleHelper;
+import com.daniel4wong.AndroidBatteryLifeTest.Helper.LocaleHelper;
 
 public class BackgroundService extends Service {
     private static final String TAG = BackgroundService.class.getName();

@@ -1,18 +1,13 @@
 package com.daniel4wong.AndroidBatteryLifeTest;
 
-import android.app.Activity;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.os.Bundle;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-
-import com.daniel4wong.AndroidBatteryLifeTest.db.AppDatabase;
-import com.daniel4wong.AndroidBatteryLifeTest.helper.LocaleHelper;
-import com.daniel4wong.AndroidBatteryLifeTest.manager.CustomBatteryManager;
+import com.daniel4wong.AndroidBatteryLifeTest.Database.AppDatabase;
+import com.daniel4wong.AndroidBatteryLifeTest.Helper.LocaleHelper;
+import com.daniel4wong.AndroidBatteryLifeTest.Manager.CustomBatteryManager;
 
 public class MainApplication extends BaseApplication {
     public static Context context;

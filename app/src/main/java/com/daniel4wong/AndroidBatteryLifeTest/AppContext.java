@@ -2,7 +2,7 @@ package com.daniel4wong.AndroidBatteryLifeTest;
 
 import android.view.Window;
 
-import com.daniel4wong.AndroidBatteryLifeTest.core.*;
+import com.daniel4wong.AndroidBatteryLifeTest.Core.*;
 
 public class AppContext extends Singleton implements ISingleton {
     public static AppContext getInstance() {

@@ -4,7 +4,7 @@ import android.app.Activity;
 import android.app.Application;
 import android.os.Bundle;
 
-import com.daniel4wong.AndroidBatteryLifeTest.helper.LocaleHelper;
+import com.daniel4wong.AndroidBatteryLifeTest.Helper.LocaleHelper;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
