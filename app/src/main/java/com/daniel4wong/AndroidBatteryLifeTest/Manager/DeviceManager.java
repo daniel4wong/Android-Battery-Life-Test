@@ -2,9 +2,12 @@ package com.daniel4wong.AndroidBatteryLifeTest.Manager;
 
 import android.app.Notification;
 import android.app.PendingIntent;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.net.wifi.WifiManager;
+import android.os.BatteryManager;
 import android.text.format.Formatter;
 import android.view.WindowManager;
 
@@ -93,29 +96,15 @@ public class DeviceManager extends Singleton implements ISingleton {
         return Formatter.formatIpAddress(wifiManager.getConnectionInfo().getIpAddress());
     }
 
-    public void showStatusIcon() {
-        Intent intent = new Intent(getContext(), MainActivity.class);
-        PendingIntent contentIntent = PendingIntent.getActivity(getContext(), 0, intent, 0);
-
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(getContext())
-                .setSmallIcon(R.drawable.ic_launcher_foreground)
-                .setContentTitle(getContext().getString(R.string.app_name))
-                .setContentText(getContext().getText(R.string.app_name))
-                .setStyle(new NotificationCompat.BigTextStyle().bigText(getContext().getText(R.string.app_name)))
-                .setPriority(NotificationCompat.PRIORITY_HIGH)
-                //.setContentIntent(contentIntent)
-                .setAutoCancel(true)
-                //.setWhen(System.currentTimeMillis())
-                ;
-
-
-        Notification notification = builder.build();
-        //notification.flags |= Notification.FLAG_NO_CLEAR | Notification.FLAG_ONGOING_EVENT;
-
-        //NotificationManager notificationManager = (NotificationManager) getContext().getSystemService(Context.NOTIFICATION_SERVICE);
-        //notificationManager.notify(1, notification);
-        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(getContext());
-        notificationManager.notify(1, notification);
-
+    public boolean isCharging() {
+        Intent intent = context.registerReceiver(new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                return;
+            }
+        }, new IntentFilter(Intent.ACTION_BATTERY_CHANGED));
+        int status = intent.getIntExtra(BatteryManager.EXTRA_STATUS, -1);
+        boolean isCharging = status == BatteryManager.BATTERY_STATUS_CHARGING || status == BatteryManager.BATTERY_STATUS_FULL;
+        return isCharging;
     }
 }
