@@ -26,6 +26,9 @@ public class PermissionHelper {
     public static void requirePermission(String[] permissions, Runnable allowRunnable, Runnable denyRunnable) {
         if (!checkPermissions(MainApplication.currentActivity, permissions)) {
             ((BaseActivity)MainApplication.currentActivity).requestPermissions(permissions, allowRunnable, denyRunnable);
+        } else {
+            if (allowRunnable != null)
+                allowRunnable.run();
         }
     }
 }

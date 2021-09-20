@@ -19,6 +19,7 @@
     <style name="Theme.FullScreen" parent="Theme.BatteryTest">
         <item name="android:windowNoTitle">true</item>
         <item name="android:windowFullscreen">true</item>
+        <item name="android:windowLightNavigationBar" tools:ignore="NewApi">true</item>
         <item name="android:forceDarkAllowed" tools:targetApi="q">true</item>
     </style>
 

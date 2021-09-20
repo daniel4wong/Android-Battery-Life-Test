@@ -10,13 +10,26 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/black">
-        <TextClock
-            android:textColor="@color/gray"
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:orientation="vertical"
             android:layout_centerVertical="true"
-            android:layout_centerHorizontal="true"
-            android:format12Hour="kk:mm" />
+            android:layout_centerHorizontal="true">
+            <TextClock
+                android:textColor="@color/gray"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="00:00"
+                android:format12Hour="kk:mm" />
+            <TextView
+                android:id="@+id/textViewPower"
+                android:textColor="@color/gray"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="100%" />
+        </LinearLayout>
+
     </RelativeLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

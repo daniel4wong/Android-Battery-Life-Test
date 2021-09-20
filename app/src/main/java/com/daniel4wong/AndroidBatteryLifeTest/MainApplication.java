@@ -7,6 +7,7 @@ import android.content.pm.PackageManager;
 
 import com.daniel4wong.AndroidBatteryLifeTest.Database.AppDatabase;
 import com.daniel4wong.AndroidBatteryLifeTest.Helper.LocaleHelper;
+import com.daniel4wong.AndroidBatteryLifeTest.Helper.NotificationHelper;
 import com.daniel4wong.AndroidBatteryLifeTest.Manager.CustomBatteryManager;
 
 public class MainApplication extends BaseApplication {
@@ -46,4 +47,13 @@ public class MainApplication extends BaseApplication {
         super.attachBaseContext(base);
     }
 
+    @Override
+    protected void onEnterForeground() {
+        NotificationHelper.clearNotification(this);
+    }
+
+    @Override
+    protected void onEnterBackground() {
+        NotificationHelper.createNotification(this, RecurrenceJobService.CHANNEL_ID);
+    }
 }

@@ -33,7 +33,7 @@ public class WebRequestHelper extends AbstractTestHelper {
             if (consumer != null)
                 consumer.accept(response);
 
-            Log.i(TAG, response);
+            Log.i(TAG, String.format("[Response] %s", response));
             Intent intent = new Intent();
             intent.setAction(BatteryTestBroadcastReceiver.ACTION_TEST_CHANGE);
             intent.putExtra(BatteryTestBroadcastReceiver.STATE, false);
@@ -55,7 +55,7 @@ public class WebRequestHelper extends AbstractTestHelper {
                 DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT)
         );
 
-        Log.i(TAG, "Making a web request...");
+        Log.i(TAG, "[Request] Making a web request...");
         Intent intent = new Intent();
         intent.setAction(BatteryTestBroadcastReceiver.ACTION_TEST_CHANGE);
         intent.putExtra(BatteryTestBroadcastReceiver.STATE, true);

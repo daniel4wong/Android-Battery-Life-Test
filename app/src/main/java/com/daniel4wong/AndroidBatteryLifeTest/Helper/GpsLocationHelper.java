@@ -4,8 +4,12 @@ import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
+import android.location.Location;
+import android.location.LocationListener;
 import android.location.LocationManager;
 import android.util.Log;
+
+import androidx.annotation.NonNull;
 
 import com.daniel4wong.AndroidBatteryLifeTest.Core.BroadcastReceiver.BatteryTestBroadcastReceiver;
 import com.google.android.gms.location.FusedLocationProviderClient;
@@ -20,6 +24,20 @@ public class GpsLocationHelper extends AbstractTestHelper {
     private LocationManager locationManager;
     private FusedLocationProviderClient fusedLocationProviderClient;
 
+    private LocationListener locationListener = new LocationListener() {
+        @Override
+        public void onLocationChanged(@NonNull Location location) {
+            Log.i(TAG, String.format("[Response] Location: %s, %s", location.getLatitude(), location.getLongitude()));
+            Intent _intent = new Intent();
+            _intent.setAction(BatteryTestBroadcastReceiver.ACTION_TEST_CHANGE);
+            _intent.putExtra(BatteryTestBroadcastReceiver.STATE, false);
+            _intent.putExtra(BatteryTestBroadcastReceiver.TYPE, TYPE);
+            _intent.putExtra(BatteryTestBroadcastReceiver.TEST_RESULT, new Gson().toJson(location));
+            context.sendBroadcast(_intent);
+            locationManager.removeUpdates(locationListener);
+        }
+    };
+
     public GpsLocationHelper(Context context) {
         this.context = context;
         this.locationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
@@ -32,22 +50,14 @@ public class GpsLocationHelper extends AbstractTestHelper {
         if (providerType == ProviderType.NETWORK)
             provider = LocationManager.NETWORK_PROVIDER;
 
-        Log.i(TAG, "Requesting GPS location...");
+        Log.i(TAG, "[Request] Requesting GPS location...");
         Intent intent = new Intent();
         intent.setAction(BatteryTestBroadcastReceiver.ACTION_TEST_CHANGE);
         intent.putExtra(BatteryTestBroadcastReceiver.STATE, true);
         intent.putExtra(BatteryTestBroadcastReceiver.TYPE, TYPE);
         context.sendBroadcast(intent);
 
-        locationManager.requestLocationUpdates(provider, 0, 0, location -> {
-            Log.i(TAG, String.format("Location: %s, %s", location.getLatitude(), location.getLongitude()));
-            Intent _intent = new Intent();
-            _intent.setAction(BatteryTestBroadcastReceiver.ACTION_TEST_CHANGE);
-            _intent.putExtra(BatteryTestBroadcastReceiver.STATE, false);
-            _intent.putExtra(BatteryTestBroadcastReceiver.TYPE, TYPE);
-            _intent.putExtra(BatteryTestBroadcastReceiver.TEST_RESULT, new Gson().toJson(location));
-            context.sendBroadcast(_intent);
-        });
+        locationManager.requestLocationUpdates(provider, 0, 0, locationListener);
     }
 
     @Override

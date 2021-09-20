@@ -25,15 +25,15 @@ public class CustomBatteryManager extends Singleton implements ISingleton {
     public void onLoad() { }
     /// end Singleton
 
-    private static final String TAG = BatteryTestManager.class.getName();
+    private static final String TAG = CustomBatteryManager.class.getName();
 
     private BroadcastReceiver batteryReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
             BatteryHistory model = new BatteryHistory();
             model.logTs = Calendar.getInstance().getTime();
-            model.btryLvl = Long.valueOf(intent.getIntExtra(BatteryManager.EXTRA_LEVEL, -1));
-            model.btryScl = Long.valueOf(intent.getIntExtra(BatteryManager.EXTRA_SCALE, -1));
+            model.btryLvl = (long) intent.getIntExtra(BatteryManager.EXTRA_LEVEL, -1);
+            model.btryScl = (long) intent.getIntExtra(BatteryManager.EXTRA_SCALE, -1);
             model.markInsert();
 
             Log.i(TAG, String.format("Log battery level: %d", model.btryLvl));

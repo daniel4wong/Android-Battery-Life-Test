@@ -68,7 +68,7 @@ public class BleDeviceHelper extends AbstractTestHelper {
             handler.postDelayed(() -> {
                 isScanning = false;
 
-                Log.i(TAG, String.format("Number of BLE devices: %d", devices.size()));
+                Log.i(TAG, String.format("[Response] Number of BLE devices: %d", devices.size()));
                 Intent intent = new Intent();
                 intent.setAction(BatteryTestBroadcastReceiver.ACTION_TEST_CHANGE);
                 intent.putExtra(BatteryTestBroadcastReceiver.STATE, false);
@@ -83,7 +83,7 @@ public class BleDeviceHelper extends AbstractTestHelper {
             isScanning = true;
             devices.clear();
 
-            Log.i(TAG, "Scanning BLE devices...");
+            Log.i(TAG, "[Request] Scanning BLE devices...");
             Intent intent = new Intent();
             intent.setAction(BatteryTestBroadcastReceiver.ACTION_TEST_CHANGE);
             intent.putExtra(BatteryTestBroadcastReceiver.TYPE, TYPE);
@@ -94,7 +94,7 @@ public class BleDeviceHelper extends AbstractTestHelper {
         } else {
             isScanning = false;
             scanner.stopScan(stopScanCallback);
-            Log.i(TAG, String.format("Number of BLE devices: %d", devices.size()));
+            Log.i(TAG, String.format("[Response] Number of BLE devices: %d", devices.size()));
         }
     }
 

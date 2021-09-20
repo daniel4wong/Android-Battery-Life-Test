@@ -12,7 +12,6 @@ import com.daniel4wong.AndroidBatteryLifeTest.Core.AppPreferences;
 import com.daniel4wong.AndroidBatteryLifeTest.Core.BroadcastReceiver.BatteryTestBroadcastReceiver;
 import com.daniel4wong.AndroidBatteryLifeTest.Helper.LayoutHelper;
 import com.daniel4wong.AndroidBatteryLifeTest.Helper.PermissionHelper;
-import com.daniel4wong.AndroidBatteryLifeTest.Manager.BatteryTestManager;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import androidx.annotation.NonNull;
@@ -34,7 +33,6 @@ public class MainActivity extends BaseActivity {
 
     private ActivityMainBinding binding;
     private Menu optionMenu;
-    private boolean isShowChart;
 
     BatteryTestBroadcastReceiver receiver = new BatteryTestBroadcastReceiver(intent -> {
         boolean isStart = intent.getBooleanExtra(BatteryTestBroadcastReceiver.STATE, false);
@@ -65,8 +63,6 @@ public class MainActivity extends BaseActivity {
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_activity_main);
         NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
         NavigationUI.setupWithNavController(binding.navView, navController);
-
-        isShowChart = AppPreferences.getInstance().getPreference(R.string.pref_show_chart, false);
 
         IntentFilter filter = new IntentFilter();
         filter.addAction(BatteryTestBroadcastReceiver.ACTION_STATE_CHANGE);
@@ -120,20 +116,6 @@ public class MainActivity extends BaseActivity {
                     MainApplication.restart(this);
                 });
                 dialog.show();
-                break;
-            }
-            case R.id.menu_chart_on: {
-                item.setVisible(false);
-                optionMenu.findItem(R.id.menu_chart_off).setVisible(true);
-                AppPreferences.getInstance().savePreference(getString(R.string.pref_show_chart), true);
-                recreate();
-                break;
-            }
-            case R.id.menu_chart_off: {
-                item.setVisible(false);
-                optionMenu.findItem(R.id.menu_chart_on).setVisible(true);
-                AppPreferences.getInstance().savePreference(getString(R.string.pref_show_chart), false);
-                recreate();
                 break;
             }
             case R.id.menu_download: {
