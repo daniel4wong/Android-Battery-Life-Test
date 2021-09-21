@@ -12,7 +12,7 @@ import android.os.Handler;
 import android.util.Log;
 
 import com.daniel4wong.AndroidBatteryLifeTest.MainApplication;
-import com.daniel4wong.AndroidBatteryLifeTest.Core.BroadcastReceiver.BatteryTestBroadcastReceiver;
+import com.daniel4wong.AndroidBatteryLifeTest.Core.BroadcastReceiver.BatteryTestReceiver;
 import com.google.gson.Gson;
 
 import java.util.ArrayList;
@@ -70,10 +70,10 @@ public class BleDeviceHelper extends AbstractTestHelper {
 
                 Log.i(TAG, String.format("[Response] Number of BLE devices: %d", devices.size()));
                 Intent intent = new Intent();
-                intent.setAction(BatteryTestBroadcastReceiver.ACTION_TEST_CHANGE);
-                intent.putExtra(BatteryTestBroadcastReceiver.STATE, false);
-                intent.putExtra(BatteryTestBroadcastReceiver.TYPE, TYPE);
-                intent.putExtra(BatteryTestBroadcastReceiver.TEST_RESULT, new Gson().toJson(devices));
+                intent.setAction(BatteryTestReceiver.ACTION_TEST_CHANGE);
+                intent.putExtra(BatteryTestReceiver.STATE, false);
+                intent.putExtra(BatteryTestReceiver.TYPE, TYPE);
+                intent.putExtra(BatteryTestReceiver.TEST_RESULT, new Gson().toJson(devices));
                 context.sendBroadcast(intent);
 
                 scanner.stopScan(stopScanCallback);
@@ -85,9 +85,9 @@ public class BleDeviceHelper extends AbstractTestHelper {
 
             Log.i(TAG, "[Request] Scanning BLE devices...");
             Intent intent = new Intent();
-            intent.setAction(BatteryTestBroadcastReceiver.ACTION_TEST_CHANGE);
-            intent.putExtra(BatteryTestBroadcastReceiver.TYPE, TYPE);
-            intent.putExtra(BatteryTestBroadcastReceiver.STATE, true);
+            intent.setAction(BatteryTestReceiver.ACTION_TEST_CHANGE);
+            intent.putExtra(BatteryTestReceiver.TYPE, TYPE);
+            intent.putExtra(BatteryTestReceiver.STATE, true);
             context.sendBroadcast(intent);
 
             scanner.startScan(startScanCallback);

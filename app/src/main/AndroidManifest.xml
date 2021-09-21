@@ -38,7 +38,7 @@
                 <action android:name="android.intent.action.ACTION_POWER_DISCONNECTED"/>
             </intent-filter>
         </receiver>
-        <receiver android:name=".Core.BroadcastReceiver.BatteryTestBroadcastReceiver">
+        <receiver android:name=".Core.BroadcastReceiver.BatteryTestReceiver">
             <intent-filter>
                 <action android:name="com.daniel4wong.OnTestStateChanged" />
             </intent-filter>

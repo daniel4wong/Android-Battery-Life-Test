@@ -130,12 +130,11 @@ public class LineChartHelper {
     }
 
     public void refreshData() {
-        Date begin = new Date();
-        begin.setMinutes(0);
-        begin.setSeconds(0);
+        Date now = new Date();
+        Date fromDate = new Date(now.getYear(), now.getMonth(), now.getDay(),
+                now.getHours(), 0);
         Calendar calendar = Calendar.getInstance();
-        calendar.setTime(begin);
-        Date fromDate = calendar.getTime();
+        calendar.setTime(fromDate);
         calendar.add(Calendar.HOUR, 1);
         Date toDate = calendar.getTime();
 

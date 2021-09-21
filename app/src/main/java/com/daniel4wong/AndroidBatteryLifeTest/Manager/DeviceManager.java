@@ -77,7 +77,6 @@ public class DeviceManager extends Singleton implements ISingleton {
 
     public void setBrightness(float brightness) {
         WindowManager.LayoutParams params = AppContext.getInstance().window.getAttributes();
-        params.flags = WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON;
         params.screenBrightness = brightness;
         AppContext.getInstance().window.setAttributes(params);
     }
@@ -97,14 +96,21 @@ public class DeviceManager extends Singleton implements ISingleton {
     }
 
     public boolean isCharging() {
-        Intent intent = context.registerReceiver(new BroadcastReceiver() {
-            @Override
-            public void onReceive(Context context, Intent intent) {
-                return;
+        Intent intent = getContext().getApplicationContext()
+                .registerReceiver(null, new IntentFilter(Intent.ACTION_BATTERY_CHANGED));
+        if (intent != null) {
+            int status = intent.getIntExtra(BatteryManager.EXTRA_STATUS, 0);
+            switch (status) {
+                case BatteryManager.BATTERY_STATUS_CHARGING:
+                case BatteryManager.BATTERY_STATUS_FULL:
+                    return true;
+                case BatteryManager.BATTERY_STATUS_UNKNOWN:
+                case BatteryManager.BATTERY_STATUS_DISCHARGING:
+                case BatteryManager.BATTERY_STATUS_NOT_CHARGING:
+                default:
+                    return false;
             }
-        }, new IntentFilter(Intent.ACTION_BATTERY_CHANGED));
-        int status = intent.getIntExtra(BatteryManager.EXTRA_STATUS, -1);
-        boolean isCharging = status == BatteryManager.BATTERY_STATUS_CHARGING || status == BatteryManager.BATTERY_STATUS_FULL;
-        return isCharging;
+        }
+        return false;
     }
 }

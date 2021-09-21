@@ -7,6 +7,7 @@
     <string name="title_language">語言</string>
     <string name="title_chart_on">顯示圖表</string>
     <string name="title_chart_off">隱藏圖表</string>
+    <string name="title_download">下載</string>
 
     <string name="button_pick_date">輸入日期</string>
     <string name="button_pick_time">輸入時間</string>
@@ -16,7 +17,7 @@
     <string name="button_stop">停止</string>
     <string name="button_confirm">確認</string>
     <string name="button_cancel">取消</string>
-    <string name="title_download">下載</string>
+    <string name="button_black">黑色</string>
 
     <string name="header_input_number">輸入數字</string>
 
@@ -35,7 +36,9 @@
     <string name="msg_test_stop">電量測試已停止。</string>
     <string name="msg_database_downloaded_success">數據庫已下載。</string>
     <string name="msg_permissions_not_grant">權限不授予。</string>
-    <string name="msg_background_task_is_runnung">後台任務正在運行。</string>
+    <string name="msg_background_task_is_running">後台任務正在運行。</string>
+    <string name="msg_charging">充電中</string>
+    <string name="msg_not_charging">沒有充電</string>
 
     <string name="chart_minutes">分鐘</string>
     <string name="chart_description">當前小時的電量百分比</string>

@@ -6,7 +6,7 @@ import android.content.Intent;
 
 import java.util.function.Function;
 
-public class BatteryTestBroadcastReceiver extends BroadcastReceiver {
+public class BatteryTestReceiver extends BroadcastReceiver {
     public static final String ACTION_STATE_CHANGE = "com.daniel4wong.AndroidBatteryLifeTest.OnStateChanged";
     public static final String ACTION_TEST_CHANGE = "com.daniel4wong.AndroidBatteryLifeTest.OnTestChanged";
     public static final String STATE = "STATE";
@@ -15,9 +15,9 @@ public class BatteryTestBroadcastReceiver extends BroadcastReceiver {
 
     private Function<Intent, Void> onReceive;
 
-    public BatteryTestBroadcastReceiver() { }
+    public BatteryTestReceiver() { }
 
-    public BatteryTestBroadcastReceiver(Function<Intent, Void> onReceive) {
+    public BatteryTestReceiver(Function<Intent, Void> onReceive) {
         this.onReceive = onReceive;
     }
 

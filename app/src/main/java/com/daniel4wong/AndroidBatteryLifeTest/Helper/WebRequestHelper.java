@@ -9,7 +9,7 @@ import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
-import com.daniel4wong.AndroidBatteryLifeTest.Core.BroadcastReceiver.BatteryTestBroadcastReceiver;
+import com.daniel4wong.AndroidBatteryLifeTest.Core.BroadcastReceiver.BatteryTestReceiver;
 import com.daniel4wong.AndroidBatteryLifeTest.Manager.DeviceManager;
 
 import java.util.function.Consumer;
@@ -35,10 +35,10 @@ public class WebRequestHelper extends AbstractTestHelper {
 
             Log.i(TAG, String.format("[Response] %s", response));
             Intent intent = new Intent();
-            intent.setAction(BatteryTestBroadcastReceiver.ACTION_TEST_CHANGE);
-            intent.putExtra(BatteryTestBroadcastReceiver.STATE, false);
-            intent.putExtra(BatteryTestBroadcastReceiver.TYPE, TYPE);
-            intent.putExtra(BatteryTestBroadcastReceiver.TEST_RESULT, response);
+            intent.setAction(BatteryTestReceiver.ACTION_TEST_CHANGE);
+            intent.putExtra(BatteryTestReceiver.STATE, false);
+            intent.putExtra(BatteryTestReceiver.TYPE, TYPE);
+            intent.putExtra(BatteryTestReceiver.TEST_RESULT, response);
             context.sendBroadcast(intent);
         }, error -> {
             if (consumer != null)
@@ -46,9 +46,9 @@ public class WebRequestHelper extends AbstractTestHelper {
 
             Log.i(TAG, error.toString());
             Intent intent = new Intent();
-            intent.setAction(BatteryTestBroadcastReceiver.ACTION_TEST_CHANGE);
-            intent.putExtra(BatteryTestBroadcastReceiver.STATE, false);
-            intent.putExtra(BatteryTestBroadcastReceiver.TYPE, TYPE);
+            intent.setAction(BatteryTestReceiver.ACTION_TEST_CHANGE);
+            intent.putExtra(BatteryTestReceiver.STATE, false);
+            intent.putExtra(BatteryTestReceiver.TYPE, TYPE);
             context.sendBroadcast(intent);
         });
         request.setRetryPolicy(new DefaultRetryPolicy(5000,
@@ -57,9 +57,9 @@ public class WebRequestHelper extends AbstractTestHelper {
 
         Log.i(TAG, "[Request] Making a web request...");
         Intent intent = new Intent();
-        intent.setAction(BatteryTestBroadcastReceiver.ACTION_TEST_CHANGE);
-        intent.putExtra(BatteryTestBroadcastReceiver.STATE, true);
-        intent.putExtra(BatteryTestBroadcastReceiver.TYPE, TYPE);
+        intent.setAction(BatteryTestReceiver.ACTION_TEST_CHANGE);
+        intent.putExtra(BatteryTestReceiver.STATE, true);
+        intent.putExtra(BatteryTestReceiver.TYPE, TYPE);
         context.sendBroadcast(intent);
 
         queue.add(request);

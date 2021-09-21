@@ -176,12 +176,20 @@
                     android:layout_height="wrap_content"
                     android:layout_centerHorizontal="true">
                     <Button
+                        android:id="@+id/buttonBlack"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/button_black" />
+                    <TextView
+                        android:layout_width="3dp"
+                        android:layout_height="wrap_content" />
+                    <Button
                         android:id="@+id/buttonPlanTest"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/button_plan" />
                     <TextView
-                        android:layout_width="10dp"
+                        android:layout_width="3dp"
                         android:layout_height="wrap_content" />
                     <Button
                         android:id="@+id/buttonStartTest"
@@ -189,7 +197,7 @@
                         android:layout_height="wrap_content"
                         android:text="@string/button_start" />
                     <TextView
-                        android:layout_width="10dp"
+                        android:layout_width="3dp"
                         android:layout_height="wrap_content" />
                     <Button
                         android:id="@+id/buttonStopTest"

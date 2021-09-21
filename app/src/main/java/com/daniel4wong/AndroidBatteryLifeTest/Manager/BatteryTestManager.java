@@ -12,13 +12,9 @@ import android.widget.Toast;
 import com.daniel4wong.AndroidBatteryLifeTest.MainApplication;
 import com.daniel4wong.AndroidBatteryLifeTest.AppContext;
 import com.daniel4wong.AndroidBatteryLifeTest.R;
-import com.daniel4wong.AndroidBatteryLifeTest.Core.AppPreferences;
-import com.daniel4wong.AndroidBatteryLifeTest.Core.ISingleton;
-import com.daniel4wong.AndroidBatteryLifeTest.Core.Singleton;
-import com.daniel4wong.AndroidBatteryLifeTest.Core.BroadcastReceiver.BatteryTestBroadcastReceiver;
-import com.daniel4wong.AndroidBatteryLifeTest.Helper.BleDeviceHelper;
-import com.daniel4wong.AndroidBatteryLifeTest.Helper.GpsLocationHelper;
-import com.daniel4wong.AndroidBatteryLifeTest.Helper.WebRequestHelper;
+import com.daniel4wong.AndroidBatteryLifeTest.Core.*;
+import com.daniel4wong.AndroidBatteryLifeTest.Core.BroadcastReceiver.BatteryTestReceiver;
+import com.daniel4wong.AndroidBatteryLifeTest.Helper.*;
 
 public class BatteryTestManager extends Singleton implements ISingleton {
     public static BatteryTestManager getInstance() {
@@ -56,8 +52,8 @@ public class BatteryTestManager extends Singleton implements ISingleton {
             return;
 
         Intent intent = new Intent();
-        intent.setAction(BatteryTestBroadcastReceiver.ACTION_STATE_CHANGE);
-        intent.putExtra(BatteryTestBroadcastReceiver.STATE, true);
+        intent.setAction(BatteryTestReceiver.ACTION_STATE_CHANGE);
+        intent.putExtra(BatteryTestReceiver.STATE, true);
         getContext().sendBroadcast(intent);
 
         this.deviceManager.screenOn();
@@ -93,13 +89,14 @@ public class BatteryTestManager extends Singleton implements ISingleton {
                     reset();
                     return;
                 }
-                Toast.makeText(getContext(), R.string.msg_test_start, Toast.LENGTH_LONG).show();
                 Log.d(TAG, "Service is still running.");
                 runTestOnce(screenTime);
                 handler.postDelayed(runnable, testInterval * 1000);
             };
             handler.postDelayed(runnable,  0);
             isRunning = true;
+            Toast.makeText(getContext(), R.string.msg_test_start, Toast.LENGTH_LONG).show();
+            AppPreferences.getInstance().savePreference(R.string.flag_state_test_started, true);
         }
     }
 
@@ -107,12 +104,13 @@ public class BatteryTestManager extends Singleton implements ISingleton {
         reset();
         isRunning = false;
         Toast.makeText(getContext(), R.string.msg_test_stop, Toast.LENGTH_LONG).show();
+        AppPreferences.getInstance().savePreference(R.string.flag_state_test_started, false);
     }
 
     public void reset() {
         Intent intent = new Intent();
-        intent.setAction(BatteryTestBroadcastReceiver.ACTION_STATE_CHANGE);
-        intent.putExtra(BatteryTestBroadcastReceiver.STATE, false);
+        intent.setAction(BatteryTestReceiver.ACTION_STATE_CHANGE);
+        intent.putExtra(BatteryTestReceiver.STATE, false);
         getContext().sendBroadcast(intent);
 
         this.deviceManager.screenReset();

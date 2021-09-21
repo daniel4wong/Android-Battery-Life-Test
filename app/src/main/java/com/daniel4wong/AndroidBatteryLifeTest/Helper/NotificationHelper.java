@@ -1,5 +1,6 @@
 package com.daniel4wong.AndroidBatteryLifeTest.Helper;
 
+import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -7,40 +8,52 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.provider.Settings;
+import android.service.notification.StatusBarNotification;
 
 import androidx.core.app.NotificationCompat;
 
 import com.daniel4wong.AndroidBatteryLifeTest.Activity.MainActivity;
+import com.daniel4wong.AndroidBatteryLifeTest.MainApplication;
 import com.daniel4wong.AndroidBatteryLifeTest.R;
+
+import java.util.Arrays;
 
 public class NotificationHelper {
     private static final int NotificationId = 0;
+    private static final String BatteryStatusChannelId = "NotificationHelper::BatteryStatusChannelId";
 
-    public static void createNotification(Context context, String channelId) {
+    public static void createNotification(Context context, String channelId,
+                                          String name, String description) {
         NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             NotificationChannel channel = notificationManager.getNotificationChannel(channelId);
             if (channel == null) {
-                String name = context.getString(R.string.app_name);
-                String description = context.getString(R.string.msg_background_task_is_runnung);
-                channel = new NotificationChannel(channelId, name, NotificationManager.IMPORTANCE_DEFAULT);
-                channel.setDescription(description);
+                String _name = context.getString(R.string.app_name);
+                String _description = context.getString(R.string.msg_background_task_is_running);
+                channel = new NotificationChannel(channelId, _name, NotificationManager.IMPORTANCE_DEFAULT);
+                channel.setDescription(_description);
                 notificationManager.createNotificationChannel(channel);
             }
         }
 
         Intent intent = new Intent(context, MainActivity.class);
-        PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, 0);
+        PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
 
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context, channelId)
                 .setSmallIcon(R.drawable.ic_battery_white_24dp)
-                .setContentTitle(context.getString(R.string.app_name))
-                .setContentText(context.getString(R.string.msg_background_task_is_runnung))
+                .setContentTitle(name)
+                .setContentText(description)
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+                .setCategory(NotificationCompat.CATEGORY_STATUS)
                 .setContentIntent(pendingIntent)
                 .setAutoCancel(true);
-        notificationManager.notify(NotificationId, builder.build());
+        Notification notification = builder.build();
+        notificationManager.notify(NotificationId, notification);
+    }
+
+    public static void showBatteryNotification(String name, String description) {
+        createNotification(MainApplication.context, BatteryStatusChannelId, name, description);
     }
 
     public static void clearNotification(Context context) {

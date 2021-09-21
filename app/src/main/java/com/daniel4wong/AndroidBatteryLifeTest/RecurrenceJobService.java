@@ -24,13 +24,11 @@ public class RecurrenceJobService extends JobService {
 
     @Override
     public boolean onStartJob(JobParameters jobParameters) {
-        NotificationHelper.createNotification(getApplicationContext(), CHANNEL_ID);
         return false;
     }
 
     @Override
     public boolean onStopJob(JobParameters jobParameters) {
-
         return false;
     }
 

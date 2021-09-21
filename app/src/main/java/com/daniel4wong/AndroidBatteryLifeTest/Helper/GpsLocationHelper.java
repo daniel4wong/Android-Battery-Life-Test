@@ -11,7 +11,7 @@ import android.util.Log;
 
 import androidx.annotation.NonNull;
 
-import com.daniel4wong.AndroidBatteryLifeTest.Core.BroadcastReceiver.BatteryTestBroadcastReceiver;
+import com.daniel4wong.AndroidBatteryLifeTest.Core.BroadcastReceiver.BatteryTestReceiver;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.gson.Gson;
@@ -29,10 +29,10 @@ public class GpsLocationHelper extends AbstractTestHelper {
         public void onLocationChanged(@NonNull Location location) {
             Log.i(TAG, String.format("[Response] Location: %s, %s", location.getLatitude(), location.getLongitude()));
             Intent _intent = new Intent();
-            _intent.setAction(BatteryTestBroadcastReceiver.ACTION_TEST_CHANGE);
-            _intent.putExtra(BatteryTestBroadcastReceiver.STATE, false);
-            _intent.putExtra(BatteryTestBroadcastReceiver.TYPE, TYPE);
-            _intent.putExtra(BatteryTestBroadcastReceiver.TEST_RESULT, new Gson().toJson(location));
+            _intent.setAction(BatteryTestReceiver.ACTION_TEST_CHANGE);
+            _intent.putExtra(BatteryTestReceiver.STATE, false);
+            _intent.putExtra(BatteryTestReceiver.TYPE, TYPE);
+            _intent.putExtra(BatteryTestReceiver.TEST_RESULT, new Gson().toJson(location));
             context.sendBroadcast(_intent);
             locationManager.removeUpdates(locationListener);
         }
@@ -52,9 +52,9 @@ public class GpsLocationHelper extends AbstractTestHelper {
 
         Log.i(TAG, "[Request] Requesting GPS location...");
         Intent intent = new Intent();
-        intent.setAction(BatteryTestBroadcastReceiver.ACTION_TEST_CHANGE);
-        intent.putExtra(BatteryTestBroadcastReceiver.STATE, true);
-        intent.putExtra(BatteryTestBroadcastReceiver.TYPE, TYPE);
+        intent.setAction(BatteryTestReceiver.ACTION_TEST_CHANGE);
+        intent.putExtra(BatteryTestReceiver.STATE, true);
+        intent.putExtra(BatteryTestReceiver.TYPE, TYPE);
         context.sendBroadcast(intent);
 
         locationManager.requestLocationUpdates(provider, 0, 0, locationListener);

@@ -21,11 +21,12 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
+import com.daniel4wong.AndroidBatteryLifeTest.Activity.BlackScreenActivity;
 import com.daniel4wong.AndroidBatteryLifeTest.Database.AppDatabase;
 import com.daniel4wong.AndroidBatteryLifeTest.Model.TestHistory;
 import com.daniel4wong.AndroidBatteryLifeTest.R;
 import com.daniel4wong.AndroidBatteryLifeTest.Core.AppPreferences;
-import com.daniel4wong.AndroidBatteryLifeTest.Core.BroadcastReceiver.BatteryTestBroadcastReceiver;
+import com.daniel4wong.AndroidBatteryLifeTest.Core.BroadcastReceiver.BatteryTestReceiver;
 import com.daniel4wong.AndroidBatteryLifeTest.Helper.*;
 import com.daniel4wong.AndroidBatteryLifeTest.databinding.FragmentHomeBinding;
 import com.daniel4wong.AndroidBatteryLifeTest.Manager.BatteryTestManager;
@@ -63,9 +64,9 @@ public class HomeFragment extends Fragment {
     private BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            Boolean state = intent.getBooleanExtra(BatteryTestBroadcastReceiver.STATE, false);
-            String type = intent.getStringExtra(BatteryTestBroadcastReceiver.TYPE);
-            String result = intent.getStringExtra(BatteryTestBroadcastReceiver.TEST_RESULT);
+            Boolean state = intent.getBooleanExtra(BatteryTestReceiver.STATE, false);
+            String type = intent.getStringExtra(BatteryTestReceiver.TYPE);
+            String result = intent.getStringExtra(BatteryTestReceiver.TEST_RESULT);
             String date = new SimpleDateFormat("hh:mm:ss").format(new Date());
 
             if (!state) {
@@ -202,6 +203,9 @@ public class HomeFragment extends Fragment {
         buttonStartTest.setOnClickListener(view -> startTest());
         buttonStopTest = binding.buttonStopTest;
         buttonStopTest.setOnClickListener(view -> stopTest());
+        binding.buttonBlack.setOnClickListener(view -> {
+            startActivity(new Intent(getActivity(), BlackScreenActivity.class));
+        });
 
         return root;
     }
@@ -228,7 +232,7 @@ public class HomeFragment extends Fragment {
         }
 
         IntentFilter filter = new IntentFilter();
-        filter.addAction(BatteryTestBroadcastReceiver.ACTION_TEST_CHANGE);
+        filter.addAction(BatteryTestReceiver.ACTION_TEST_CHANGE);
         getActivity().registerReceiver(broadcastReceiver, filter);
     }
 

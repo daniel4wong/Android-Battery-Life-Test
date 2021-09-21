@@ -5,11 +5,12 @@ import android.content.IntentFilter;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.Toast;
 
 import com.daniel4wong.AndroidBatteryLifeTest.Core.AppPreferences;
-import com.daniel4wong.AndroidBatteryLifeTest.Core.BroadcastReceiver.BatteryTestBroadcastReceiver;
+import com.daniel4wong.AndroidBatteryLifeTest.Core.BroadcastReceiver.BatteryTestReceiver;
 import com.daniel4wong.AndroidBatteryLifeTest.Helper.LayoutHelper;
 import com.daniel4wong.AndroidBatteryLifeTest.Helper.PermissionHelper;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -34,8 +35,8 @@ public class MainActivity extends BaseActivity {
     private ActivityMainBinding binding;
     private Menu optionMenu;
 
-    BatteryTestBroadcastReceiver receiver = new BatteryTestBroadcastReceiver(intent -> {
-        boolean isStart = intent.getBooleanExtra(BatteryTestBroadcastReceiver.STATE, false);
+    BatteryTestReceiver receiver = new BatteryTestReceiver(intent -> {
+        boolean isStart = intent.getBooleanExtra(BatteryTestReceiver.STATE, false);
         for(int i = 0; i < optionMenu.size(); i++) {
             optionMenu.getItem(i).setEnabled(!isStart);
         }
@@ -46,12 +47,13 @@ public class MainActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        binding = ActivityMainBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
+
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
         AppContext.getInstance().window = getWindow();
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
-
-        binding = ActivityMainBinding.inflate(getLayoutInflater());
-        setContentView(binding.getRoot());
 
         BottomNavigationView navView = findViewById(R.id.nav_view);
         AppBarConfiguration appBarConfiguration = new AppBarConfiguration.Builder(
@@ -65,7 +67,7 @@ public class MainActivity extends BaseActivity {
         NavigationUI.setupWithNavController(binding.navView, navController);
 
         IntentFilter filter = new IntentFilter();
-        filter.addAction(BatteryTestBroadcastReceiver.ACTION_STATE_CHANGE);
+        filter.addAction(BatteryTestReceiver.ACTION_STATE_CHANGE);
         registerReceiver(receiver, filter);
     }
 

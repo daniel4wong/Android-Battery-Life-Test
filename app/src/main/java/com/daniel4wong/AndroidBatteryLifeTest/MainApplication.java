@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 
+import com.daniel4wong.AndroidBatteryLifeTest.Core.BroadcastReceiver.CustomBatteryReceiver;
 import com.daniel4wong.AndroidBatteryLifeTest.Database.AppDatabase;
 import com.daniel4wong.AndroidBatteryLifeTest.Helper.LocaleHelper;
 import com.daniel4wong.AndroidBatteryLifeTest.Helper.NotificationHelper;
@@ -54,6 +55,6 @@ public class MainApplication extends BaseApplication {
 
     @Override
     protected void onEnterBackground() {
-        NotificationHelper.createNotification(this, RecurrenceJobService.CHANNEL_ID);
+        sendBroadcast(new Intent(CustomBatteryReceiver.ACTION_SHOW_NOTIFICATION));
     }
 }
