@@ -106,6 +106,15 @@ public class InputButton extends android.widget.Button {
     public String getFormat() {
         return format;
     }
+    public boolean isDatePicker() {
+        return isDatePicker;
+    }
+    public boolean isTimePicker() {
+        return isTimePicker;
+    }
+    public boolean isNumberInput() {
+        return isNumberInput;
+    }
 
     public void setGetResult(Consumer<String> getResult) {
         this.getResult = getResult;

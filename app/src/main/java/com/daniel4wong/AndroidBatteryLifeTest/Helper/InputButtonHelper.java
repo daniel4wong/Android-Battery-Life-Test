@@ -18,7 +18,10 @@ public class InputButtonHelper {
             if (view instanceof InputButton) {
                 InputButton button = (InputButton) view;
                 button.setGetResult(s -> {
-                    AppPreferences.getInstance().savePreference(button.getTag().toString(), s);
+                    if (!button.isNumberInput())
+                        AppPreferences.getInstance().savePreference(button.getTag().toString(), s);
+                    else
+                        AppPreferences.getInstance().savePreference(button.getTag().toString(), Integer.valueOf(s));
                     Optional<View> textViewAny = Arrays.stream(views).filter(i -> i.getTag().equals(button.getTag()) && i instanceof TextView).findAny();
                     if (textViewAny.isPresent()) {
                         TextView textView = (TextView) textViewAny.get();

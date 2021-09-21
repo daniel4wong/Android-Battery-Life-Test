@@ -44,10 +44,6 @@ public class HomeFragment extends Fragment {
     private Button buttonPlanTest;
     private Button buttonStartTest;
     private Button buttonStopTest;
-    private Button buttonScreenTime;
-    private TextView textViewScreenTime;
-    private Button buttonTestFrequency;
-    private TextView textViewTestFrequency;
 
     private BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
         @Override
@@ -126,8 +122,6 @@ public class HomeFragment extends Fragment {
             Integer _screenTime = AppPreferences.getInstance().getPreference(R.string.pref_screen_seconds, 0);
             BatteryTestManager.getInstance().runTestOnce(_screenTime);
         });
-
-
         return root;
     }
 
