@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="InputButton">
+        <attr name="is_date_picker" format="boolean" />
+        <attr name="is_time_picker" format="boolean" />
+        <attr name="is_number_input" format="boolean" />
+    </declare-styleable>
+</resources>

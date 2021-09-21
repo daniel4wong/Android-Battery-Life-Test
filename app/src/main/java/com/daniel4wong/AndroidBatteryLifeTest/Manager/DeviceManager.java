@@ -1,8 +1,5 @@
 package com.daniel4wong.AndroidBatteryLifeTest.Manager;
 
-import android.app.Notification;
-import android.app.PendingIntent;
-import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
@@ -13,15 +10,11 @@ import android.view.WindowManager;
 
 import com.daniel4wong.AndroidBatteryLifeTest.MainApplication;
 import com.daniel4wong.AndroidBatteryLifeTest.AppContext;
-import com.daniel4wong.AndroidBatteryLifeTest.R;
 import com.daniel4wong.AndroidBatteryLifeTest.Activity.BlackScreenActivity;
-import com.daniel4wong.AndroidBatteryLifeTest.Activity.MainActivity;
 import com.daniel4wong.AndroidBatteryLifeTest.Core.ISingleton;
 import com.daniel4wong.AndroidBatteryLifeTest.Core.Singleton;
 
 import androidx.annotation.Nullable;
-import androidx.core.app.NotificationCompat;
-import androidx.core.app.NotificationManagerCompat;
 
 public class DeviceManager extends Singleton implements ISingleton {
     public static DeviceManager getInstance() {

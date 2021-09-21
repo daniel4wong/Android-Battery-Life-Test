@@ -11,6 +11,7 @@ import android.view.WindowManager;
 
 import com.daniel4wong.AndroidBatteryLifeTest.Core.AppPreferences;
 import com.daniel4wong.AndroidBatteryLifeTest.MainApplication;
+import com.daniel4wong.AndroidBatteryLifeTest.Manager.BatteryTestManager;
 import com.daniel4wong.AndroidBatteryLifeTest.R;
 import com.daniel4wong.AndroidBatteryLifeTest.databinding.ActivityBlackScreenBinding;
 
@@ -47,6 +48,7 @@ public class BlackScreenActivity extends BaseActivity {
     public void onBackPressed() {
         if (!AppPreferences.getInstance().getPreference(R.string.flag_state_test_started, false)) {
             super.onBackPressed();
+            BatteryTestManager.getInstance().reset();
         }
     }
 

@@ -1,8 +1,6 @@
-package com.daniel4wong.AndroidBatteryLifeTest.Fragment.home;
+package com.daniel4wong.AndroidBatteryLifeTest.Fragment;
 
 import android.annotation.SuppressLint;
-import android.app.DatePickerDialog;
-import android.app.TimePickerDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -14,7 +12,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
-import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -44,15 +41,6 @@ public class HomeFragment extends Fragment {
     private Handler planTestHandler;
 
     private LinearLayout layoutTestConfig;
-    private Switch switchScreenAlwaysOn;
-    private Switch switchCpuAlwaysOn;
-    private Switch switchWebRequest;
-    private Switch switchGpsRequest;
-    private Switch switchBleRequest;
-    private Button buttonPickDate;
-    private Button buttonPickTime;
-    private TextView textViewDate;
-    private TextView textViewTime;
     private Button buttonPlanTest;
     private Button buttonStartTest;
     private Button buttonStopTest;
@@ -102,99 +90,27 @@ public class HomeFragment extends Fragment {
     @SuppressLint("InvalidWakeLockTag")
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-
         binding = FragmentHomeBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
 
         layoutTestConfig = binding.layoutTestConfig;
 
-        switchScreenAlwaysOn = binding.switchScreenAlwaysOn;
-        switchCpuAlwaysOn = binding.switchCpuAlwaysOn;
-        switchWebRequest = binding.switchWebRequest;
-        switchGpsRequest = binding.switchGpsRequest;
-        switchBleRequest = binding.switchBleRequest;
-
-        Switch[] switches = {
-                switchScreenAlwaysOn,
-                switchCpuAlwaysOn,
-                switchWebRequest,
-                switchGpsRequest,
-                switchBleRequest
+        View[] views = {
+                binding.switchScreenAlwaysOn,
+                binding.switchCpuAlwaysOn,
+                binding.switchWebRequest,
+                binding.switchGpsRequest,
+                binding.switchBleRequest,
+                binding.textViewDate,
+                binding.textViewTime,
+                binding.textViewScreenTime,
+                binding.textViewTestFrequency,
+                binding.buttonPickDate,
+                binding.buttonPickTime,
+                binding.buttonScreenTime,
+                binding.buttonTestFrequency
         };
-        for (Switch aSwitch : switches) {
-            aSwitch.setOnCheckedChangeListener((compoundButton, b) -> {
-                AppPreferences.getInstance().savePreference(compoundButton, compoundButton.isChecked());
-            });
-        }
-
-        buttonPickDate = binding.buttonPickDate;
-        buttonPickTime = binding.buttonPickTime;
-        buttonScreenTime = binding.buttonScreenTime;
-        buttonTestFrequency = binding.buttonTestFrequency;
-
-        textViewDate = binding.textViewDate;
-        textViewTime = binding.textViewTime;
-        textViewScreenTime = binding.textViewScreenTime;
-        textViewTestFrequency = binding.textViewTestFrequency;
-
-        String textDate = AppPreferences.getInstance().getPreference(buttonPickDate, "");
-        if (!textDate.isEmpty())
-            textViewDate.setText(textDate);
-        buttonPickDate.setOnClickListener(view -> {
-            final Calendar calendar = Calendar.getInstance();
-            int year = calendar.get(Calendar.YEAR);
-            int month = calendar.get(Calendar.MONTH);
-            int day = calendar.get(Calendar.DAY_OF_MONTH);
-
-            DatePickerDialog dialog = new DatePickerDialog(getActivity(), (datePicker, y, m, d) -> {
-                calendar.set(y, m, d);
-                final String date = new SimpleDateFormat("yyyy-MM-dd").format(calendar.getTime());
-                AppPreferences.getInstance().savePreference(buttonPickDate, date);
-                textViewDate.setText(date);
-            }, year, month, day);
-            dialog.show();
-        });
-
-        String textTime = AppPreferences.getInstance().getPreference(buttonPickTime, "");
-        if (!textTime.isEmpty())
-            textViewTime.setText(textTime);
-        buttonPickTime.setOnClickListener(view -> {
-            final Calendar calendar = Calendar.getInstance();
-            calendar.add(Calendar.HOUR, 1);
-            int hour = calendar.get(Calendar.HOUR_OF_DAY);
-            int minute = 0;
-
-            TimePickerDialog dialog = new TimePickerDialog(getActivity(), (timePicker, h, m) -> {
-                Date date = new Date();
-                date.setHours(h);
-                date.setMinutes(m);
-                calendar.setTime(date);
-                final String time = new SimpleDateFormat("HH:mm").format(calendar.getTime());
-                AppPreferences.getInstance().savePreference(buttonPickTime, time);
-                textViewTime.setText(time);
-            }, hour, minute, true);
-            dialog.show();
-        });
-
-        Integer frequency = AppPreferences.getInstance().getPreference(buttonTestFrequency, 0);
-        textViewTestFrequency.setText(frequency.toString());
-        buttonTestFrequency.setOnClickListener(view -> DialogHelper.NumberInputDialog(getActivity(), integer -> {
-            if (integer == null)
-                return null;
-            AppPreferences.getInstance().savePreference(buttonTestFrequency, integer);
-            textViewTestFrequency.setText(integer.toString());
-            return null;
-        }));
-
-        Integer screenTime =  AppPreferences.getInstance().getPreference(buttonScreenTime, 0);
-        textViewScreenTime.setText(screenTime.toString());
-        buttonScreenTime.setOnClickListener(view -> DialogHelper.NumberInputDialog(getActivity(), integer -> {
-            if (integer == null)
-                return null;
-            AppPreferences.getInstance().savePreference(buttonScreenTime, integer);
-            textViewScreenTime.setText(integer.toString());
-            return null;
-        }));
+        InputButtonHelper.prepareInputs(views);
 
         // test buttons
         buttonPlanTest = binding.buttonPlanTest;
@@ -206,6 +122,11 @@ public class HomeFragment extends Fragment {
         binding.buttonBlack.setOnClickListener(view -> {
             startActivity(new Intent(getActivity(), BlackScreenActivity.class));
         });
+        binding.buttonOnce.setOnClickListener(view -> {
+            Integer _screenTime = AppPreferences.getInstance().getPreference(R.string.pref_screen_seconds, 0);
+            BatteryTestManager.getInstance().runTestOnce(_screenTime);
+        });
+
 
         return root;
     }
@@ -219,17 +140,6 @@ public class HomeFragment extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
-
-        Switch[] switches = {
-                switchScreenAlwaysOn,
-                switchCpuAlwaysOn,
-                switchWebRequest,
-                switchGpsRequest,
-                switchBleRequest
-        };
-        for (Switch aSwitch : switches) {
-            aSwitch.setChecked(AppPreferences.getInstance().getPreference(aSwitch, false));
-        }
 
         IntentFilter filter = new IntentFilter();
         filter.addAction(BatteryTestReceiver.ACTION_TEST_CHANGE);
@@ -251,8 +161,8 @@ public class HomeFragment extends Fragment {
         if (!BatteryTestManager.canRunTest())
             return;
 
-        String textDate = AppPreferences.getInstance().getPreference(buttonPickDate, "");
-        String textTime = AppPreferences.getInstance().getPreference(buttonPickTime, "");
+        String textDate = AppPreferences.getInstance().getPreference(R.string.pref_test_bgn_date, "");
+        String textTime = AppPreferences.getInstance().getPreference(R.string.pref_test_bgn_time, "");
 
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm");
         Calendar planTime = Calendar.getInstance();

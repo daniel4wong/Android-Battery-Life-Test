@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="@dimen/fragment_padding"
-    tools:context=".Fragment.home.HomeFragment">
+    tools:context=".Fragment.HomeFragment">
 
     <ScrollView
         android:layout_width="match_parent"
@@ -22,17 +22,18 @@
                 android:layout_height="wrap_content">
                 <TextView
                     android:id="@+id/textViewDate"
+                    android:tag="@string/pref_test_bgn_date"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
-                    android:text="@string/label_for_text_test_date" />
-
-                <Button
+                    android:text="@string/label_for_text_date" />
+                <com.daniel4wong.AndroidBatteryLifeTest.Control.InputButton
                     android:id="@+id/buttonPickDate"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
                     android:tag="@string/pref_test_bgn_date"
+                    app:is_date_picker="true"
                     android:text="@string/button_pick_date" />
             </RelativeLayout>
             <RelativeLayout
@@ -40,17 +41,18 @@
                 android:layout_height="wrap_content">
                 <TextView
                     android:id="@+id/textViewTime"
+                    android:tag="@string/pref_test_bgn_time"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
-                    android:text="@string/label_for_text_test_time" />
-
-                <Button
+                    android:text="@string/label_for_text_time" />
+                <com.daniel4wong.AndroidBatteryLifeTest.Control.InputButton
                     android:id="@+id/buttonPickTime"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
                     android:tag="@string/pref_test_bgn_time"
+                    app:is_time_picker="true"
                     android:text="@string/button_pick_time" />
             </RelativeLayout>
             <RelativeLayout
@@ -66,18 +68,20 @@
                         android:text="@string/label_for_text_test_frequency" />
                     <TextView
                         android:id="@+id/textViewTestFrequency"
+                        android:tag="@string/pref_test_frequency"
                         style="@style/InputValueTextView"
                         android:text="0"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content" />
                 </LinearLayout>
 
-                <Button
+                <com.daniel4wong.AndroidBatteryLifeTest.Control.InputButton
                     android:id="@+id/buttonTestFrequency"
+                    android:tag="@string/pref_test_frequency"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
-                    android:tag="@string/pref_test_frequency"
+                    app:is_number_input="true"
                     android:text="@string/button_input" />
             </RelativeLayout>
             <com.google.android.material.divider.MaterialDivider
@@ -107,19 +111,21 @@
                         android:text="@string/label_for_text_screen_time" />
                     <TextView
                         android:id="@+id/textViewScreenTime"
+                        android:tag="@string/pref_screen_seconds"
                         style="@style/InputValueTextView"
                         android:text="0"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content" />
                 </LinearLayout>
 
-                <Button
+                <com.daniel4wong.AndroidBatteryLifeTest.Control.InputButton
                     android:id="@+id/buttonScreenTime"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
                     android:tag="@string/pref_screen_seconds"
-                    android:text="@string/button_input" />
+                    android:text="@string/button_input"
+                    app:is_number_input="true" />
             </RelativeLayout>
             <com.google.android.material.divider.MaterialDivider
                 android:layout_width="match_parent"
@@ -168,44 +174,46 @@
             <com.google.android.material.divider.MaterialDivider
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
-            <RelativeLayout
+            <LinearLayout
+                android:orientation="vertical"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_centerHorizontal="true">
+                    android:layout_gravity="center">
                     <Button
                         android:id="@+id/buttonBlack"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/button_black" />
-                    <TextView
-                        android:layout_width="3dp"
-                        android:layout_height="wrap_content" />
+                    <Button
+                        android:id="@+id/buttonOnce"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/button_once" />
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center">
                     <Button
                         android:id="@+id/buttonPlanTest"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/button_plan" />
-                    <TextView
-                        android:layout_width="3dp"
-                        android:layout_height="wrap_content" />
                     <Button
                         android:id="@+id/buttonStartTest"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/button_start" />
-                    <TextView
-                        android:layout_width="3dp"
-                        android:layout_height="wrap_content" />
                     <Button
                         android:id="@+id/buttonStopTest"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/button_stop" />
                 </LinearLayout>
-            </RelativeLayout>
+            </LinearLayout>
             <com.google.android.material.divider.MaterialDivider
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />

@@ -18,17 +18,19 @@
     <string name="button_confirm">確認</string>
     <string name="button_cancel">取消</string>
     <string name="button_black">黑色</string>
+    <string name="button_once">一次</string>
 
     <string name="header_input_number">輸入數字</string>
 
-    <string name="label_for_text_test_date">預約測試日期</string>
-    <string name="label_for_text_test_time">預約測試時間</string>
+    <string name="label_for_text_date">日期</string>
+    <string name="label_for_text_time">時間</string>
     <string name="label_for_text_test_frequency">頻率 [每小時] : </string>
     <string name="label_for_switch_screen_always_on">保持屏幕常亮？</string>
     <string name="label_for_text_screen_time">屏幕時間 [秒] :</string>
     <string name="label_for_switch_web_request">發出 WEB 請求？</string>
     <string name="label_for_switch_gps_request">發出 GSP 請求？</string>
     <string name="label_for_switch_ble_request">發出 BLE 請求？</string>
+    <string name="label_for_switch_record_battery">記錄電池電量?</string>
 
     <string name="msg_past_time_warning">無法為過去的時間做預約測試</string>
     <string name="msg_frequency_warning">頻率必須大於零</string>

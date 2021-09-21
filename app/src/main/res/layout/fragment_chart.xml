@@ -4,16 +4,68 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Fragment.chart.ChartFragment">
+    android:padding="@dimen/fragment_padding"
+    tools:context=".Fragment.ChartFragment">
 
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="0dp"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toTopOf="@+id/layoutDashboardLineChart">
-
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+            <Switch
+                android:id="@+id/switchRecordBattery"
+                android:tag="@string/pref_record_battery"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/label_for_switch_record_battery"
+                android:textOn="on"
+                android:textOff="off"
+                android:checked="false"
+                style="@style/BaseSwitchStyle" />
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <TextView
+                    android:id="@+id/textViewDate"
+                    android:tag="@string/pref_chart_date"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:text="@string/label_for_text_date" />
+                <com.daniel4wong.AndroidBatteryLifeTest.Control.InputButton
+                    android:id="@+id/buttonPickDate"
+                    android:tag="@string/pref_chart_date"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    app:is_date_picker="true"
+                    android:text="@string/button_pick_date" />
+            </RelativeLayout>
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <TextView
+                    android:id="@+id/textViewTime"
+                    android:tag="@string/pref_chart_time"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:text="@string/label_for_text_time" />
+                <com.daniel4wong.AndroidBatteryLifeTest.Control.InputButton
+                    android:id="@+id/buttonPickTime"
+                    android:tag="@string/pref_chart_time"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    app:is_time_picker="true"
+                    android:text="@string/button_pick_time" />
+            </RelativeLayout>
+        </LinearLayout>
     </ScrollView>
-
     <LinearLayout
         android:id="@+id/layoutDashboardLineChart"
         android:orientation="vertical"

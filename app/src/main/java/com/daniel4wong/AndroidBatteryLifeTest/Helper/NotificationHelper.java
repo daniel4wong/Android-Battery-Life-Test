@@ -1,5 +1,6 @@
 package com.daniel4wong.AndroidBatteryLifeTest.Helper;
 
+import android.Manifest;
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
@@ -8,15 +9,12 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.provider.Settings;
-import android.service.notification.StatusBarNotification;
 
 import androidx.core.app.NotificationCompat;
 
 import com.daniel4wong.AndroidBatteryLifeTest.Activity.MainActivity;
 import com.daniel4wong.AndroidBatteryLifeTest.MainApplication;
 import com.daniel4wong.AndroidBatteryLifeTest.R;
-
-import java.util.Arrays;
 
 public class NotificationHelper {
     private static final int NotificationId = 0;
@@ -38,7 +36,8 @@ public class NotificationHelper {
         }
 
         Intent intent = new Intent(context, MainActivity.class);
-        PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+        PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent,
+                PendingIntent.FLAG_UPDATE_CURRENT);
 
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context, channelId)
                 .setSmallIcon(R.drawable.ic_battery_white_24dp)
@@ -47,9 +46,11 @@ public class NotificationHelper {
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT)
                 .setCategory(NotificationCompat.CATEGORY_STATUS)
                 .setContentIntent(pendingIntent)
-                .setAutoCancel(true);
+                ;
         Notification notification = builder.build();
-        notificationManager.notify(NotificationId, notification);
+        PermissionHelper.requirePermission(new String[]{ Manifest.permission.USE_FULL_SCREEN_INTENT }, () -> {
+            notificationManager.notify(NotificationId, notification);
+        }, null);
     }
 
     public static void showBatteryNotification(String name, String description) {
