@@ -7,7 +7,7 @@ public abstract class AbstractTestHelper {
     public abstract String[] getRequiredPermissions();
 
     public boolean checkPermissions(Context context) {
-        return PermissionHelper.checkPermissions(context, getRequiredPermissions());
+        return PermissionHelper.checkPermissions(context, getRequiredPermissions(), true);
     }
 
     public abstract boolean check();

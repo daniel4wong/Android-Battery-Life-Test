@@ -20,6 +20,7 @@ import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import io.reactivex.rxjava3.internal.util.BlockingIgnoringReceiver;
 import io.reactivex.rxjava3.schedulers.Schedulers;
 
 public class LineChartHelper {
@@ -147,6 +148,7 @@ public class LineChartHelper {
 
         AppDatabase.getInstance().batteryHistoryDao().getList(fromDate, toDate)
                 .subscribeOn(Schedulers.computation())
+                .doOnError(new BlockingIgnoringReceiver())
                 .subscribe(models -> {
                     List<Pair<Integer, Integer>> data = new ArrayList<>();
                     models.forEach(i -> {

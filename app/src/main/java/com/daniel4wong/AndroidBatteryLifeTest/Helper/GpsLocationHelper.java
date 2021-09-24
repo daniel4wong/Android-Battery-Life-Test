@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.os.Build;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
@@ -16,6 +17,10 @@ import com.daniel4wong.AndroidBatteryLifeTest.Model.Constant.LogType;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.gson.Gson;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 public class GpsLocationHelper extends AbstractTestHelper {
     private static final String TAG = LogType.TEST + GpsLocationHelper.class.getSimpleName();
@@ -63,11 +68,15 @@ public class GpsLocationHelper extends AbstractTestHelper {
 
     @Override
     public String[] getRequiredPermissions() {
-        return new String[] {
+        String[] permissions = {
                 Manifest.permission.ACCESS_FINE_LOCATION,
                 Manifest.permission.ACCESS_COARSE_LOCATION,
-                Manifest.permission.ACCESS_BACKGROUND_LOCATION
         };
+        List<String> list = new ArrayList(Arrays.asList(permissions));
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+            list.add(Manifest.permission.ACCESS_BACKGROUND_LOCATION);
+        }
+        return list.toArray(new String[0]);
     }
 
     @Override

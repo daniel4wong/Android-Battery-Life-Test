@@ -18,6 +18,7 @@ import com.daniel4wong.AndroidBatteryLifeTest.R;
 import java.util.Calendar;
 import java.util.Date;
 
+import io.reactivex.rxjava3.internal.util.BlockingIgnoringReceiver;
 import io.reactivex.rxjava3.schedulers.Schedulers;
 
 public class CustomBatteryManager extends Singleton implements ISingleton {
@@ -54,10 +55,15 @@ public class CustomBatteryManager extends Singleton implements ISingleton {
 
             AppDatabase.getInstance().batteryHistoryDao().getList(fromDate, toDate)
                     .subscribeOn(Schedulers.computation())
+                    .doOnError(new BlockingIgnoringReceiver())
                     .subscribe(models -> {
+                        try {
                             if (models.size() == 0) {
                                 AppDatabase.getInstance().batteryHistoryDao().insertRecord(model);
                             }
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
                     });
 
             boolean isCharging = DeviceManager.getInstance().isCharging();
