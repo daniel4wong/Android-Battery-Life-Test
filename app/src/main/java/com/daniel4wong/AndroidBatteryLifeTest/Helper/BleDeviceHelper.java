@@ -1,5 +1,6 @@
 package com.daniel4wong.AndroidBatteryLifeTest.Helper;
 
+import android.Manifest;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothManager;
@@ -13,13 +14,15 @@ import android.util.Log;
 
 import com.daniel4wong.AndroidBatteryLifeTest.MainApplication;
 import com.daniel4wong.AndroidBatteryLifeTest.Core.BroadcastReceiver.BatteryTestReceiver;
+import com.daniel4wong.AndroidBatteryLifeTest.Model.Constant.LogType;
 import com.google.gson.Gson;
 
 import java.util.ArrayList;
 import java.util.List;
 
+//https://proandroiddev.com/background-ble-scan-in-doze-mode-on-android-devices-3c2ce1764570
 public class BleDeviceHelper extends AbstractTestHelper {
-    private static final String TAG = "=BT= " + BleDeviceHelper.class.getName();
+    private static final String TAG = LogType.TEST + BleDeviceHelper.class.getSimpleName();
     public static final String TYPE = "BLE";
 
     public static final int REQUEST_ENABLE_BT = 1;
@@ -47,7 +50,9 @@ public class BleDeviceHelper extends AbstractTestHelper {
         @Override
         public void onScanResult(int callbackType, ScanResult result) {
             super.onScanResult(callbackType, result);
-            devices.add(result.getDevice());
+            synchronized (devices) {
+                devices.add(result.getDevice());
+            }
         }
     };
     private ScanCallback stopScanCallback = new ScanCallback() {
@@ -68,12 +73,14 @@ public class BleDeviceHelper extends AbstractTestHelper {
             handler.postDelayed(() -> {
                 isScanning = false;
 
-                Log.i(TAG, String.format("[Response] Number of BLE devices: %d", devices.size()));
                 Intent intent = new Intent();
                 intent.setAction(BatteryTestReceiver.ACTION_TEST_CHANGE);
                 intent.putExtra(BatteryTestReceiver.STATE, false);
                 intent.putExtra(BatteryTestReceiver.TYPE, TYPE);
-                intent.putExtra(BatteryTestReceiver.TEST_RESULT, new Gson().toJson(devices));
+                synchronized (devices) {
+                    Log.i(TAG, String.format("[Response] Number of BLE devices: %d", devices.size()));
+                    intent.putExtra(BatteryTestReceiver.TEST_RESULT, new Gson().toJson(devices));
+                }
                 context.sendBroadcast(intent);
 
                 scanner.stopScan(stopScanCallback);
@@ -81,7 +88,9 @@ public class BleDeviceHelper extends AbstractTestHelper {
             }, SCAN_PERIOD);
 
             isScanning = true;
-            devices.clear();
+            synchronized (devices) {
+                devices.clear();
+            }
 
             Log.i(TAG, "[Request] Scanning BLE devices...");
             Intent intent = new Intent();
@@ -100,11 +109,17 @@ public class BleDeviceHelper extends AbstractTestHelper {
 
     @Override
     public String[] getRequiredPermissions() {
-        return new String[0];
+        //https://punchthrough.com/android-ble-guide/
+        return new String[] {
+                Manifest.permission.BLUETOOTH,
+                Manifest.permission.BLUETOOTH_ADMIN,
+                Manifest.permission.ACCESS_FINE_LOCATION,
+        };
     }
 
     @Override
     public boolean check() {
-        return true;
+        PermissionHelper.requirePermission(getRequiredPermissions(), null, null);
+        return checkPermissions(context);
     }
 }

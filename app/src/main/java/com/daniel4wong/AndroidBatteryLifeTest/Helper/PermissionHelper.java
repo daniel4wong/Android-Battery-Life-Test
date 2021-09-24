@@ -13,13 +13,17 @@ import java.util.ArrayList;
 public class PermissionHelper {
 
     public static boolean checkPermissions(Context context, String[] permissions) {
-        ArrayList<String> noPermissions = new ArrayList<>();
+        if (context == null || permissions == null)
+            return false;
 
+        if (permissions.length == 0)
+            return true;
+
+        ArrayList<String> noPermissions = new ArrayList<>();
         for (String permission: permissions) {
             if (ActivityCompat.checkSelfPermission(context, permission) != PackageManager.PERMISSION_GRANTED)
                 noPermissions.add(permission);
         }
-
         return noPermissions.size() == 0;
     }
 

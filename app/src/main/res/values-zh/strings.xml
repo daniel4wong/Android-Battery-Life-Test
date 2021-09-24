@@ -8,6 +8,8 @@
     <string name="title_chart_on">顯示圖表</string>
     <string name="title_chart_off">隱藏圖表</string>
     <string name="title_download">下載</string>
+    <string name="title_start">開始</string>
+    <string name="title_stop">結束</string>
 
     <string name="button_pick_date">輸入日期</string>
     <string name="button_pick_time">輸入時間</string>
@@ -24,7 +26,7 @@
 
     <string name="label_for_text_date">日期</string>
     <string name="label_for_text_time">時間</string>
-    <string name="label_for_text_test_frequency">頻率 [每小時] : </string>
+    <string name="label_for_text_test_period">頻率 [每小時] : </string>
     <string name="label_for_switch_screen_always_on">保持屏幕常亮？</string>
     <string name="label_for_text_screen_time">屏幕時間 [秒] :</string>
     <string name="label_for_switch_web_request">發出 WEB 請求？</string>
@@ -41,6 +43,8 @@
     <string name="msg_background_task_is_running">後台任務正在運行。</string>
     <string name="msg_charging">充電中</string>
     <string name="msg_not_charging">沒有充電</string>
+    <string name="msg_testing">測試中</string>
+    <string name="msg_not_testing">沒有測試</string>
 
     <string name="chart_minutes">分鐘</string>
     <string name="chart_description">當前小時的電量百分比</string>

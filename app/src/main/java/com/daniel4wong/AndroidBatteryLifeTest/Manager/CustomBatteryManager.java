@@ -31,7 +31,7 @@ public class CustomBatteryManager extends Singleton implements ISingleton {
     public void onLoad() { }
     /// end Singleton
 
-    private static final String TAG = CustomBatteryManager.class.getName();
+    private static final String TAG = CustomBatteryManager.class.getSimpleName();
 
     private BroadcastReceiver batteryReceiver = new BroadcastReceiver() {
         @Override
@@ -46,6 +46,9 @@ public class CustomBatteryManager extends Singleton implements ISingleton {
             model.btryLvl = (long) intent.getIntExtra(BatteryManager.EXTRA_LEVEL, -1);
             model.btryScl = (long) intent.getIntExtra(BatteryManager.EXTRA_SCALE, -1);
             model.markInsert();
+
+            if (model.btryLvl < 0)
+                return;
 
             Log.i(TAG, String.format("Log battery level: %d", model.btryLvl));
 

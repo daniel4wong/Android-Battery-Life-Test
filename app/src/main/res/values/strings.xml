@@ -8,6 +8,8 @@
     <string name="title_chart_on">Show Chart</string>
     <string name="title_chart_off">Hide Chart</string>
     <string name="title_download">Download</string>
+    <string name="title_start">Start</string>
+    <string name="title_stop">Stop</string>
 
     <string name="button_pick_date">Pick Date</string>
     <string name="button_pick_time">Pick Time</string>
@@ -24,7 +26,7 @@
 
     <string name="label_for_text_date">Date</string>
     <string name="label_for_text_time">Time</string>
-    <string name="label_for_text_test_frequency">Frequency [Per hour] : </string>
+    <string name="label_for_text_test_period">Period [Second] : </string>
     <string name="label_for_switch_screen_always_on">Keep screen always on?</string>
     <string name="label_for_text_screen_time">Screen time [Seconds] : </string>
     <string name="label_for_switch_web_request">Make WEB request?</string>
@@ -41,6 +43,8 @@
     <string name="msg_background_task_is_running">Background task is running.</string>
     <string name="msg_charging">Charging</string>
     <string name="msg_not_charging">Not charging</string>
+    <string name="msg_testing">Testing</string>
+    <string name="msg_not_testing">Not testing</string>
 
     <string name="button_language_chinese" translatable="false">中文</string>
     <string name="button_language_english" translatable="false">English</string>
@@ -52,7 +56,7 @@
     <string name="lang_english" translatable="false">en</string>
     <string name="pref_language_code" translatable="false">language_code</string>
     <string name="pref_screen_always_on" translatable="false">screen_always_on</string>
-    <string name="pref_cpu_always_on" translatable="false">screen_always_on</string>
+    <string name="pref_cpu_always_on" translatable="false">cpu_always_on</string>
     <string name="pref_web_request" translatable="false">web_request</string>
     <string name="pref_gps_request" translatable="false">gps_request</string>
     <string name="pref_ble_request" translatable="false">ble_request</string>
@@ -60,7 +64,7 @@
     <string name="pref_test_bgn_time" translatable="false">test_bgn_time</string>
     <string name="pref_chart_date" translatable="false">chart_date</string>
     <string name="pref_chart_time" translatable="false">chart_time</string>
-    <string name="pref_test_frequency" translatable="false">test_frequency</string>
+    <string name="pref_test_period_seconds" translatable="false">test_period_seconds</string>
     <string name="pref_screen_seconds" translatable="false">screen_seconds</string>
     <string name="pref_show_chart" translatable="false">show_chart</string>
     <string name="pref_record_battery" translatable="false">record_battery</string>

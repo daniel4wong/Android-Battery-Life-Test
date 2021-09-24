@@ -23,7 +23,7 @@ import java.util.TimerTask;
 import io.reactivex.rxjava3.schedulers.Schedulers;
 
 public class LineChartHelper {
-    private static final String TAG = LineChartHelper.class.getName();
+    private static final String TAG = LineChartHelper.class.getSimpleName();
 
     private int LineColor = Color.RED;
     private Activity activity;
@@ -151,6 +151,8 @@ public class LineChartHelper {
                     List<Pair<Integer, Integer>> data = new ArrayList<>();
                     models.forEach(i -> {
                         if (data.stream().anyMatch(d -> d.first == i.logTs.getMinutes()))
+                            return;
+                        if (i.btryLvl < 0)
                             return;
                         data.add(new Pair<>(i.logTs.getMinutes(), i.btryLvl.intValue()));
                     });

@@ -34,7 +34,7 @@ import java.util.Calendar;
 import java.util.Date;
 
 public class HomeFragment extends Fragment {
-    private static String TAG = HomeFragment.class.getName();
+    private static String TAG = HomeFragment.class.getSimpleName();
 
     private FragmentHomeBinding binding;
 
@@ -51,7 +51,7 @@ public class HomeFragment extends Fragment {
             Boolean state = intent.getBooleanExtra(BatteryTestReceiver.STATE, false);
             String type = intent.getStringExtra(BatteryTestReceiver.TYPE);
             String result = intent.getStringExtra(BatteryTestReceiver.TEST_RESULT);
-            String date = new SimpleDateFormat("hh:mm:ss").format(new Date());
+            String date = new SimpleDateFormat("HH:mm:ss").format(new Date());
 
             if (!state) {
                 TestHistory model = new TestHistory();
@@ -100,7 +100,7 @@ public class HomeFragment extends Fragment {
                 binding.textViewDate,
                 binding.textViewTime,
                 binding.textViewScreenTime,
-                binding.textViewTestFrequency,
+                binding.textViewTestPeriod,
                 binding.buttonPickDate,
                 binding.buttonPickTime,
                 binding.buttonScreenTime,
@@ -119,7 +119,7 @@ public class HomeFragment extends Fragment {
             startActivity(new Intent(getActivity(), BlackScreenActivity.class));
         });
         binding.buttonOnce.setOnClickListener(view -> {
-            Integer _screenTime = AppPreferences.getInstance().getPreference(R.string.pref_screen_seconds, 0);
+            Integer _screenTime = Integer.valueOf(AppPreferences.getInstance().getPreference(R.string.pref_screen_seconds, "0"));
             BatteryTestManager.getInstance().runTestOnce(_screenTime);
         });
         return root;
@@ -189,8 +189,8 @@ public class HomeFragment extends Fragment {
         LayoutHelper.setTouchablesEnable(layoutTestConfig, false);
         buttonStopTest.setEnabled(true);
 
-        Integer testFrequency = AppPreferences.getInstance().getPreference(R.string.pref_test_frequency, 0);
-        BatteryTestManager.getInstance().start(testFrequency);
+        BatteryTestManager.getInstance().start(
+                Integer.valueOf(AppPreferences.getInstance().getPreference(R.string.pref_test_period_seconds, "0")));
     }
 
     public void stopTest() {
@@ -203,8 +203,7 @@ public class HomeFragment extends Fragment {
     }
 
     public boolean checkConfig() {
-        Integer testFrequency = AppPreferences.getInstance().getPreference(R.string.pref_test_frequency, 0);
-        if (testFrequency == null || testFrequency < 1) {
+        if (Integer.valueOf(AppPreferences.getInstance().getPreference(R.string.pref_test_period_seconds, "0")) < 1) {
             Toast.makeText(getActivity(), R.string.msg_frequency_warning, Toast.LENGTH_LONG).show();
             return false;
         }

@@ -10,10 +10,11 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import com.daniel4wong.AndroidBatteryLifeTest.Core.AppPreferences;
+import com.daniel4wong.AndroidBatteryLifeTest.Core.BroadcastReceiver.AlarmReceiver;
 import com.daniel4wong.AndroidBatteryLifeTest.Core.BroadcastReceiver.BatteryTestReceiver;
 import com.daniel4wong.AndroidBatteryLifeTest.Helper.LayoutHelper;
 import com.daniel4wong.AndroidBatteryLifeTest.Helper.PermissionHelper;
-import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.daniel4wong.AndroidBatteryLifeTest.Manager.BatteryTestManager;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatDelegate;
@@ -34,14 +35,18 @@ public class MainActivity extends BaseActivity {
 
     private ActivityMainBinding binding;
     private Menu optionMenu;
+    private AlarmReceiver alarmReceiver;
+    private MenuItem menuStart;
+    private MenuItem menuStop;
 
     BatteryTestReceiver receiver = new BatteryTestReceiver(intent -> {
         boolean isStart = intent.getBooleanExtra(BatteryTestReceiver.STATE, false);
-        for(int i = 0; i < optionMenu.size(); i++) {
-            optionMenu.getItem(i).setEnabled(!isStart);
+        if (optionMenu != null) {
+            for(int i = 0; i < optionMenu.size(); i++) {
+                optionMenu.getItem(i).setEnabled(!isStart);
+            }
         }
         LayoutHelper.setTouchablesEnable(binding.navView, !isStart);
-        return null;
     });
 
     @Override
@@ -55,7 +60,6 @@ public class MainActivity extends BaseActivity {
         AppContext.getInstance().window = getWindow();
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
 
-        BottomNavigationView navView = findViewById(R.id.nav_view);
         AppBarConfiguration appBarConfiguration = new AppBarConfiguration.Builder(
                 R.id.navigation_home,
                 R.id.navigation_config,
@@ -69,11 +73,24 @@ public class MainActivity extends BaseActivity {
         IntentFilter filter = new IntentFilter();
         filter.addAction(BatteryTestReceiver.ACTION_STATE_CHANGE);
         registerReceiver(receiver, filter);
+
+        AppPreferences.getInstance().savePreference(R.string.flag_state_test_started, false);
+
+        alarmReceiver = new AlarmReceiver();
+        if (Long.valueOf(AppPreferences.getInstance().getPreference(R.string.pref_test_period_seconds, "0")) <= 0)
+            AppPreferences.getInstance().savePreference(R.string.flag_state_test_started, false);
     }
 
     @Override
     protected void onStart() {
         super.onStart();
+
+        if (AppPreferences.getInstance().isTestStarted() && BatteryTestManager.canRunTest()) {
+            alarmReceiver.createAlert(
+                    this,
+                    Long.valueOf(AppPreferences.getInstance().getPreference(R.string.pref_test_period_seconds, "0")),
+                    false);
+        }
     }
 
     @Override
@@ -86,6 +103,18 @@ public class MainActivity extends BaseActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.top_menu, menu);
         optionMenu = menu;
+        for (int i = 0; i < optionMenu.size(); i++) {
+            switch (optionMenu.getItem(i).getItemId()) {
+                case R.id.menu_start:
+                    menuStart = optionMenu.getItem(i);
+                    menuStart.setVisible(!AppPreferences.getInstance().isTestStarted());
+                    break;
+                case R.id.menu_stop:
+                    menuStop = optionMenu.getItem(i);
+                    menuStop.setVisible(AppPreferences.getInstance().isTestStarted());
+                    break;
+            }
+        }
         return true;
     }
 
@@ -129,7 +158,25 @@ public class MainActivity extends BaseActivity {
                 }, () -> {
                     Toast.makeText(this, R.string.msg_permissions_not_grant, Toast.LENGTH_LONG).show();
                 });
-
+                break;
+            }
+            case R.id.menu_start: {
+                if (!BatteryTestManager.canRunTest())
+                    break;
+                menuStart.setVisible(false);
+                menuStop.setVisible(true);
+                AppPreferences.getInstance().savePreference(R.string.flag_state_test_started, true);
+                alarmReceiver.createAlert(
+                        this,
+                        Long.valueOf(AppPreferences.getInstance().getPreference(R.string.pref_test_period_seconds, "0")) ,
+                        true);
+                break;
+            }
+            case R.id.menu_stop: {
+                menuStart.setVisible(true);
+                menuStop.setVisible(false);
+                AppPreferences.getInstance().savePreference(R.string.flag_state_test_started, false);
+                alarmReceiver.stopAlarm();
                 break;
             }
             default: {

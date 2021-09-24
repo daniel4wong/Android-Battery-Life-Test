@@ -19,9 +19,9 @@ import com.daniel4wong.AndroidBatteryLifeTest.R;
 public class NotificationHelper {
     private static final int NotificationId = 0;
     private static final String BatteryStatusChannelId = "NotificationHelper::BatteryStatusChannelId";
+    private static final String TestStatusChannelId = "NotificationHelper::TestStatusChannelId";
 
-    public static void createNotification(Context context, String channelId,
-                                          String name, String description) {
+    public static Notification createNotification(Context context, String channelId, String name, String description) {
         NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -29,7 +29,10 @@ public class NotificationHelper {
             if (channel == null) {
                 String _name = context.getString(R.string.app_name);
                 String _description = context.getString(R.string.msg_background_task_is_running);
-                channel = new NotificationChannel(channelId, _name, NotificationManager.IMPORTANCE_DEFAULT);
+                channel = new NotificationChannel(
+                        channelId,
+                        _name,
+                        NotificationManager.IMPORTANCE_DEFAULT);
                 channel.setDescription(_description);
                 notificationManager.createNotificationChannel(channel);
             }
@@ -45,16 +48,26 @@ public class NotificationHelper {
                 .setContentText(description)
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT)
                 .setCategory(NotificationCompat.CATEGORY_STATUS)
-                .setContentIntent(pendingIntent)
-                ;
+                .setContentIntent(pendingIntent);
         Notification notification = builder.build();
-        PermissionHelper.requirePermission(new String[]{ Manifest.permission.USE_FULL_SCREEN_INTENT }, () -> {
-            notificationManager.notify(NotificationId, notification);
-        }, null);
+        return notification;
     }
 
-    public static void showBatteryNotification(String name, String description) {
-        createNotification(MainApplication.context, BatteryStatusChannelId, name, description);
+    public static Notification showBatteryNotification(String name, String description) {
+        Context context = MainApplication.context;
+        Notification notification = createNotification(context, BatteryStatusChannelId, name, description);
+
+        NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+        notificationManager.notify(NotificationId, notification);
+
+        return notification;
+    }
+
+    public static Notification getTestNotification(String name, String description) {
+        Context context = MainApplication.context;
+        Notification notification = createNotification(context, TestStatusChannelId, name, description);
+
+        return notification;
     }
 
     public static void clearNotification(Context context) {

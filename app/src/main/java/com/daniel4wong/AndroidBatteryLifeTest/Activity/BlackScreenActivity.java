@@ -46,7 +46,7 @@ public class BlackScreenActivity extends BaseActivity {
     }
     @Override
     public void onBackPressed() {
-        if (!AppPreferences.getInstance().getPreference(R.string.flag_state_test_started, false)) {
+        if (!AppPreferences.getInstance().isTestStarted()) {
             super.onBackPressed();
             BatteryTestManager.getInstance().reset();
         }

@@ -11,6 +11,7 @@ import android.widget.Toast;
 
 import com.daniel4wong.AndroidBatteryLifeTest.MainApplication;
 import com.daniel4wong.AndroidBatteryLifeTest.AppContext;
+import com.daniel4wong.AndroidBatteryLifeTest.Model.Constant.LogType;
 import com.daniel4wong.AndroidBatteryLifeTest.R;
 import com.daniel4wong.AndroidBatteryLifeTest.Core.*;
 import com.daniel4wong.AndroidBatteryLifeTest.Core.BroadcastReceiver.BatteryTestReceiver;
@@ -33,7 +34,7 @@ public class BatteryTestManager extends Singleton implements ISingleton {
     }
     /// end Singleton
 
-    private static final String TAG = BatteryTestManager.class.getName();
+    private static final String TAG = LogType.BAT + BatteryTestManager.class.getSimpleName();
 
     private Handler handler;
     private Runnable runnable;
@@ -44,6 +45,10 @@ public class BatteryTestManager extends Singleton implements ISingleton {
     private WebRequestHelper webRequestHelper;
     private GpsLocationHelper gpsLocationHelper;
     private BleDeviceHelper bleDeviceHelper;
+
+    public void runTestOnce() {
+        runTestOnce(0);
+    }
 
     public void runTestOnce(Integer screenTime) {
         this.isReset = false;
@@ -56,31 +61,31 @@ public class BatteryTestManager extends Singleton implements ISingleton {
         intent.putExtra(BatteryTestReceiver.STATE, true);
         getContext().sendBroadcast(intent);
 
-        this.deviceManager.screenOn();
-
-        //web
-        if (Check.isRunWebRequest()) {
-            webRequestHelper.httpGet("https://worldtimeapi.org/api/timezone/Asia/Hong_Kong", null);
-        }
-        //gps
-        if (Check.isRunGpsRequest()) {
-            gpsLocationHelper.getCurrentLocation(GpsLocationHelper.ProviderType.NETWORK);
-        }
-        //ble
-        if (Check.isRunBleRequest()) {
-            bleDeviceHelper.scan();
-        }
         //screen
-        if (Check.isControlScreenOnOff()) {
+        if (!AppPreferences.getInstance().isKeepScreenOn()) {
+            this.deviceManager.screenOn();
             handler.postDelayed(() -> {
                 if (!this.isReset)
                     this.deviceManager.screenOff();
             }, screenTime * 1000);
         }
+
+        //web
+        if (AppPreferences.getInstance().isMakeWebRequest()) {
+            webRequestHelper.httpGet("https://worldtimeapi.org/api/timezone/Asia/Hong_Kong", null);
+        }
+        //gps
+        if (AppPreferences.getInstance().isMakeGpsRequest()) {
+            gpsLocationHelper.getCurrentLocation(GpsLocationHelper.ProviderType.NETWORK);
+        }
+        //ble
+        if (AppPreferences.getInstance().isMakeBleRequest()) {
+            bleDeviceHelper.scan();
+        }
     }
 
     public void start(Integer testFrequency) {
-        Integer screenTime = AppPreferences.getInstance().getPreference(R.string.pref_screen_seconds, 0);
+        Integer screenTime = Integer.valueOf(AppPreferences.getInstance().getPreference(R.string.pref_screen_seconds, "0"));
         Integer testInterval = 3600 / testFrequency;
 
         if (!isRunning) {
@@ -133,35 +138,23 @@ public class BatteryTestManager extends Singleton implements ISingleton {
     }
 
     public void setQuickTestProfile() {
-        AppPreferences.getInstance().savePreference(R.string.pref_test_frequency, 60);
-        AppPreferences.getInstance().savePreference(R.string.pref_screen_seconds, 5);
-        AppPreferences.getInstance().savePreference(R.string.pref_screen_always_on, false);
+        AppPreferences.getInstance().savePreference(R.string.pref_test_period_seconds, "60");
+        AppPreferences.getInstance().savePreference(R.string.pref_screen_seconds, "5");
+        AppPreferences.getInstance().savePreference(R.string.pref_screen_always_on, true);
         AppPreferences.getInstance().savePreference(R.string.pref_web_request, true);
         AppPreferences.getInstance().savePreference(R.string.pref_gps_request, true);
         AppPreferences.getInstance().savePreference(R.string.pref_ble_request, true);
     }
     public void setDefaultTestProfile() {
-        AppPreferences.getInstance().savePreference(R.string.pref_test_frequency, 1);
-        AppPreferences.getInstance().savePreference(R.string.pref_screen_seconds, 60);
-        AppPreferences.getInstance().savePreference(R.string.pref_screen_always_on, false);
+        AppPreferences.getInstance().savePreference(R.string.pref_test_period_seconds, "600");
+        AppPreferences.getInstance().savePreference(R.string.pref_screen_seconds, "60");
+        AppPreferences.getInstance().savePreference(R.string.pref_screen_always_on, true);
         AppPreferences.getInstance().savePreference(R.string.pref_web_request, true);
         AppPreferences.getInstance().savePreference(R.string.pref_gps_request, true);
         AppPreferences.getInstance().savePreference(R.string.pref_ble_request, true);
     }
 
     public static class Check {
-        public static boolean isRunWebRequest() {
-            return AppPreferences.getInstance().getPreference(R.string.pref_web_request, false);
-        }
-        public static boolean isRunGpsRequest() {
-            return AppPreferences.getInstance().getPreference(R.string.pref_gps_request, false);
-        }
-        public static boolean isRunBleRequest() {
-            return AppPreferences.getInstance().getPreference(R.string.pref_ble_request, false);
-        }
-        public static boolean isControlScreenOnOff() {
-            return !AppPreferences.getInstance().getPreference(R.string.pref_cpu_always_on, false);
-        }
         public static boolean isReadyWebRequest() {
             try {
                 ConnectivityManager connectivityManager = (ConnectivityManager) AppContext.getSystemService(Context.CONNECTIVITY_SERVICE);

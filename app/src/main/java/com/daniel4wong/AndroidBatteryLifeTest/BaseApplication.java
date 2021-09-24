@@ -13,7 +13,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 public abstract class BaseApplication extends Application implements Application.ActivityLifecycleCallbacks {
-    private static final String TAG = BaseApplication.class.getName();
+    private static final String TAG = BaseApplication.class.getSimpleName();
 
     public static Activity currentActivity = null;
     private static boolean isInBackground = false;

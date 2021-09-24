@@ -11,13 +11,14 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.daniel4wong.AndroidBatteryLifeTest.Core.BroadcastReceiver.BatteryTestReceiver;
 import com.daniel4wong.AndroidBatteryLifeTest.Manager.DeviceManager;
+import com.daniel4wong.AndroidBatteryLifeTest.Model.Constant.LogType;
 
 import java.util.function.Consumer;
 
 import androidx.annotation.Nullable;
 
 public class WebRequestHelper extends AbstractTestHelper {
-    private static final String TAG = "=BT= " + WebRequestHelper.class.getName();
+    private static final String TAG = LogType.TEST + WebRequestHelper.class.getSimpleName();
     public static final String TYPE = "WEB";
 
     private Context context;

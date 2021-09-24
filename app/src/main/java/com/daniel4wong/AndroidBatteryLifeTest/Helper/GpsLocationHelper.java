@@ -12,12 +12,13 @@ import android.util.Log;
 import androidx.annotation.NonNull;
 
 import com.daniel4wong.AndroidBatteryLifeTest.Core.BroadcastReceiver.BatteryTestReceiver;
+import com.daniel4wong.AndroidBatteryLifeTest.Model.Constant.LogType;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.gson.Gson;
 
 public class GpsLocationHelper extends AbstractTestHelper {
-    private static final String TAG = "=BT= " + GpsLocationHelper.class.getName();
+    private static final String TAG = LogType.TEST + GpsLocationHelper.class.getSimpleName();
     public static final String TYPE = "GPS";
 
     private Context context;
@@ -64,7 +65,8 @@ public class GpsLocationHelper extends AbstractTestHelper {
     public String[] getRequiredPermissions() {
         return new String[] {
                 Manifest.permission.ACCESS_FINE_LOCATION,
-                Manifest.permission.ACCESS_COARSE_LOCATION
+                Manifest.permission.ACCESS_COARSE_LOCATION,
+                Manifest.permission.ACCESS_BACKGROUND_LOCATION
         };
     }
 

@@ -29,7 +29,7 @@ public class DeviceManager extends Singleton implements ISingleton {
     }
     /// end Singleton
 
-    private static final String TAG = DeviceManager.class.getName();
+    private static final String TAG = DeviceManager.class.getSimpleName();
 
     private Intent intent;
 

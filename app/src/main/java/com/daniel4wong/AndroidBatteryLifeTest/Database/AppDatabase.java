@@ -32,7 +32,7 @@ import static android.os.Environment.DIRECTORY_DOWNLOADS;
         BatteryTestConfig.class, BatteryTestConfigItem.class
 }, version = 1, exportSchema = false)
 public abstract class AppDatabase extends RoomDatabase {
-    private static final String TAG = AppDatabase.class.getName();
+    private static final String TAG = AppDatabase.class.getSimpleName();
 
     public static String DB_NAME = "AndroidBatteryLifeTest.db";
     protected Context context;

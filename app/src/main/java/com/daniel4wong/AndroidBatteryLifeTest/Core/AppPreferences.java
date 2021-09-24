@@ -60,13 +60,17 @@ public class AppPreferences extends Singleton {
         } else if (value instanceof Long) {
             return (T) (Long) preferences.getLong(name, (Long) value);
         }
-        return null;
+        return value;
     }
     public <T> T getPreference(int resId, T value) {
         return getPreference(getContext().getString(resId), value);
     }
     public <T> T getPreference(Button button, T value) {
         return getPreference(button.getTag().toString(), value);
+    }
+
+    public boolean isTestStarted() {
+        return getPreference(R.string.flag_state_test_started, false);
     }
 
     public boolean isKeepScreenOn() {
