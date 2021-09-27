@@ -80,8 +80,9 @@ public class BatteryTestManager extends Singleton implements ISingleton {
 
         //web
         if (AppPreferences.getInstance().isMakeWebRequest()) {
-            //https://worldtimeapi.org/api/timezone/Asia/Hong_Kong
-            String url = "https://en345750ztapgxo.m.pipedream.net";
+            //https://nklvsbit7y0xh01yywqtjj.hooks.webhookrelay.com
+            //https://en345750ztapgxo.m.pipedream.net
+            String url = "https://nklvsbit7y0xh01yywqtjj.hooks.webhookrelay.com";
             webRequestHelper.httpGet(url, null);
         }
         //gps
@@ -187,11 +188,13 @@ public class BatteryTestManager extends Singleton implements ISingleton {
     }
 
     public static class Job {
+        private static final boolean isUseAlarmManager = true;
+
         public static void startJob() {
             BatteryTestManager manager = BatteryTestManager.getInstance();
 
             Long period = Long.valueOf(AppPreferences.getInstance().getPreference(R.string.pref_test_period_seconds, "0"));
-            if (period >= 900L)
+            if (!isUseAlarmManager && period >= 900L)
                 manager.jobId = TestJob.scheduleJob(period, true);
             else
                 manager.alarmReceiver.createAlert(manager.getContext(), period, true);

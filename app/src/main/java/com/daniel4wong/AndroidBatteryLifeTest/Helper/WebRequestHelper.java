@@ -47,6 +47,7 @@ public class WebRequestHelper extends AbstractTestHelper {
             postData.put("web",  AppPreferences.getInstance().getPreference(R.string.data_web_request, ""));
             postData.put("gps", AppPreferences.getInstance().getPreference(R.string.data_gps_location, ""));
             postData.put("ble",  AppPreferences.getInstance().getPreference(R.string.data_ble_device_count, ""));
+            postData.put("doze", DeviceManager.Power.isDozing());
         } catch (JSONException e) {
             e.printStackTrace();
         }

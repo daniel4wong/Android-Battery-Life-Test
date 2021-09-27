@@ -30,6 +30,7 @@ public class TestJob extends Job {
 
         return new JobRequest.Builder(TestJob.TAG)
                 .setPeriodic(TimeUnit.SECONDS.toMillis(period), JobRequest.MIN_FLEX)
+                .setRequiredNetworkType(JobRequest.NetworkType.ANY)
                 .setUpdateCurrent(true)
                 .build()
                 .schedule();

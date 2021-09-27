@@ -167,7 +167,7 @@ public class DeviceManager extends Singleton implements ISingleton {
 
             PowerManager powerManager = (PowerManager) context.getSystemService(Context.POWER_SERVICE);
             getInstance().wakeLock = powerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, packageName);
-            getInstance().wakeLock .acquire();
+            getInstance().wakeLock.acquire();
         }
 
         public static void releaseWakeLock() {
