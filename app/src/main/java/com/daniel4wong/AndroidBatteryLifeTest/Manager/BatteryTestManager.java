@@ -4,11 +4,15 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.os.Build;
 import android.os.Handler;
+import android.os.PowerManager;
 import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.daniel4wong.AndroidBatteryLifeTest.Core.BroadcastReceiver.AlarmReceiver;
+import com.daniel4wong.AndroidBatteryLifeTest.Job.TestJob;
 import com.daniel4wong.AndroidBatteryLifeTest.MainApplication;
 import com.daniel4wong.AndroidBatteryLifeTest.AppContext;
 import com.daniel4wong.AndroidBatteryLifeTest.Model.Constant.LogType;
@@ -27,6 +31,7 @@ public class BatteryTestManager extends Singleton implements ISingleton {
     @Override
     public void onLoad() {
         handler = new Handler();
+        alarmReceiver = new AlarmReceiver();
         deviceManager = DeviceManager.getInstance();
         webRequestHelper = new WebRequestHelper(getContext());
         gpsLocationHelper = new GpsLocationHelper(getContext());
@@ -45,6 +50,9 @@ public class BatteryTestManager extends Singleton implements ISingleton {
     private WebRequestHelper webRequestHelper;
     private GpsLocationHelper gpsLocationHelper;
     private BleDeviceHelper bleDeviceHelper;
+
+    private AlarmReceiver alarmReceiver;
+    private int jobId;
 
     public void runTestOnce() {
         runTestOnce(0);
@@ -72,11 +80,13 @@ public class BatteryTestManager extends Singleton implements ISingleton {
 
         //web
         if (AppPreferences.getInstance().isMakeWebRequest()) {
-            webRequestHelper.httpGet("https://worldtimeapi.org/api/timezone/Asia/Hong_Kong", null);
+            //https://worldtimeapi.org/api/timezone/Asia/Hong_Kong
+            String url = "https://en345750ztapgxo.m.pipedream.net";
+            webRequestHelper.httpGet(url, null);
         }
         //gps
         if (AppPreferences.getInstance().isMakeGpsRequest()) {
-            gpsLocationHelper.getCurrentLocation(GpsLocationHelper.ProviderType.NETWORK);
+            gpsLocationHelper.getCurrentLocation();
         }
         //ble
         if (AppPreferences.getInstance().isMakeBleRequest()) {
@@ -124,6 +134,10 @@ public class BatteryTestManager extends Singleton implements ISingleton {
 
     public static boolean canRunTest() {
         boolean canRun = true;
+        if (!DeviceManager.Power.isIgnoringBatteryOptimizations()) {
+            DeviceManager.Power.requestChangeBatteryOptimizations(true);
+            return false;
+        }
         if (AppPreferences.getInstance().isMakeWebRequest() && !BatteryTestManager.getInstance().webRequestHelper.check()) {
             return false;
         }
@@ -169,6 +183,31 @@ public class BatteryTestManager extends Singleton implements ISingleton {
         public static boolean isReadySimCard() {
             TelephonyManager telephonyManager = (TelephonyManager) AppContext.getSystemService(Context.TELEPHONY_SERVICE);
             return telephonyManager.getSimState() == TelephonyManager.SIM_STATE_READY;
+        }
+    }
+
+    public static class Job {
+        public static void startJob() {
+            BatteryTestManager manager = BatteryTestManager.getInstance();
+
+            Long period = Long.valueOf(AppPreferences.getInstance().getPreference(R.string.pref_test_period_seconds, "0"));
+            if (period >= 900L)
+                manager.jobId = TestJob.scheduleJob(period);
+            else
+                manager.alarmReceiver.createAlert(manager.getContext(), period, true);
+
+            DeviceManager.Power.acquireWakeLock();
+        }
+
+        public static void stopJob() {
+            BatteryTestManager manager = BatteryTestManager.getInstance();
+
+            if (manager.jobId > 0L)
+                TestJob.cancelJob(manager.jobId);
+            else
+                manager.alarmReceiver.stopAlarm();
+
+            DeviceManager.Power.releaseWakeLock();
         }
     }
 }

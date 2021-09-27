@@ -25,7 +25,7 @@ public class DialogHelper {
         editText.setInputType(InputType.TYPE_CLASS_NUMBER);
         editText.setRawInputType(Configuration.KEYBOARD_12KEY);
         editText.setMaxLines(1);
-        editText.setFilters(new InputFilter[] { new InputFilter.LengthFilter(2) });
+        editText.setFilters(new InputFilter[] { new InputFilter.LengthFilter(8) });
         builder.setView(editText);
         builder.setPositiveButton(context.getString(R.string.button_confirm), (dialogInterface, i) -> {
             String text = editText.getText().toString();

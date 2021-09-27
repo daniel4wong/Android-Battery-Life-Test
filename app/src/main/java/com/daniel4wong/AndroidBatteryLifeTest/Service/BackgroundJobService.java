@@ -1,4 +1,4 @@
-package com.daniel4wong.AndroidBatteryLifeTest;
+package com.daniel4wong.AndroidBatteryLifeTest.Service;
 
 import android.app.job.JobInfo;
 import android.app.job.JobParameters;

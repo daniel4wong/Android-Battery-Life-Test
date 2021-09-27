@@ -2,21 +2,26 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.daniel4wong.AndroidBatteryLifeTest">
 
-    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <!-- Background -->
+    <uses-permission android:name="android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS"/>
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
-    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <!-- GPS -->
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" />
-    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <!-- BLE -->
     <uses-permission android:name="android.permission.BLUETOOTH" />
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
+    <!-- Web -->
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
+    <!-- Others -->
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <application
         android:name=".MainApplication"
@@ -29,12 +34,13 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.BatteryTest">
         <service
-            android:name=".BackgroundJobService"
+            android:name=".Service.BackgroundJobService"
             android:enabled="true"
             android:exported="true"
             android:permission="android.permission.BIND_JOB_SERVICE" />
-        <service android:name=".BackgroundService" />
+        <service android:name=".Service.BackgroundService" />
         <receiver android:name=".Core.BroadcastReceiver.AlarmReceiver" />
+        <receiver android:name=".Core.BroadcastReceiver.BackgroundWakefulReceiver" />
         <receiver android:name=".Core.BroadcastReceiver.PowerConnectionReceiver">
             <intent-filter>
                 <action android:name="android.intent.action.ACTION_POWER_CONNECTED"/>
@@ -55,7 +61,7 @@
         <activity
             android:name=".Activity.MainActivity"
             android:configChanges="orientation|keyboardHidden"
-            android:label=""
+            android:label="@string/app_name"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan|stateAlwaysHidden">
             <intent-filter>

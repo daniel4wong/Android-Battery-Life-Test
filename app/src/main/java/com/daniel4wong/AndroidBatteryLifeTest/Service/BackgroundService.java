@@ -1,11 +1,10 @@
-package com.daniel4wong.AndroidBatteryLifeTest;
+package com.daniel4wong.AndroidBatteryLifeTest.Service;
 
 import static android.os.Process.THREAD_PRIORITY_BACKGROUND;
 
 import android.app.Notification;
 import android.app.Service;
 import android.content.Intent;
-import android.os.Build;
 import android.os.Handler;
 import android.os.HandlerThread;
 import android.os.IBinder;
@@ -18,6 +17,7 @@ import androidx.annotation.NonNull;
 import com.daniel4wong.AndroidBatteryLifeTest.Helper.NotificationHelper;
 import com.daniel4wong.AndroidBatteryLifeTest.Manager.BatteryTestManager;
 import com.daniel4wong.AndroidBatteryLifeTest.Model.Constant.LogType;
+import com.daniel4wong.AndroidBatteryLifeTest.R;
 
 //https://developer.android.com/guide/components/services#java
 public class BackgroundService extends Service {

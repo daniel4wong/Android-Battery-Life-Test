@@ -1,5 +1,6 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <string name="app_name">Battery Test</string>
+    <string name="app_short_name" translatable="false">BTX</string>
     <string name="title_home">Home</string>
     <string name="title_config">Config</string>
     <string name="title_chart">Chart</string>
@@ -21,6 +22,7 @@
     <string name="button_cancel">Cancel</string>
     <string name="button_black">Black</string>
     <string name="button_once">Once</string>
+    <string name="button_clear">Clear</string>
 
     <string name="header_input_number">Input Number</string>
 
@@ -40,6 +42,7 @@
     <string name="msg_test_stop">Battery test has been stopped.</string>
     <string name="msg_permissions_not_grant">Permissions do not grant.</string>
     <string name="msg_database_downloaded_success">Database has been downloaded.</string>
+    <string name="msg_database_deleted_data">Database data has been deleted.</string>
     <string name="msg_background_task_is_running">Background task is running.</string>
     <string name="msg_charging">Charging</string>
     <string name="msg_not_charging">Not charging</string>

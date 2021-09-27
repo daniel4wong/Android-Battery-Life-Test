@@ -46,6 +46,7 @@ public abstract class AppDatabase extends RoomDatabase {
                     .allowMainThreadQueries()
                     .build();
             Log.i(TAG, DebugDB.getAddressLog());
+            Log.i(TAG, "Run: adb forward tcp:8080 tcp:8080");
         }
         instance.context = context;
     }

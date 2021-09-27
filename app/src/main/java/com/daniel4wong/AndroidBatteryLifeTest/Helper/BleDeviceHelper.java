@@ -15,7 +15,9 @@ import android.util.Log;
 import com.daniel4wong.AndroidBatteryLifeTest.MainApplication;
 import com.daniel4wong.AndroidBatteryLifeTest.Core.BroadcastReceiver.BatteryTestReceiver;
 import com.daniel4wong.AndroidBatteryLifeTest.Model.Constant.LogType;
-import com.google.gson.Gson;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -78,8 +80,18 @@ public class BleDeviceHelper extends AbstractTestHelper {
                 intent.putExtra(BatteryTestReceiver.STATE, false);
                 intent.putExtra(BatteryTestReceiver.TYPE, TYPE);
                 synchronized (devices) {
-                    Log.i(TAG, String.format("[Response] Number of BLE devices: %d", devices.size()));
-                    intent.putExtra(BatteryTestReceiver.TEST_RESULT, new Gson().toJson(devices));
+                    String message = String.format("Number of BLE devices: %d", devices.size());
+                    Log.i(TAG, String.format("[Response] %s", message));
+
+                    JSONObject data = new JSONObject();
+                    try {
+                        data.put("type",  TYPE);
+                        data.put("count",  devices.size());
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+
+                    intent.putExtra(BatteryTestReceiver.TEST_RESULT, data.toString());
                 }
                 context.sendBroadcast(intent);
 

@@ -29,7 +29,7 @@ public class PermissionHelper {
                 noPermissions.add(permission);
         }
         if (autoRequire && noPermissions.size() > 0) {
-            requirePermission(permissions, null, null);
+            requirePermission(noPermissions.toArray(new String[0]), null, null);
         }
         return noPermissions.size() == 0;
     }

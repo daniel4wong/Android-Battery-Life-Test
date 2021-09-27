@@ -122,6 +122,10 @@ public class HomeFragment extends Fragment {
             Integer _screenTime = Integer.valueOf(AppPreferences.getInstance().getPreference(R.string.pref_screen_seconds, "0"));
             BatteryTestManager.getInstance().runTestOnce(_screenTime);
         });
+        binding.buttonClear.setOnClickListener(view ->  {
+            AppDatabase.getInstance().clearAllTables();
+            Toast.makeText(getContext(), R.string.msg_database_deleted_data, Toast.LENGTH_LONG).show();
+        });
         return root;
     }
 

@@ -9,7 +9,9 @@ import com.daniel4wong.AndroidBatteryLifeTest.Core.BroadcastReceiver.CustomBatte
 import com.daniel4wong.AndroidBatteryLifeTest.Database.AppDatabase;
 import com.daniel4wong.AndroidBatteryLifeTest.Helper.LocaleHelper;
 import com.daniel4wong.AndroidBatteryLifeTest.Helper.NotificationHelper;
+import com.daniel4wong.AndroidBatteryLifeTest.Job.TestJobCreator;
 import com.daniel4wong.AndroidBatteryLifeTest.Manager.CustomBatteryManager;
+import com.evernote.android.job.JobManager;
 
 public class MainApplication extends BaseApplication {
     public static Context context;
@@ -22,6 +24,7 @@ public class MainApplication extends BaseApplication {
 
         AppDatabase.init(getApplicationContext());
         CustomBatteryManager.getInstance().start();
+        JobManager.create(this).addJobCreator(new TestJobCreator());
     }
 
     @Override

@@ -4,10 +4,12 @@ import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
+import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Build;
+import android.os.Looper;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
@@ -15,8 +17,14 @@ import androidx.annotation.NonNull;
 import com.daniel4wong.AndroidBatteryLifeTest.Core.BroadcastReceiver.BatteryTestReceiver;
 import com.daniel4wong.AndroidBatteryLifeTest.Model.Constant.LogType;
 import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationCallback;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
-import com.google.gson.Gson;
+import com.google.android.gms.tasks.OnSuccessListener;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -29,33 +37,19 @@ public class GpsLocationHelper extends AbstractTestHelper {
     private Context context;
     private LocationManager locationManager;
     private FusedLocationProviderClient fusedLocationProviderClient;
+    private String lastProvider;
 
-    private LocationListener locationListener = new LocationListener() {
-        @Override
-        public void onLocationChanged(@NonNull Location location) {
-            Log.i(TAG, String.format("[Response] Location: %s, %s", location.getLatitude(), location.getLongitude()));
-            Intent _intent = new Intent();
-            _intent.setAction(BatteryTestReceiver.ACTION_TEST_CHANGE);
-            _intent.putExtra(BatteryTestReceiver.STATE, false);
-            _intent.putExtra(BatteryTestReceiver.TYPE, TYPE);
-            _intent.putExtra(BatteryTestReceiver.TEST_RESULT, new Gson().toJson(location));
-            context.sendBroadcast(_intent);
-            locationManager.removeUpdates(locationListener);
-        }
-    };
+    private LocationListener locationListener = location -> readLocation(location, lastProvider);
 
     public GpsLocationHelper(Context context) {
         this.context = context;
-        this.locationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
-        this.fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(context);
+
+        locationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
+        fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(context);
     }
 
     @SuppressLint("MissingPermission")
-    public void getCurrentLocation(ProviderType providerType) {
-        String provider = LocationManager.GPS_PROVIDER;
-        if (providerType == ProviderType.NETWORK)
-            provider = LocationManager.NETWORK_PROVIDER;
-
+    public void getCurrentLocation() {
         Log.i(TAG, "[Request] Requesting GPS location...");
         Intent intent = new Intent();
         intent.setAction(BatteryTestReceiver.ACTION_TEST_CHANGE);
@@ -63,7 +57,44 @@ public class GpsLocationHelper extends AbstractTestHelper {
         intent.putExtra(BatteryTestReceiver.TYPE, TYPE);
         context.sendBroadcast(intent);
 
-        locationManager.requestLocationUpdates(provider, 0, 0, locationListener);
+        lastProvider = getBestProvider();
+        locationManager.requestLocationUpdates(lastProvider, 0, 0, locationListener);
+        fusedLocationProviderClient.getLastLocation().addOnSuccessListener(location -> readLocation(location, "fuse"));
+    }
+
+    private String getBestProvider() {
+        Criteria criteria = new Criteria();
+        criteria.setCostAllowed(false);
+        criteria.setSpeedRequired(false);
+        criteria.setBearingRequired(false);
+        criteria.setAltitudeRequired(false);
+        criteria.setAccuracy(Criteria.ACCURACY_FINE);
+
+        String bestProvider = locationManager.getBestProvider(criteria, true);
+        return bestProvider;
+    }
+
+    private void readLocation(Location location, String by) {
+        String message = String.format("Location: %s, %s", location.getLatitude(), location.getLongitude());
+        Log.i(TAG, String.format("[Response] %s", message));
+
+        JSONObject data = new JSONObject();
+        try {
+            data.put("type", TYPE);
+            data.put("latitude", location.getLatitude());
+            data.put("longitude", location.getLongitude());
+            data.put("by", by);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        Intent _intent = new Intent();
+        _intent.setAction(BatteryTestReceiver.ACTION_TEST_CHANGE);
+        _intent.putExtra(BatteryTestReceiver.STATE, false);
+        _intent.putExtra(BatteryTestReceiver.TYPE, TYPE);
+        _intent.putExtra(BatteryTestReceiver.TEST_RESULT, data.toString());
+        context.sendBroadcast(_intent);
+        locationManager.removeUpdates(locationListener);
     }
 
     @Override
@@ -83,10 +114,5 @@ public class GpsLocationHelper extends AbstractTestHelper {
     public boolean check() {
         PermissionHelper.requirePermission(getRequiredPermissions(), null, null);
         return checkPermissions(context);
-    }
-
-    public enum ProviderType {
-        NETWORK,
-        GPS
     }
 }

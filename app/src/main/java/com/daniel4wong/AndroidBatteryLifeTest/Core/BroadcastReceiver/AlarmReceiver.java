@@ -8,9 +8,9 @@ import android.content.Intent;
 import android.os.Build;
 import android.util.Log;
 
-import com.daniel4wong.AndroidBatteryLifeTest.BackgroundService;
+import com.daniel4wong.AndroidBatteryLifeTest.Service.BackgroundService;
 import com.daniel4wong.AndroidBatteryLifeTest.Model.Constant.LogType;
-import com.daniel4wong.AndroidBatteryLifeTest.BackgroundJobService;
+import com.daniel4wong.AndroidBatteryLifeTest.Service.BackgroundJobService;
 
 import java.util.UUID;
 

@@ -71,7 +71,7 @@ public class LineChartHelper {
         xAxis.setDrawGridLines(gridlines[0]);
         xAxis.setAxisMinimum(xRange[0]);
         xAxis.setAxisMaximum(xRange[1]);
-        xAxis.setLabelCount((int)(xRange[1]/xRange[2]));
+        xAxis.setLabelCount((int)(xRange[1] / xRange[2]));
 
         YAxis yAxis = chart.getAxisLeft();
         yAxis.setPosition(YAxis.YAxisLabelPosition.OUTSIDE_CHART);
@@ -81,7 +81,7 @@ public class LineChartHelper {
         yAxis.setDrawGridLines(gridlines[1]);
         yAxis.setAxisMinimum(yRange[0]);
         yAxis.setAxisMaximum(yRange[1]);
-        yAxis.setLabelCount((int)(yRange[1]/yRange[2]));
+        yAxis.setLabelCount((int)(yRange[1] / yRange[2]));
 
         chart.getAxisRight().setEnabled(false);
     }
@@ -132,8 +132,7 @@ public class LineChartHelper {
 
     public void refreshData() {
         Date now = new Date();
-        Date fromDate = new Date(now.getYear(), now.getMonth(), now.getDay(),
-                now.getHours(), 0);
+        Date fromDate = new Date(now.getYear(), now.getMonth(), now.getDate(), now.getHours(), 0);
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(fromDate);
         calendar.add(Calendar.HOUR, 1);
@@ -144,8 +143,10 @@ public class LineChartHelper {
             toDate = endTime;
         }
 
-        Log.d(TAG, String.format("Query data: from %tT to %tT", fromDate, toDate));
+        Description description = chart.getDescription();
+        description.setText(String.format("%s (%tT)", activity.getString(R.string.chart_description), fromDate));
 
+        Log.d(TAG, String.format("Query data: from %tT to %tT", fromDate, toDate));
         AppDatabase.getInstance().batteryHistoryDao().getList(fromDate, toDate)
                 .subscribeOn(Schedulers.computation())
                 .doOnError(new BlockingIgnoringReceiver())

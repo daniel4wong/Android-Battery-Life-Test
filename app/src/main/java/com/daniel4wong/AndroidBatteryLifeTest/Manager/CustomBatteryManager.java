@@ -33,15 +33,14 @@ public class CustomBatteryManager extends Singleton implements ISingleton {
     /// end Singleton
 
     private static final String TAG = CustomBatteryManager.class.getSimpleName();
+    private boolean showNotification = false;
 
     private BroadcastReceiver batteryReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            Date fromDate = Calendar.getInstance().getTime();
-            fromDate = new Date(fromDate.getYear(), fromDate.getMonth(), fromDate.getDay(),
-                    fromDate.getHours(), fromDate.getMinutes());
+            Date now = new Date();
+            Date fromDate = new Date(now.getYear(), now.getMonth(), now.getDate(), now.getHours(), now.getMinutes());
             Date toDate = new Date(fromDate.getTime() + 60000L);
-
             BatteryHistory model = new BatteryHistory();
             model.logTs = fromDate;
             model.btryLvl = (long) intent.getIntExtra(BatteryManager.EXTRA_LEVEL, -1);
@@ -66,11 +65,11 @@ public class CustomBatteryManager extends Singleton implements ISingleton {
                         }
                     });
 
-            boolean isCharging = DeviceManager.getInstance().isCharging();
-
-            NotificationHelper.showBatteryNotification(
-                    isCharging ? context.getString(R.string.msg_charging) : context.getString(R.string.msg_not_charging),
-                    String.format("%d", model.btryLvl) + "%");
+            if (showNotification) {
+                String name = DeviceManager.getInstance().isCharging() ? context.getString(R.string.msg_charging) : context.getString(R.string.msg_not_charging);
+                String description = String.format("%d", model.btryLvl) + "%";
+                NotificationHelper.showBatteryNotification(name , description);
+            }
         }
     };
 

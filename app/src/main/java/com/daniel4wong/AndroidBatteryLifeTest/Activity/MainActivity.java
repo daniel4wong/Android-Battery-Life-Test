@@ -10,7 +10,6 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import com.daniel4wong.AndroidBatteryLifeTest.Core.AppPreferences;
-import com.daniel4wong.AndroidBatteryLifeTest.Core.BroadcastReceiver.AlarmReceiver;
 import com.daniel4wong.AndroidBatteryLifeTest.Core.BroadcastReceiver.BatteryTestReceiver;
 import com.daniel4wong.AndroidBatteryLifeTest.Helper.LayoutHelper;
 import com.daniel4wong.AndroidBatteryLifeTest.Helper.PermissionHelper;
@@ -35,7 +34,6 @@ public class MainActivity extends BaseActivity {
 
     private ActivityMainBinding binding;
     private Menu optionMenu;
-    private AlarmReceiver alarmReceiver;
     private MenuItem menuStart;
     private MenuItem menuStop;
 
@@ -47,6 +45,8 @@ public class MainActivity extends BaseActivity {
             }
         }
         LayoutHelper.setTouchablesEnable(binding.navView, !isStart);
+        menuStart.setEnabled(true);
+        menuStop.setEnabled(true);
     });
 
     @Override
@@ -74,23 +74,16 @@ public class MainActivity extends BaseActivity {
         filter.addAction(BatteryTestReceiver.ACTION_STATE_CHANGE);
         registerReceiver(receiver, filter);
 
-        AppPreferences.getInstance().savePreference(R.string.flag_state_test_started, false);
-
-        alarmReceiver = new AlarmReceiver();
         if (Long.valueOf(AppPreferences.getInstance().getPreference(R.string.pref_test_period_seconds, "0")) <= 0)
             AppPreferences.getInstance().savePreference(R.string.flag_state_test_started, false);
+
+        if (AppPreferences.getInstance().isTestStarted())
+            BatteryTestManager.Job.startJob();
     }
 
     @Override
     protected void onStart() {
         super.onStart();
-
-        if (AppPreferences.getInstance().isTestStarted() && BatteryTestManager.canRunTest()) {
-            alarmReceiver.createAlert(
-                    this,
-                    Long.valueOf(AppPreferences.getInstance().getPreference(R.string.pref_test_period_seconds, "0")),
-                    false);
-        }
     }
 
     @Override
@@ -166,17 +159,14 @@ public class MainActivity extends BaseActivity {
                 menuStart.setVisible(false);
                 menuStop.setVisible(true);
                 AppPreferences.getInstance().savePreference(R.string.flag_state_test_started, true);
-                alarmReceiver.createAlert(
-                        this,
-                        Long.valueOf(AppPreferences.getInstance().getPreference(R.string.pref_test_period_seconds, "0")) ,
-                        true);
+                BatteryTestManager.Job.startJob();
                 break;
             }
             case R.id.menu_stop: {
                 menuStart.setVisible(true);
                 menuStop.setVisible(false);
                 AppPreferences.getInstance().savePreference(R.string.flag_state_test_started, false);
-                alarmReceiver.stopAlarm();
+                BatteryTestManager.Job.stopJob();
                 break;
             }
             default: {

@@ -21,6 +21,7 @@
     <string name="button_cancel">取消</string>
     <string name="button_black">黑色</string>
     <string name="button_once">一次</string>
+    <string name="button_clear">清除</string>
 
     <string name="header_input_number">輸入數字</string>
 
@@ -39,6 +40,7 @@
     <string name="msg_test_start">電量測試已開始。</string>
     <string name="msg_test_stop">電量測試已停止。</string>
     <string name="msg_database_downloaded_success">數據庫已下載。</string>
+    <string name="msg_database_deleted_data">數據庫資料已被刪除。</string>
     <string name="msg_permissions_not_grant">權限不授予。</string>
     <string name="msg_background_task_is_running">後台任務正在運行。</string>
     <string name="msg_charging">充電中</string>
