@@ -4,6 +4,8 @@ import android.view.Window;
 
 import com.daniel4wong.AndroidBatteryLifeTest.Core.*;
 
+import java.util.Dictionary;
+
 public class AppContext extends Singleton implements ISingleton {
     public static AppContext getInstance() {
         ISingleton _instance = getInstance(AppContext.class);

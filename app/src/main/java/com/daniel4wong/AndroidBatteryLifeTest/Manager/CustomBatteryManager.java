@@ -51,6 +51,7 @@ public class CustomBatteryManager extends Singleton implements ISingleton {
                 return;
 
             Log.i(TAG, String.format("Log battery level: %d", model.btryLvl));
+            AppPreferences.getInstance().savePreference(R.string.data_web_battery_level, model.btryLvl.toString());
 
             AppDatabase.getInstance().batteryHistoryDao().getList(fromDate, toDate)
                     .subscribeOn(Schedulers.computation())

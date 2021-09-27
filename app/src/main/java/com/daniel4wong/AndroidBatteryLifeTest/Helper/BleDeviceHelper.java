@@ -12,14 +12,18 @@ import android.content.Intent;
 import android.os.Handler;
 import android.util.Log;
 
+import com.daniel4wong.AndroidBatteryLifeTest.Core.AppPreferences;
 import com.daniel4wong.AndroidBatteryLifeTest.MainApplication;
 import com.daniel4wong.AndroidBatteryLifeTest.Core.BroadcastReceiver.BatteryTestReceiver;
 import com.daniel4wong.AndroidBatteryLifeTest.Model.Constant.LogType;
+import com.daniel4wong.AndroidBatteryLifeTest.R;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 //https://proandroiddev.com/background-ble-scan-in-doze-mode-on-android-devices-3c2ce1764570
@@ -87,11 +91,14 @@ public class BleDeviceHelper extends AbstractTestHelper {
                     try {
                         data.put("type",  TYPE);
                         data.put("count",  devices.size());
+                        data.put("ts", new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
 
                     intent.putExtra(BatteryTestReceiver.TEST_RESULT, data.toString());
+
+                    AppPreferences.getInstance().savePreference(R.string.data_ble_device_count, data.toString());
                 }
                 context.sendBroadcast(intent);
 

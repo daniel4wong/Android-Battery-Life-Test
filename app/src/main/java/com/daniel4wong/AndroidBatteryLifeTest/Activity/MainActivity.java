@@ -41,12 +41,13 @@ public class MainActivity extends BaseActivity {
         boolean isStart = intent.getBooleanExtra(BatteryTestReceiver.STATE, false);
         if (optionMenu != null) {
             for(int i = 0; i < optionMenu.size(); i++) {
-                optionMenu.getItem(i).setEnabled(!isStart);
+                MenuItem item = optionMenu.getItem(i);
+                if (item.getItemId() == R.id.menu_start || item.getItemId() == R.id.menu_stop)
+                    continue;
+                item.setEnabled(!isStart);
             }
         }
         LayoutHelper.setTouchablesEnable(binding.navView, !isStart);
-        menuStart.setEnabled(true);
-        menuStop.setEnabled(true);
     });
 
     @Override

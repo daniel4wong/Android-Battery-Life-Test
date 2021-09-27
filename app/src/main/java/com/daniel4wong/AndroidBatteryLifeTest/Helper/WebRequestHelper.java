@@ -9,12 +9,15 @@ import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.JsonObjectRequest;
-import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.daniel4wong.AndroidBatteryLifeTest.Core.AppPreferences;
 import com.daniel4wong.AndroidBatteryLifeTest.Core.BroadcastReceiver.BatteryTestReceiver;
 import com.daniel4wong.AndroidBatteryLifeTest.Manager.DeviceManager;
 import com.daniel4wong.AndroidBatteryLifeTest.Model.Constant.LogType;
+import com.daniel4wong.AndroidBatteryLifeTest.R;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.function.Consumer;
 
 import androidx.annotation.Nullable;
@@ -40,6 +43,10 @@ public class WebRequestHelper extends AbstractTestHelper {
         JSONObject postData = new JSONObject();
         try {
             postData.put("androidId",  androidId);
+            postData.put("level", AppPreferences.getInstance().getPreference(R.string.data_web_battery_level, ""));
+            postData.put("web",  AppPreferences.getInstance().getPreference(R.string.data_web_request, ""));
+            postData.put("gps", AppPreferences.getInstance().getPreference(R.string.data_gps_location, ""));
+            postData.put("ble",  AppPreferences.getInstance().getPreference(R.string.data_ble_device_count, ""));
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -54,11 +61,13 @@ public class WebRequestHelper extends AbstractTestHelper {
             intent.putExtra(BatteryTestReceiver.STATE, false);
             intent.putExtra(BatteryTestReceiver.TYPE, TYPE);
             try {
+                response.put("ts", new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));
                 response.put("type", TYPE);
             } catch (JSONException e) {
                 e.printStackTrace();
             }
             intent.putExtra(BatteryTestReceiver.TEST_RESULT, response.toString());
+            AppPreferences.getInstance().savePreference(R.string.data_web_request, response.toString());
             context.sendBroadcast(intent);
         }, error -> {
             if (consumer != null)
@@ -83,6 +92,7 @@ public class WebRequestHelper extends AbstractTestHelper {
         intent.putExtra(BatteryTestReceiver.TYPE, TYPE);
         context.sendBroadcast(intent);
 
+        Log.i(TAG, "Add request to queue...");
         queue.add(request);
     }
 

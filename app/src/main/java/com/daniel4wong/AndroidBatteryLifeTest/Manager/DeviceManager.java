@@ -84,7 +84,12 @@ public class DeviceManager extends Singleton implements ISingleton {
         WifiManager wifiManager = (WifiManager) getContext().getSystemService(Context.WIFI_SERVICE);
         boolean isWifiEnabled = wifiManager.isWifiEnabled();
         if (!isWifiEnabled && shouldEnabled) {
-            wifiManager.setWifiEnabled(true);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                Intent intent = new Intent(Settings.Panel.ACTION_INTERNET_CONNECTIVITY);
+                MainApplication.currentActivity.startActivityForResult(intent, 0);
+            } else {
+                wifiManager.setWifiEnabled(true);
+            }
         }
         return isWifiEnabled;
     }

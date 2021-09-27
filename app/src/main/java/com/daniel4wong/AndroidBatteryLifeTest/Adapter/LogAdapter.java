@@ -2,6 +2,7 @@ package com.daniel4wong.AndroidBatteryLifeTest.Adapter;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.graphics.Typeface;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -35,7 +36,7 @@ public class LogAdapter extends ArrayAdapter<TestHistory> {
         TextView name = convertView.findViewById(R.id.textViewName);
         TextView description = convertView.findViewById(R.id.textviewDescription);
 
-        name.setText(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(testHistory.logTs) + " [" + testHistory.type + "]");
+        name.setText(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(testHistory.logTs) + " [ " + testHistory.type + " ]");
         description.setText(testHistory.dataText);
 
         return convertView;

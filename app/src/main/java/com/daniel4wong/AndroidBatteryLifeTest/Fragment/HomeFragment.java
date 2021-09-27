@@ -62,23 +62,27 @@ public class HomeFragment extends Fragment {
                 AppDatabase.getInstance().testHistoryDao().insertRecord(model);
             }
 
+            TextView textView = null;
             switch (type) {
                 case WebRequestHelper.TYPE: {
-                    if (!state) {
-                        binding.textViewResultWeb.setText(date);
-                    }
+                    textView = binding.textViewResultWeb;
                     break;
                 }
                 case GpsLocationHelper.TYPE: {
-                    if (!state)
-                        binding.textViewResultGps.setText(date);
+                    textView = binding.textViewResultGps;
                     break;
                 }
                 case BleDeviceHelper.TYPE: {
-                    if (!state)
-                        binding.textViewResultBle.setText(date);
+                    textView = binding.textViewResultBle;
                     break;
                 }
+            }
+
+            if (textView != null && !state) {
+                textView.setText(date);
+                textView.setAnimation(AnimationHelper.getFlashAnimation());
+            } else if (textView != null) {
+                textView.setText("...");
             }
         }
     };

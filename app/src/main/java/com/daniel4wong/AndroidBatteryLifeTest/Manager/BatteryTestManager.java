@@ -192,7 +192,7 @@ public class BatteryTestManager extends Singleton implements ISingleton {
 
             Long period = Long.valueOf(AppPreferences.getInstance().getPreference(R.string.pref_test_period_seconds, "0"));
             if (period >= 900L)
-                manager.jobId = TestJob.scheduleJob(period);
+                manager.jobId = TestJob.scheduleJob(period, true);
             else
                 manager.alarmReceiver.createAlert(manager.getContext(), period, true);
 
