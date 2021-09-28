@@ -23,6 +23,7 @@
     <string name="button_black">Black</string>
     <string name="button_once">Once</string>
     <string name="button_clear">Clear</string>
+    <string name="button_crash">Crash</string>
 
     <string name="header_input_number">Input Number</string>
 
@@ -72,6 +73,7 @@
     <string name="pref_show_chart" translatable="false">pref_show_chart</string>
     <string name="pref_record_battery" translatable="false">pref_record_battery</string>
     <string name="flag_state_test_started" translatable="false">flag_state_test_started</string>
+    <string name="data_test_next_execution_time" translatable="false">data_test_next_execution_time</string>
     <string name="data_gps_location" translatable="false">data_gps_location</string>
     <string name="data_ble_device_count" translatable="false">data_ble_device_count</string>
     <string name="data_web_request" translatable="false">data_web_request</string>

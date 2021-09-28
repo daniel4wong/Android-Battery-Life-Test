@@ -16,8 +16,6 @@ import com.daniel4wong.AndroidBatteryLifeTest.Manager.DeviceManager;
 import com.daniel4wong.AndroidBatteryLifeTest.Model.Constant.LogType;
 import com.daniel4wong.AndroidBatteryLifeTest.R;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.function.Consumer;
 
 import androidx.annotation.Nullable;
@@ -62,7 +60,7 @@ public class WebRequestHelper extends AbstractTestHelper {
             intent.putExtra(BatteryTestReceiver.STATE, false);
             intent.putExtra(BatteryTestReceiver.TYPE, TYPE);
             try {
-                response.put("ts", new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));
+                response.put("ts", FormatHelper.dateToString());
                 response.put("type", TYPE);
             } catch (JSONException e) {
                 e.printStackTrace();

@@ -19,13 +19,14 @@
             android:orientation="vertical">
             <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:visibility="gone">
                 <TextView
                     android:id="@+id/textViewDate"
-                    android:tag="@string/pref_test_bgn_date"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
+                    android:tag="@string/pref_test_bgn_date"
                     android:text="@string/label_for_text_date" />
                 <com.daniel4wong.AndroidBatteryLifeTest.Control.InputButton
                     android:id="@+id/buttonPickDate"
@@ -38,7 +39,8 @@
             </RelativeLayout>
             <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:visibility="gone">
                 <TextView
                     android:id="@+id/textViewTime"
                     android:tag="@string/pref_test_bgn_time"
@@ -183,6 +185,11 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center">
                     <Button
+                        android:id="@+id/buttonCrash"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/button_crash" />
+                    <Button
                         android:id="@+id/buttonClear"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -206,6 +213,7 @@
                         android:id="@+id/buttonPlanTest"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:visibility="gone"
                         android:text="@string/button_plan" />
                     <Button
                         android:id="@+id/buttonStartTest"

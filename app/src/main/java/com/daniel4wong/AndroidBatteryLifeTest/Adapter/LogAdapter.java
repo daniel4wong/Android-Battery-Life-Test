@@ -12,10 +12,10 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.daniel4wong.AndroidBatteryLifeTest.Helper.FormatHelper;
 import com.daniel4wong.AndroidBatteryLifeTest.Model.TestHistory;
 import com.daniel4wong.AndroidBatteryLifeTest.R;
 
-import java.text.SimpleDateFormat;
 import java.util.List;
 
 public class LogAdapter extends ArrayAdapter<TestHistory> {
@@ -36,7 +36,7 @@ public class LogAdapter extends ArrayAdapter<TestHistory> {
         TextView name = convertView.findViewById(R.id.textViewName);
         TextView description = convertView.findViewById(R.id.textviewDescription);
 
-        name.setText(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(testHistory.logTs) + " [ " + testHistory.type + " ]");
+        name.setText(FormatHelper.dateToString(testHistory.logTs) + " [ " + testHistory.type + " ]");
         description.setText(testHistory.dataText);
 
         return convertView;

@@ -22,6 +22,7 @@
     <string name="button_black">黑色</string>
     <string name="button_once">一次</string>
     <string name="button_clear">清除</string>
+    <string name="button_crash">崩潰</string>
 
     <string name="header_input_number">輸入數字</string>
 

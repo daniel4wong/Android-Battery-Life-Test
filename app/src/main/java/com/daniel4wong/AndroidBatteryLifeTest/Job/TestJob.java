@@ -13,6 +13,7 @@ import java.util.concurrent.TimeUnit;
 public class TestJob extends Job {
     public static final String TAG = "TestJob";
     public static boolean isStarted = false;
+    public static boolean isEnabled = false;
 
     @NonNull
     @Override
@@ -41,7 +42,16 @@ public class TestJob extends Job {
         isStarted = false;
     }
 
+    public static void clearJobs() {
+        for (Job job : JobManager.instance().getAllJobs()) {
+            job.cancel();
+        }
+    }
+
     public static void run() {
+        if (!isEnabled)
+            return;
+
         BatteryTestManager.getInstance().runTestOnce();
     }
 }

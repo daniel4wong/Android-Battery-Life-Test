@@ -160,7 +160,7 @@ public class LineChartHelper {
                         data.add(new Pair<>(i.logTs.getMinutes(), i.btryLvl.intValue()));
                     });
                     setData(data);
-                }, e -> System.out.println("RoomWithRx: " + e.getMessage()));
+                }, throwable -> { throwable.printStackTrace(); });
     }
 
     public void setTimeRange(Date bgnTime, Date endTime) {

@@ -23,7 +23,6 @@ public class BackgroundJobService extends JobService {
     @Override
     public void onCreate() {
         super.onCreate();
-
         Log.i(TAG, "onCreate");
     }
 
@@ -38,21 +37,17 @@ public class BackgroundJobService extends JobService {
     @Override
     public boolean onStopJob(JobParameters jobParameters) {
         Log.i(TAG, "onStopJob");
-
         return false;
     }
 
     @Override
     public void onDestroy() {
         Log.i(TAG, "onDestroy");
-
         super.onDestroy();
     }
 
     public static void scheduleJob(Context context, Long periodInSecond) {
         JobInfo.Builder builder = new JobInfo.Builder(JOB_ID, new ComponentName(context, BackgroundJobService.class))
-                .setRequiresCharging(false)
-                .setRequiresDeviceIdle(false)
                 .setPersisted(true)
                 .setMinimumLatency(0L)
                 .setOverrideDeadline(periodInSecond * 1000);

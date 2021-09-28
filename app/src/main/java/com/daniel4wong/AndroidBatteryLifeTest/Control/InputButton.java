@@ -6,11 +6,9 @@ import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.util.AttributeSet;
-import android.view.View;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.view.animation.LinearInterpolator;
-import android.widget.ProgressBar;
 
 import com.daniel4wong.AndroidBatteryLifeTest.Helper.DialogHelper;
 import com.daniel4wong.AndroidBatteryLifeTest.R;

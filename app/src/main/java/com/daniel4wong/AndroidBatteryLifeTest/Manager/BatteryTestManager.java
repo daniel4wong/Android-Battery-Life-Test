@@ -80,10 +80,7 @@ public class BatteryTestManager extends Singleton implements ISingleton {
 
         //web
         if (AppPreferences.getInstance().isMakeWebRequest()) {
-            //https://nklvsbit7y0xh01yywqtjj.hooks.webhookrelay.com
-            //https://en345750ztapgxo.m.pipedream.net
-            String url = "https://nklvsbit7y0xh01yywqtjj.hooks.webhookrelay.com";
-            webRequestHelper.httpGet(url, null);
+            webRequestHelper.httpGet(AppContext.webRequestUrl, null);
         }
         //gps
         if (AppPreferences.getInstance().isMakeGpsRequest()) {
@@ -118,6 +115,7 @@ public class BatteryTestManager extends Singleton implements ISingleton {
 
     public void stop() {
         reset();
+
         isRunning = false;
         Toast.makeText(getContext(), R.string.msg_test_stop, Toast.LENGTH_LONG).show();
         AppPreferences.getInstance().savePreference(R.string.flag_state_test_started, false);
@@ -134,7 +132,6 @@ public class BatteryTestManager extends Singleton implements ISingleton {
     }
 
     public static boolean canRunTest() {
-        boolean canRun = true;
         if (!DeviceManager.Power.isIgnoringBatteryOptimizations()) {
             DeviceManager.Power.requestChangeBatteryOptimizations(true);
             return false;
@@ -148,21 +145,12 @@ public class BatteryTestManager extends Singleton implements ISingleton {
         if (AppPreferences.getInstance().isMakeBleRequest() && !BatteryTestManager.getInstance().bleDeviceHelper.check()) {
             return false;
         }
-
         return Check.isReadyWebRequest();
     }
 
-    public void setQuickTestProfile() {
-        AppPreferences.getInstance().savePreference(R.string.pref_test_period_seconds, "60");
-        AppPreferences.getInstance().savePreference(R.string.pref_screen_seconds, "5");
-        AppPreferences.getInstance().savePreference(R.string.pref_screen_always_on, true);
-        AppPreferences.getInstance().savePreference(R.string.pref_web_request, true);
-        AppPreferences.getInstance().savePreference(R.string.pref_gps_request, true);
-        AppPreferences.getInstance().savePreference(R.string.pref_ble_request, true);
-    }
     public void setDefaultTestProfile() {
         AppPreferences.getInstance().savePreference(R.string.pref_test_period_seconds, "600");
-        AppPreferences.getInstance().savePreference(R.string.pref_screen_seconds, "60");
+        AppPreferences.getInstance().savePreference(R.string.pref_screen_seconds, "0");
         AppPreferences.getInstance().savePreference(R.string.pref_screen_always_on, true);
         AppPreferences.getInstance().savePreference(R.string.pref_web_request, true);
         AppPreferences.getInstance().savePreference(R.string.pref_gps_request, true);

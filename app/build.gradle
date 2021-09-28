@@ -1,5 +1,7 @@
 plugins {
     id 'com.android.application'
+    id 'com.google.gms.google-services'
+    id 'com.google.firebase.crashlytics'
 }
 
 android {
@@ -69,4 +71,8 @@ dependencies {
     // job
     implementation 'com.evernote:android-job:1.4.2'
     implementation "android.arch.work:work-runtime:1.4.2'"
+    // firebase
+    implementation platform('com.google.firebase:firebase-bom:28.4.1')
+    implementation 'com.google.firebase:firebase-analytics'
+    implementation 'com.google.firebase:firebase-crashlytics'
 }

@@ -8,10 +8,15 @@ import android.content.Intent;
 import android.os.Build;
 import android.util.Log;
 
+import com.daniel4wong.AndroidBatteryLifeTest.Core.AppPreferences;
+import com.daniel4wong.AndroidBatteryLifeTest.Helper.FormatHelper;
+import com.daniel4wong.AndroidBatteryLifeTest.Job.TestJob;
+import com.daniel4wong.AndroidBatteryLifeTest.R;
 import com.daniel4wong.AndroidBatteryLifeTest.Service.BackgroundService;
 import com.daniel4wong.AndroidBatteryLifeTest.Model.Constant.LogType;
 import com.daniel4wong.AndroidBatteryLifeTest.Service.BackgroundJobService;
 
+import java.text.SimpleDateFormat;
 import java.util.UUID;
 
 //https://erev0s.com/blog/run-android-service-background-reliably-every-n-seconds/
@@ -30,13 +35,13 @@ public class AlarmReceiver extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        Log.i(TAG, "onReceive");
-
         String jobId = intent.getStringExtra(JOB_ID);
         Long periodInSecond = intent.getLongExtra(PERIOD_IN_SECOND, 0);
 
+        Log.i(TAG, String.format("onReceive: %s", jobId));
+
         if (!latestJobId.equals(jobId)) {
-            Log.i(TAG, "onReceive: exit job as stopped (jobId not matched");
+            Log.i(TAG, "onReceive: exit job as stopped (jobId not matched)");
             return;
         }
 
@@ -48,10 +53,14 @@ public class AlarmReceiver extends BroadcastReceiver {
             return;
 
         this.context = context;
+        stopAlarm();
+
         this.jobId = UUID.randomUUID().toString();
         this.latestJobId = this.jobId;
         this.isCreated = true;
-        if (isRunFirst) {
+
+        Long nextPref = AppPreferences.getInstance().getPreference(R.string.data_test_next_execution_time, 0L);
+        if (isRunFirst && nextPref < System.currentTimeMillis()) {
             run(context, periodInSecond, this.jobId);
         } else {
             this.setAlarm(context, periodInSecond, this.jobId);
@@ -68,7 +77,7 @@ public class AlarmReceiver extends BroadcastReceiver {
 
         Intent intent = new Intent(context, AlarmReceiver.class);
         intent.putExtra(JOB_ID, jobId);
-        intent.putExtra(PERIOD_IN_SECOND,periodInSecond);
+        intent.putExtra(PERIOD_IN_SECOND, periodInSecond);
         pendingIntent = PendingIntent.getBroadcast(
                 context,
                 REQUEST_CODE,
@@ -77,18 +86,41 @@ public class AlarmReceiver extends BroadcastReceiver {
 
         AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
         assert alarmManager != null;
-        Long next = (System.currentTimeMillis() / 1000L + periodInSecond) * 1000L;
+        Long now = System.currentTimeMillis();
+        Long next = now + (periodInSecond * 1000L);
+        Long nextPref = AppPreferences.getInstance().getPreference(R.string.data_test_next_execution_time, 0L);
+        if (nextPref > now && nextPref < next)
+            next = nextPref;
         alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, next, pendingIntent);
+        AppPreferences.getInstance().savePreference(R.string.data_test_next_execution_time, next);
+        Log.i(TAG, String.format("Next run: %s", FormatHelper.dateToString(next)));
     }
 
     public void stopAlarm() {
         Log.i(TAG, String.format("stopAlarm: %s", this.jobId));
         this.isCreated = false;
         this.jobId = "";
-        if (pendingIntent != null) {
-            AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
-            assert alarmManager != null;
+        if (pendingIntent == null) {
+            Intent intent = new Intent(context, AlarmReceiver.class);
+            pendingIntent = PendingIntent.getBroadcast(
+                    context,
+                    REQUEST_CODE,
+                    intent,
+                    PendingIntent.FLAG_UPDATE_CURRENT);
+        }
+        AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+        assert alarmManager != null;
+        try {
+            Log.i(TAG, "Try cancel alarm");
             alarmManager.cancel(pendingIntent);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        try {
+            Log.i(TAG, "Try cancel jobs");
+            TestJob.clearJobs();
+        }  catch (Exception e) {
+            e.printStackTrace();
         }
     }
 

@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "691411424289",
+    "project_id": "android-battery-life-test",
+    "storage_bucket": "android-battery-life-test.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:691411424289:android:488de7ef34f98cbe99ff60",
+        "android_client_info": {
+          "package_name": "com.daniel4wong.AndroidBatteryLifeTest"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "691411424289-3b0mke2baed9oh2fmfk44d6m0hj0hu2v.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBdNbalOEc_mfqaNbDyjzhnl-vQ5ANTU3c"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "691411424289-3b0mke2baed9oh2fmfk44d6m0hj0hu2v.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -18,6 +18,10 @@ public class AppContext extends Singleton implements ISingleton {
     }
     /// end Singleton
 
+    //https://nklvsbit7y0xh01yywqtjj.hooks.webhookrelay.com
+    //https://en345750ztapgxo.m.pipedream.net
+    public static String webRequestUrl = "https://nklvsbit7y0xh01yywqtjj.hooks.webhookrelay.com";
+
     public Window window;
 
     public String getLanguageCode() {

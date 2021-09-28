@@ -21,9 +21,7 @@ import com.daniel4wong.AndroidBatteryLifeTest.R;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 //https://proandroiddev.com/background-ble-scan-in-doze-mode-on-android-devices-3c2ce1764570
@@ -91,7 +89,7 @@ public class BleDeviceHelper extends AbstractTestHelper {
                     try {
                         data.put("type",  TYPE);
                         data.put("count",  devices.size());
-                        data.put("ts", new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));
+                        data.put("ts", FormatHelper.dateToString());
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }

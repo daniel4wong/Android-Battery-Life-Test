@@ -31,7 +31,6 @@ import com.daniel4wong.AndroidBatteryLifeTest.Manager.BatteryTestManager;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.Date;
 
 public class HomeFragment extends Fragment {
     private static String TAG = HomeFragment.class.getSimpleName();
@@ -51,7 +50,7 @@ public class HomeFragment extends Fragment {
             Boolean state = intent.getBooleanExtra(BatteryTestReceiver.STATE, false);
             String type = intent.getStringExtra(BatteryTestReceiver.TYPE);
             String result = intent.getStringExtra(BatteryTestReceiver.TEST_RESULT);
-            String date = new SimpleDateFormat("HH:mm:ss").format(new Date());
+            String date = FormatHelper.dateToString();
 
             if (!state) {
                 TestHistory model = new TestHistory();
@@ -129,6 +128,9 @@ public class HomeFragment extends Fragment {
         binding.buttonClear.setOnClickListener(view ->  {
             AppDatabase.getInstance().clearAllTables();
             Toast.makeText(getContext(), R.string.msg_database_deleted_data, Toast.LENGTH_LONG).show();
+        });
+        binding.buttonCrash.setOnClickListener(view -> {
+            throw new RuntimeException("Force a crash");
         });
         return root;
     }

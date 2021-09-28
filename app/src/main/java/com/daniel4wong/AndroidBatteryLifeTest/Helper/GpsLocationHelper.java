@@ -19,19 +19,13 @@ import com.daniel4wong.AndroidBatteryLifeTest.Core.BroadcastReceiver.BatteryTest
 import com.daniel4wong.AndroidBatteryLifeTest.Model.Constant.LogType;
 import com.daniel4wong.AndroidBatteryLifeTest.R;
 import com.google.android.gms.location.FusedLocationProviderClient;
-import com.google.android.gms.location.LocationCallback;
-import com.google.android.gms.location.LocationRequest;
-import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
-import com.google.android.gms.tasks.OnSuccessListener;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.List;
 
 public class GpsLocationHelper extends AbstractTestHelper {
@@ -64,8 +58,8 @@ public class GpsLocationHelper extends AbstractTestHelper {
         AsyncHelper.run(() -> {
             try {
                 fusedLocationProviderClient.getLastLocation().addOnSuccessListener(location -> readLocation(location, "fuse"));
-                lastProvider = getBestProvider();
-                locationManager.requestLocationUpdates(lastProvider, 0, 0, locationListener);
+                //lastProvider = getBestProvider();
+                //locationManager.requestLocationUpdates(lastProvider, 0, 0, locationListener);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -90,7 +84,7 @@ public class GpsLocationHelper extends AbstractTestHelper {
 
         JSONObject data = new JSONObject();
         try {
-            data.put("ts", new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));
+            data.put("ts", FormatHelper.dateToString());
             data.put("type", TYPE);
             data.put("latitude", location.getLatitude());
             data.put("longitude", location.getLongitude());

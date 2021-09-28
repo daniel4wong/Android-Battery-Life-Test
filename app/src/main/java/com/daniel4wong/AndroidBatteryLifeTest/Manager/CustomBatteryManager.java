@@ -55,7 +55,6 @@ public class CustomBatteryManager extends Singleton implements ISingleton {
 
             AppDatabase.getInstance().batteryHistoryDao().getList(fromDate, toDate)
                     .subscribeOn(Schedulers.computation())
-                    .doOnError(new BlockingIgnoringReceiver())
                     .subscribe(models -> {
                         try {
                             if (models.size() == 0) {
@@ -64,7 +63,7 @@ public class CustomBatteryManager extends Singleton implements ISingleton {
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
-                    });
+                    }, throwable -> { throwable.printStackTrace(); });
 
             if (showNotification) {
                 String name = DeviceManager.getInstance().isCharging() ? context.getString(R.string.msg_charging) : context.getString(R.string.msg_not_charging);
