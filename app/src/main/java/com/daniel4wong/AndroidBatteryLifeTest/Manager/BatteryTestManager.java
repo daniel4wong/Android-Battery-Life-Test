@@ -4,12 +4,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.os.Build;
 import android.os.Handler;
-import android.os.PowerManager;
 import android.telephony.TelephonyManager;
-import android.util.Log;
-import android.widget.Toast;
 
 import com.daniel4wong.AndroidBatteryLifeTest.Core.BroadcastReceiver.AlarmReceiver;
 import com.daniel4wong.AndroidBatteryLifeTest.Job.TestJob;

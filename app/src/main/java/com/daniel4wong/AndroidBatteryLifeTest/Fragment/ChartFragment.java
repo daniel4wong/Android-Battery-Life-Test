@@ -4,8 +4,6 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.RadioButton;
-import android.widget.RadioGroup;
 
 import com.daniel4wong.AndroidBatteryLifeTest.Core.AppPreferences;
 import com.daniel4wong.AndroidBatteryLifeTest.Helper.FormatHelper;

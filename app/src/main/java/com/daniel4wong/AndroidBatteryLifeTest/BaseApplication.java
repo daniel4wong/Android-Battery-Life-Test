@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.util.Log;
 
 import com.daniel4wong.AndroidBatteryLifeTest.Helper.LocaleHelper;
-import com.daniel4wong.AndroidBatteryLifeTest.Manager.CustomBatteryManager;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;

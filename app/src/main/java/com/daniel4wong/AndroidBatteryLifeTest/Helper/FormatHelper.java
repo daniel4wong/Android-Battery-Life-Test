@@ -1,7 +1,5 @@
 package com.daniel4wong.AndroidBatteryLifeTest.Helper;
 
-import android.content.SyncRequest;
-
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;

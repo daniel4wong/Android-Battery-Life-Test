@@ -4,8 +4,6 @@ import android.view.Window;
 
 import com.daniel4wong.AndroidBatteryLifeTest.Core.*;
 
-import java.util.Dictionary;
-
 public class AppContext extends Singleton implements ISingleton {
     public static AppContext getInstance() {
         ISingleton _instance = getInstance(AppContext.class);
@@ -20,7 +18,8 @@ public class AppContext extends Singleton implements ISingleton {
 
     //https://nklvsbit7y0xh01yywqtjj.hooks.webhookrelay.com
     //https://en345750ztapgxo.m.pipedream.net
-    public static String webRequestUrl = "https://nklvsbit7y0xh01yywqtjj.hooks.webhookrelay.com";
+    public static String webRequestUrl = "https://en345750ztapgxo.m.pipedream.net";
+    public static Integer bleScanTimeout = 60;
 
     public Window window;
 

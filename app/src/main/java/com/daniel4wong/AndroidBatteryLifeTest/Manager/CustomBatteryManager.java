@@ -15,10 +15,8 @@ import com.daniel4wong.AndroidBatteryLifeTest.Database.AppDatabase;
 import com.daniel4wong.AndroidBatteryLifeTest.Model.BatteryHistory;
 import com.daniel4wong.AndroidBatteryLifeTest.R;
 
-import java.util.Calendar;
 import java.util.Date;
 
-import io.reactivex.rxjava3.internal.util.BlockingIgnoringReceiver;
 import io.reactivex.rxjava3.schedulers.Schedulers;
 
 public class CustomBatteryManager extends Singleton implements ISingleton {

@@ -7,16 +7,14 @@ import android.bluetooth.BluetoothManager;
 import android.bluetooth.le.BluetoothLeScanner;
 import android.bluetooth.le.ScanCallback;
 import android.bluetooth.le.ScanFilter;
-import android.bluetooth.le.ScanRecord;
 import android.bluetooth.le.ScanResult;
 import android.bluetooth.le.ScanSettings;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Handler;
-import android.os.ParcelUuid;
 import android.util.Log;
-import android.util.SparseArray;
 
+import com.daniel4wong.AndroidBatteryLifeTest.AppContext;
 import com.daniel4wong.AndroidBatteryLifeTest.Core.AppPreferences;
 import com.daniel4wong.AndroidBatteryLifeTest.MainApplication;
 import com.daniel4wong.AndroidBatteryLifeTest.Core.BroadcastReceiver.BatteryTestReceiver;
@@ -35,7 +33,7 @@ public class BleDeviceHelper extends AbstractTestHelper {
     public static final String TYPE = "BLE";
 
     public static final int REQUEST_ENABLE_BT = 1;
-    public static final int SCAN_PERIOD = 30000;
+    public static final int SCAN_PERIOD = AppContext.bleScanTimeout * 0000;
     private Context context;
     private BluetoothManager bluetoothManager;
     private BluetoothAdapter bluetoothAdapter;
