@@ -25,6 +25,7 @@
     <string name="button_clear">Clear</string>
     <string name="button_crash">Crash</string>
     <string name="button_search">Search</string>
+    <string name="button_reset">Reset</string>
 
     <string name="header_input_number">Input Number</string>
 

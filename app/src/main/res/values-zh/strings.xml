@@ -24,6 +24,7 @@
     <string name="button_clear">清除</string>
     <string name="button_crash">崩潰</string>
     <string name="button_search">搜索</string>
+    <string name="button_reset">重設</string>
 
     <string name="header_input_number">輸入數字</string>
 

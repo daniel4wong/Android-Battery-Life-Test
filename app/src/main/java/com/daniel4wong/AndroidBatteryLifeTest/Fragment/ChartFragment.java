@@ -54,6 +54,15 @@ public class ChartFragment extends Fragment {
             lineChartHelper.setTimeRange(bgnDate, endDate);
         });
 
+        binding.buttonReset.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                AppPreferences.getInstance().savePreference(binding.buttonPickDate, "");
+                AppPreferences.getInstance().savePreference(binding.buttonPickTime, "");
+                lineChartHelper.setTimeRange(null, null);
+            }
+        });
+
         return root;
     }
 

@@ -151,6 +151,7 @@ public class LineChartHelper {
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(fromDate);
         calendar.add(Calendar.HOUR, 1);
+
         Date toDate = calendar.getTime();
 
         if (bgnTime != null && endTime != null) {
@@ -159,27 +160,41 @@ public class LineChartHelper {
         }
 
         if (chartType == ChartType.Day) {
-            fromDate = new Date(now.getYear(), now.getMonth(), now.getDate(), 0, 0);
+            fromDate = new Date(fromDate.getYear(), fromDate.getMonth(), fromDate.getDate(), 0, 0);
             calendar.setTime(fromDate);
             calendar.add(Calendar.DATE, 1);
             toDate = calendar.getTime();
         }
+        if (chartType == ChartType.Day) {
+            calendar.setTime(toDate);
+            calendar.add(Calendar.HOUR, 1);
+            toDate = calendar.getTime();
+        }
+        else {
+            calendar.setTime(toDate);
+            calendar.add(Calendar.MINUTE, 1);
+            toDate = calendar.getTime();
+        }
 
         Log.d(TAG, String.format("Query data: from %tT to %tT", fromDate, toDate));
+        Date finalFromDate = fromDate;
         AppDatabase.getInstance().batteryHistoryDao().getList(fromDate, toDate)
                 .subscribeOn(Schedulers.computation())
                 .doOnError(new BlockingIgnoringReceiver())
                 .subscribe(models -> {
                     List<Pair<Integer, Integer>> data = new ArrayList<>();
                     models.forEach(i -> {
-                        if (data.stream().anyMatch(d ->
-                                (chartType == ChartType.Hour && d.first == i.logTs.getMinutes())
-                                || (chartType == ChartType.Day && d.first == i.logTs.getHours())
-                        ))
+                        long difference = i.logTs.getTime() - finalFromDate.getTime();
+                        Integer days = (int) (difference / (1000*60*60*24));
+                        Integer hours = (int) ((difference - (1000*60*60*24*days)) / (1000*60*60));
+                        Integer key = chartType == ChartType.Hour
+                                ? hours * 60 + i.logTs.getMinutes() : days * 24 + i.logTs.getHours();
+
+                        if (data.stream().anyMatch(d -> d.first == key))
                             return;
                         if (i.btryLvl < 0)
                             return;
-                        data.add(new Pair<>(chartType == ChartType.Hour ? i.logTs.getMinutes() : i.logTs.getHours(), i.btryLvl.intValue()));
+                        data.add(new Pair<>(key, i.btryLvl.intValue()));
                     });
                     setData(data);
                 }, throwable -> { throwable.printStackTrace(); });
