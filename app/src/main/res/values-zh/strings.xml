@@ -23,6 +23,7 @@
     <string name="button_once">一次</string>
     <string name="button_clear">清除</string>
     <string name="button_crash">崩潰</string>
+    <string name="button_search">搜索</string>
 
     <string name="header_input_number">輸入數字</string>
 
@@ -35,6 +36,8 @@
     <string name="label_for_switch_gps_request">發出 GSP 請求？</string>
     <string name="label_for_switch_ble_request">發出 BLE 請求？</string>
     <string name="label_for_switch_record_battery">記錄電池電量?</string>
+    <string name="label_for_radio_minute">分鐘</string>
+    <string name="label_for_radio_hour">小時</string>
 
     <string name="msg_past_time_warning">無法為過去的時間做預約測試</string>
     <string name="msg_frequency_warning">頻率必須大於零</string>
@@ -49,6 +52,8 @@
     <string name="msg_testing">測試中</string>
     <string name="msg_not_testing">沒有測試</string>
 
-    <string name="chart_minutes">分鐘</string>
-    <string name="chart_description">當前小時的電量百分比</string>
+    <string name="chart_minute">分鐘</string>
+    <string name="chart_hour">小時</string>
+    <string name="chart_description_hour">當前小時的電量百分比</string>
+    <string name="chart_description_day">當天的電量百分比</string>
 </resources>

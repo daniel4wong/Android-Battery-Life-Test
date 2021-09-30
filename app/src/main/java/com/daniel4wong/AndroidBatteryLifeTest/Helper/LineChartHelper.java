@@ -1,11 +1,14 @@
 package com.daniel4wong.AndroidBatteryLifeTest.Helper;
 
 import android.app.Activity;
+import android.content.Context;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.util.Log;
 import android.util.Pair;
 
+import com.daniel4wong.AndroidBatteryLifeTest.AppContext;
+import com.daniel4wong.AndroidBatteryLifeTest.Core.AppPreferences;
 import com.daniel4wong.AndroidBatteryLifeTest.Database.AppDatabase;
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.*;
@@ -33,6 +36,13 @@ public class LineChartHelper {
 
     private Date bgnTime;
     private Date endTime;
+    private ChartType chartType;
+
+    public LineChartHelper() {
+        Context _context = AppContext.getInstance().getContext();
+        setChartType(AppPreferences.getInstance().getPreference(
+                _context.getString(R.string.pref_chart_type), _context.getString(R.string.chart_minute)), false);
+    }
 
     public void initChart(Activity activity, LineChart chart) {
         this.activity = activity;
@@ -42,9 +52,14 @@ public class LineChartHelper {
         int lineColor = LineColor;
         float textSize = 12f;
         float padding = 5f;
-        float[] xRange = { 0f, 60f, 5f };
+        float[] xRange = chartType == ChartType.Hour
+                ? new float[] { 0f, 60f, 5f } : new float[] { 0f, 24f, 2f };
         float[] yRange = { 00f, 100f, 10f };
         boolean[] gridlines = { true, true };
+        int legendId = chartType == ChartType.Hour
+                ? R.string.chart_minute : R.string.chart_hour;
+        int descriptionId = chartType == ChartType.Hour
+                ? R.string.chart_description_hour : R.string.chart_description_day;
 
         chart.setDrawGridBackground(true);
         chart.setBackgroundColor(Color.WHITE);
@@ -54,10 +69,10 @@ public class LineChartHelper {
         chart.setExtraOffsets(padding, padding, padding, padding);
 
         Description description = chart.getDescription();
-        description.setText(activity.getString(R.string.chart_description));
+        description.setText(activity.getString(descriptionId));
         description.setTextSize(textSize);
 
-        LegendEntry legendEntry = new LegendEntry(activity.getString(R.string.chart_minutes), Legend.LegendForm.LINE, 0f, 0f, null, lineColor);
+        LegendEntry legendEntry = new LegendEntry(activity.getString(legendId), Legend.LegendForm.LINE, 0f, 0f, null, lineColor);
         Legend legend = chart.getLegend();
         legend.setTextSize(textSize);
         legend.setHorizontalAlignment(Legend.LegendHorizontalAlignment.CENTER);
@@ -143,8 +158,12 @@ public class LineChartHelper {
             toDate = endTime;
         }
 
-        Description description = chart.getDescription();
-        description.setText(String.format("%s (%tT)", activity.getString(R.string.chart_description), fromDate));
+        if (chartType == ChartType.Day) {
+            fromDate = new Date(now.getYear(), now.getMonth(), now.getDate(), 0, 0);
+            calendar.setTime(fromDate);
+            calendar.add(Calendar.DATE, 1);
+            toDate = calendar.getTime();
+        }
 
         Log.d(TAG, String.format("Query data: from %tT to %tT", fromDate, toDate));
         AppDatabase.getInstance().batteryHistoryDao().getList(fromDate, toDate)
@@ -153,11 +172,14 @@ public class LineChartHelper {
                 .subscribe(models -> {
                     List<Pair<Integer, Integer>> data = new ArrayList<>();
                     models.forEach(i -> {
-                        if (data.stream().anyMatch(d -> d.first == i.logTs.getMinutes()))
+                        if (data.stream().anyMatch(d ->
+                                (chartType == ChartType.Hour && d.first == i.logTs.getMinutes())
+                                || (chartType == ChartType.Day && d.first == i.logTs.getHours())
+                        ))
                             return;
                         if (i.btryLvl < 0)
                             return;
-                        data.add(new Pair<>(i.logTs.getMinutes(), i.btryLvl.intValue()));
+                        data.add(new Pair<>(chartType == ChartType.Hour ? i.logTs.getMinutes() : i.logTs.getHours(), i.btryLvl.intValue()));
                     });
                     setData(data);
                 }, throwable -> { throwable.printStackTrace(); });
@@ -166,6 +188,26 @@ public class LineChartHelper {
     public void setTimeRange(Date bgnTime, Date endTime) {
         this.bgnTime = bgnTime;
         this.endTime = endTime;
+
+        setChartType(AppPreferences.getInstance().getPreference(
+                activity.getString(R.string.pref_chart_type), activity.getString(R.string.chart_minute)), true);
         refreshData();
+    }
+
+    public void setChartType(String chartType, boolean initialChartIfRequired) {
+        Context _context = AppContext.getInstance().getContext();
+
+        ChartType _chartType = chartType.equals(_context.getString(R.string.chart_hour))
+            ? ChartType.Day : ChartType.Hour;
+        if (this.chartType != _chartType) {
+            this.chartType = _chartType;
+            if (initialChartIfRequired && activity != null && chart != null)
+                initChart(activity, chart);
+        }
+    }
+
+    public enum ChartType {
+        Hour,
+        Day
     }
 }

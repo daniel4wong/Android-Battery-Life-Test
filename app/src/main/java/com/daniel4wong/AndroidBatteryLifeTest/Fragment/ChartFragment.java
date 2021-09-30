@@ -4,13 +4,20 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 
+import com.daniel4wong.AndroidBatteryLifeTest.Core.AppPreferences;
+import com.daniel4wong.AndroidBatteryLifeTest.Helper.FormatHelper;
 import com.daniel4wong.AndroidBatteryLifeTest.Helper.InputButtonHelper;
 import com.daniel4wong.AndroidBatteryLifeTest.databinding.FragmentChartBinding;
 import com.daniel4wong.AndroidBatteryLifeTest.Helper.LineChartHelper;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+
+import java.util.Calendar;
+import java.util.Date;
 
 public class ChartFragment extends Fragment {
 
@@ -28,13 +35,24 @@ public class ChartFragment extends Fragment {
                 binding.textViewDate,
                 binding.textViewTime,
                 binding.buttonPickDate,
-                binding.buttonPickTime
+                binding.buttonPickTime,
+                binding.radioGroupChartType
         };
         InputButtonHelper.prepareInputs(views);
 
         lineChartHelper = new LineChartHelper();
         lineChartHelper.initChart(getActivity(), binding.lineChart);
         lineChartHelper.startDataTimer();
+
+        binding.buttonSearch.setOnClickListener(view -> {
+            String dateText = String.format("%s %s", binding.textViewDate.getText(), binding.textViewTime.getText());
+            Date bgnDate = FormatHelper.stringToDate(dateText);
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime(bgnDate);
+            calendar.add(Calendar.HOUR, 1);
+            Date endDate = calendar.getTime();
+            lineChartHelper.setTimeRange(bgnDate, endDate);
+        });
 
         return root;
     }

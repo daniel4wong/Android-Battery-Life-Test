@@ -64,11 +64,6 @@ public class BatteryTestManager extends Singleton implements ISingleton {
         if (!canRunTest())
             return;
 
-        Intent intent = new Intent();
-        intent.setAction(BatteryTestReceiver.ACTION_STATE_CHANGE);
-        intent.putExtra(BatteryTestReceiver.STATE, true);
-        getContext().sendBroadcast(intent);
-
         //screen
         if (!AppPreferences.getInstance().isKeepScreenOn()) {
             this.deviceManager.screenOn();
@@ -92,41 +87,7 @@ public class BatteryTestManager extends Singleton implements ISingleton {
         }
     }
 
-    public void start(Integer testFrequency) {
-        Integer screenTime = Integer.valueOf(AppPreferences.getInstance().getPreference(R.string.pref_screen_seconds, "0"));
-        Integer testInterval = 3600 / testFrequency;
-
-        if (!isRunning) {
-            runnable = () -> {
-                if (!isRunning) {
-                    reset();
-                    return;
-                }
-                Log.d(TAG, "Service is still running.");
-                runTestOnce(screenTime);
-                handler.postDelayed(runnable, testInterval * 1000);
-            };
-            handler.postDelayed(runnable,  0);
-            isRunning = true;
-            Toast.makeText(getContext(), R.string.msg_test_start, Toast.LENGTH_LONG).show();
-            AppPreferences.getInstance().savePreference(R.string.flag_state_test_started, true);
-        }
-    }
-
-    public void stop() {
-        reset();
-
-        isRunning = false;
-        Toast.makeText(getContext(), R.string.msg_test_stop, Toast.LENGTH_LONG).show();
-        AppPreferences.getInstance().savePreference(R.string.flag_state_test_started, false);
-    }
-
     public void reset() {
-        Intent intent = new Intent();
-        intent.setAction(BatteryTestReceiver.ACTION_STATE_CHANGE);
-        intent.putExtra(BatteryTestReceiver.STATE, false);
-        getContext().sendBroadcast(intent);
-
         this.deviceManager.screenReset();
         this.isReset = true;
     }
@@ -178,8 +139,13 @@ public class BatteryTestManager extends Singleton implements ISingleton {
     public static class Job {
         private static final boolean isUseAlarmManager = true;
 
-        public static void startJob() {
+        public static boolean startJob() {
+            if (!BatteryTestManager.canRunTest())
+                return false;
+
+            AppPreferences.getInstance().savePreference(R.string.flag_state_test_started, true);
             BatteryTestManager manager = BatteryTestManager.getInstance();
+            DeviceManager.Power.acquireWakeLock();
 
             Long period = Long.valueOf(AppPreferences.getInstance().getPreference(R.string.pref_test_period_seconds, "0"));
             if (!isUseAlarmManager && period >= 900L)
@@ -187,18 +153,30 @@ public class BatteryTestManager extends Singleton implements ISingleton {
             else
                 manager.alarmReceiver.createAlert(manager.getContext(), period, true);
 
-            DeviceManager.Power.acquireWakeLock();
+            Intent intent = new Intent();
+            intent.setAction(BatteryTestReceiver.ACTION_STATE_CHANGE);
+            intent.putExtra(BatteryTestReceiver.STATE, true);
+            manager.getContext().sendBroadcast(intent);
+
+            return true;
         }
 
-        public static void stopJob() {
+        public static boolean stopJob() {
+            AppPreferences.getInstance().savePreference(R.string.flag_state_test_started, false);
             BatteryTestManager manager = BatteryTestManager.getInstance();
+            DeviceManager.Power.releaseWakeLock();
 
             if (manager.jobId > 0L)
                 TestJob.cancelJob(manager.jobId);
             else
                 manager.alarmReceiver.stopAlarm();
 
-            DeviceManager.Power.releaseWakeLock();
+            Intent intent = new Intent();
+            intent.setAction(BatteryTestReceiver.ACTION_STATE_CHANGE);
+            intent.putExtra(BatteryTestReceiver.STATE, false);
+            manager.getContext().sendBroadcast(intent);
+
+            return true;
         }
     }
 }

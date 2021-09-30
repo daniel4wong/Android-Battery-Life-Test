@@ -18,6 +18,7 @@ public class LayoutHelper {
         for(View view : views) {
             if (view instanceof Button) {
                 view.setEnabled(enabled);
+                view.setAlpha(enabled ? 1.0f : 0.8f);
             }
         }
     }

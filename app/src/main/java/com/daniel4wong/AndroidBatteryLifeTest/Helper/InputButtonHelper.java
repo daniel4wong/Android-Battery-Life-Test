@@ -2,6 +2,8 @@ package com.daniel4wong.AndroidBatteryLifeTest.Helper;
 
 import android.view.View;
 import android.widget.Button;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.Switch;
 import android.widget.TextView;
 
@@ -38,6 +40,16 @@ public class InputButtonHelper {
                 String data = AppPreferences.getInstance().getPreference(textView.getTag().toString(), "");
                 if (!data.isEmpty())
                     textView.setText(data);
+            } else if (view instanceof RadioGroup) {
+                RadioGroup radioGroup = (RadioGroup) view;
+                String data = AppPreferences.getInstance().getPreference(radioGroup.getTag().toString(), "");
+                RadioButton radioButton = radioGroup.findViewWithTag(data);
+                if (radioButton != null)
+                    radioButton.setChecked(true);
+                radioGroup.setOnCheckedChangeListener((_radioGroup, i) -> {
+                    RadioButton button = _radioGroup.findViewById(i);
+                    AppPreferences.getInstance().savePreference(_radioGroup.getTag().toString(), button.getTag().toString());
+                });
             }
         }
     }

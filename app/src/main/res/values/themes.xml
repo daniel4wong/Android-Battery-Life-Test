@@ -14,14 +14,19 @@
         <!-- Customize your theme here. -->
         <item name="android:textSize">14sp</item>
         <item name="android:forceDarkAllowed" tools:targetApi="q">false</item>
-        <item name="materialButtonStyle">@style/Widget.App.Button</item>
+        <item name="materialButtonStyle">@style/BaseButton</item>
     </style>
 
-    <style name="Widget.App.Button" parent="Base.Widget.AppCompat.Button">
+    <style name="BaseButton" parent="Base.Widget.AppCompat.Button">
         <item name="android:minHeight">0dp</item>
         <item name="android:minWidth">0dp</item>
         <item name="android:insetTop">0dp</item>
         <item name="android:insetBottom">0dp</item>
+    </style>
+
+    <style name="BaseSwitchStyle" parent="android:Widget.Material.CompoundButton.Switch">
+        <item name="android:layout_margin">5dp</item>
+        <item name="android:switchPadding">5dp</item>
     </style>
 
     <style name="Theme.FullScreen" parent="Theme.BatteryTest">
@@ -32,13 +37,18 @@
         <item name="android:forceDarkAllowed" tools:targetApi="q">true</item>
     </style>
 
-    <style name="BaseSwitchStyle" parent="android:Widget.Material.CompoundButton.Switch">
-        <item name="android:layout_margin">5dp</item>
-        <item name="android:switchPadding">5dp</item>
-    </style>
-
     <style name="InputValueTextView" parent="Widget.AppCompat.TextView">
         <item name="fontWeight">700</item>
         <item name="color">@color/black</item>
+    </style>
+    <style name="SegmentedButton" parent="Widget.AppCompat.CompoundButton.RadioButton">
+        <item name="android:paddingLeft">16dp</item>
+        <item name="android:paddingRight">16dp</item>
+        <item name="android:paddingTop">3dp</item>
+        <item name="android:paddingBottom">3dp</item>
+        <item name="android:gravity">center</item>
+        <item name="android:background">@drawable/radio_flat_selector</item>
+        <item name="android:textColor">@drawable/radio_flat_text_selector</item>
+        <item name="android:button">@android:color/transparent</item>
     </style>
 </resources>

@@ -24,6 +24,7 @@
     <string name="button_once">Once</string>
     <string name="button_clear">Clear</string>
     <string name="button_crash">Crash</string>
+    <string name="button_search">Search</string>
 
     <string name="header_input_number">Input Number</string>
 
@@ -36,6 +37,8 @@
     <string name="label_for_switch_gps_request">Make GSP request?</string>
     <string name="label_for_switch_ble_request">Make BLE request?</string>
     <string name="label_for_switch_record_battery">Record battery level?</string>
+    <string name="label_for_radio_minute">Minute</string>
+    <string name="label_for_radio_hour">Hour</string>
 
     <string name="msg_past_time_warning">Cannot plan for past time</string>
     <string name="msg_frequency_warning">Frequency must greater than zero</string>
@@ -53,8 +56,10 @@
     <string name="button_language_chinese" translatable="false">中文</string>
     <string name="button_language_english" translatable="false">English</string>
 
-    <string name="chart_minutes">minutes</string>
-    <string name="chart_description">Power percentage over current hour</string>
+    <string name="chart_minute">minute</string>
+    <string name="chart_hour">hour</string>
+    <string name="chart_description_hour">Power percentage over current hour</string>
+    <string name="chart_description_day">Power percentage over current day</string>
 
     <string name="lang_chinese" translatable="false">zh</string>
     <string name="lang_english" translatable="false">en</string>
@@ -71,6 +76,7 @@
     <string name="pref_test_period_seconds" translatable="false">pref_test_period_seconds</string>
     <string name="pref_screen_seconds" translatable="false">pref_screen_seconds</string>
     <string name="pref_show_chart" translatable="false">pref_show_chart</string>
+    <string name="pref_chart_type" translatable="false">pref_chart_type</string>
     <string name="pref_record_battery" translatable="false">pref_record_battery</string>
     <string name="flag_state_test_started" translatable="false">flag_state_test_started</string>
     <string name="data_test_next_execution_time" translatable="false">data_test_next_execution_time</string>

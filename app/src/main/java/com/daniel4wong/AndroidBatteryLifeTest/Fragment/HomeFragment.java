@@ -47,41 +47,47 @@ public class HomeFragment extends Fragment {
     private BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
+            String action = intent.getAction();
             Boolean state = intent.getBooleanExtra(BatteryTestReceiver.STATE, false);
-            String type = intent.getStringExtra(BatteryTestReceiver.TYPE);
-            String result = intent.getStringExtra(BatteryTestReceiver.TEST_RESULT);
-            String date = FormatHelper.dateToString();
 
-            if (!state) {
-                TestHistory model = new TestHistory();
-                model.logTs = Calendar.getInstance().getTime();
-                model.type = type;
-                model.dataText = result;
-                model.markInsert();
-                AppDatabase.getInstance().testHistoryDao().insertRecord(model);
-            }
+            if (action.equals(BatteryTestReceiver.ACTION_STATE_CHANGE)) {
+                updateTestConfigView();
+            } else {
+                String type = intent.getStringExtra(BatteryTestReceiver.TYPE);
+                String result = intent.getStringExtra(BatteryTestReceiver.TEST_RESULT);
+                String date = FormatHelper.dateToString();
 
-            TextView textView = null;
-            switch (type) {
-                case WebRequestHelper.TYPE: {
-                    textView = binding.textViewResultWeb;
-                    break;
+                if (!state) {
+                    TestHistory model = new TestHistory();
+                    model.logTs = Calendar.getInstance().getTime();
+                    model.type = type;
+                    model.dataText = result;
+                    model.markInsert();
+                    AppDatabase.getInstance().testHistoryDao().insertRecord(model);
                 }
-                case GpsLocationHelper.TYPE: {
-                    textView = binding.textViewResultGps;
-                    break;
-                }
-                case BleDeviceHelper.TYPE: {
-                    textView = binding.textViewResultBle;
-                    break;
-                }
-            }
 
-            if (textView != null && !state) {
-                textView.setText(date);
-                textView.setAnimation(AnimationHelper.getFlashAnimation());
-            } else if (textView != null) {
-                textView.setText("...");
+                TextView textView = null;
+                switch (type) {
+                    case WebRequestHelper.TYPE: {
+                        textView = binding.textViewResultWeb;
+                        break;
+                    }
+                    case GpsLocationHelper.TYPE: {
+                        textView = binding.textViewResultGps;
+                        break;
+                    }
+                    case BleDeviceHelper.TYPE: {
+                        textView = binding.textViewResultBle;
+                        break;
+                    }
+                }
+
+                if (textView != null && !state) {
+                    textView.setText(date);
+                    textView.setAnimation(AnimationHelper.getFlashAnimation());
+                } else if (textView != null) {
+                    textView.setText("...");
+                }
             }
         }
     };
@@ -147,7 +153,15 @@ public class HomeFragment extends Fragment {
 
         IntentFilter filter = new IntentFilter();
         filter.addAction(BatteryTestReceiver.ACTION_TEST_CHANGE);
+        filter.addAction(BatteryTestReceiver.ACTION_STATE_CHANGE);
         getActivity().registerReceiver(broadcastReceiver, filter);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        updateTestConfigView();
     }
 
     @Override
@@ -191,25 +205,15 @@ public class HomeFragment extends Fragment {
     }
 
     public void startTest() {
-        if (!checkConfig())
-            return;
-        if (!BatteryTestManager.canRunTest())
-            return;
-
-        LayoutHelper.setTouchablesEnable(layoutTestConfig, false);
-        buttonStopTest.setEnabled(true);
-
-        BatteryTestManager.getInstance().start(
-                Integer.valueOf(AppPreferences.getInstance().getPreference(R.string.pref_test_period_seconds, "0")));
+        BatteryTestManager.Job.startJob();
     }
 
     public void stopTest() {
+        BatteryTestManager.Job.stopJob();
         if (planTestHandler != null) {
             planTestHandler.removeCallbacks(planTestRunnable);
             planTestHandler = null;
         }
-        BatteryTestManager.getInstance().stop();
-        LayoutHelper.setTouchablesEnable(layoutTestConfig, true);
     }
 
     public boolean checkConfig() {
@@ -219,5 +223,12 @@ public class HomeFragment extends Fragment {
         }
 
         return true;
+    }
+
+    public void updateTestConfigView() {
+        boolean isStart = AppPreferences.getInstance().getPreference(R.string.flag_state_test_started, false);
+
+        LayoutHelper.setTouchablesEnable(layoutTestConfig, !isStart);
+        buttonStopTest.setEnabled(true);
     }
 }

@@ -155,19 +155,17 @@ public class MainActivity extends BaseActivity {
                 break;
             }
             case R.id.menu_start: {
-                if (!BatteryTestManager.canRunTest())
-                    break;
-                menuStart.setVisible(false);
-                menuStop.setVisible(true);
-                AppPreferences.getInstance().savePreference(R.string.flag_state_test_started, true);
-                BatteryTestManager.Job.startJob();
+                if (BatteryTestManager.Job.startJob()) {
+                    menuStart.setVisible(false);
+                    menuStop.setVisible(true);
+                }
                 break;
             }
             case R.id.menu_stop: {
-                menuStart.setVisible(true);
-                menuStop.setVisible(false);
-                AppPreferences.getInstance().savePreference(R.string.flag_state_test_started, false);
-                BatteryTestManager.Job.stopJob();
+                if (BatteryTestManager.Job.stopJob()) {
+                    menuStart.setVisible(true);
+                    menuStop.setVisible(false);
+                }
                 break;
             }
             default: {
