@@ -97,6 +97,9 @@ public class AlarmReceiver extends BroadcastReceiver {
     }
 
     public void stopAlarm() {
+        if (context == null)
+            return;
+
         Log.i(TAG, String.format("stopAlarm: %s", this.jobId));
         this.isCreated = false;
         this.jobId = "";
