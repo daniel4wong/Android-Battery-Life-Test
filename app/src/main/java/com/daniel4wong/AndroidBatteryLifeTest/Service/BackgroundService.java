@@ -59,6 +59,7 @@ public class BackgroundService extends Service {
         Log.i(TAG, "onStartCommand");
 
         //https://stackoverflow.com/questions/44425584/context-startforegroundservice-did-not-then-call-service-startforeground
+        Log.i(TAG, String.format("startForeground notification: %s", JOB_ID));
         Notification notification = NotificationHelper.getTestNotification(getString(R.string.msg_testing), null);
         startForeground(JOB_ID, notification);
 

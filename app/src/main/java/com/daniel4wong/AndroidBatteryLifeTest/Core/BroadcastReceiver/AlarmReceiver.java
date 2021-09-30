@@ -125,7 +125,8 @@ public class AlarmReceiver extends BroadcastReceiver {
     }
 
     public void run(Context context, Long periodInSecond, String jobId) {
-        Class _class = BackgroundJobService.class; //BackgroundService.class
+        Class _class = BackgroundJobService.class;
+        _class = BackgroundService.class;
         Intent intent = new Intent(context, _class);
 
         Log.i(TAG, String.format("run %s", _class.getSimpleName()));

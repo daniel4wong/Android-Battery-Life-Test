@@ -6,11 +6,16 @@ import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothManager;
 import android.bluetooth.le.BluetoothLeScanner;
 import android.bluetooth.le.ScanCallback;
+import android.bluetooth.le.ScanFilter;
+import android.bluetooth.le.ScanRecord;
 import android.bluetooth.le.ScanResult;
+import android.bluetooth.le.ScanSettings;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Handler;
+import android.os.ParcelUuid;
 import android.util.Log;
+import android.util.SparseArray;
 
 import com.daniel4wong.AndroidBatteryLifeTest.Core.AppPreferences;
 import com.daniel4wong.AndroidBatteryLifeTest.MainApplication;
@@ -30,7 +35,7 @@ public class BleDeviceHelper extends AbstractTestHelper {
     public static final String TYPE = "BLE";
 
     public static final int REQUEST_ENABLE_BT = 1;
-    public static final int SCAN_PERIOD = 10000;
+    public static final int SCAN_PERIOD = 30000;
     private Context context;
     private BluetoothManager bluetoothManager;
     private BluetoothAdapter bluetoothAdapter;
@@ -50,19 +55,17 @@ public class BleDeviceHelper extends AbstractTestHelper {
         devices = new ArrayList<>();
     }
 
-    private ScanCallback startScanCallback = new ScanCallback() {
+    private ScanCallback scanCallback = new ScanCallback() {
         @Override
         public void onScanResult(int callbackType, ScanResult result) {
             super.onScanResult(callbackType, result);
             synchronized (devices) {
-                devices.add(result.getDevice());
+                BluetoothDevice device = result.getDevice();
+                if (device.getName() == null || devices.stream().anyMatch(i -> i.getAddress().equals(device.getAddress())))
+                    return;
+                devices.add(device);
+                Log.d(TAG, String.format("Find device: %s, %s", device.getName(), device.getAddress()));
             }
-        }
-    };
-    private ScanCallback stopScanCallback = new ScanCallback() {
-        @Override
-        public void onScanResult(int callbackType, ScanResult result) {
-            super.onScanResult(callbackType, result);
         }
     };
 
@@ -100,11 +103,12 @@ public class BleDeviceHelper extends AbstractTestHelper {
                 }
                 context.sendBroadcast(intent);
 
-                scanner.stopScan(stopScanCallback);
-
+                isScanning = false;
+                Log.i(TAG, "stopScan");
+                scanner.stopScan(scanCallback);
+                scanner.flushPendingScanResults(scanCallback);
             }, SCAN_PERIOD);
 
-            isScanning = true;
             synchronized (devices) {
                 devices.clear();
             }
@@ -116,10 +120,22 @@ public class BleDeviceHelper extends AbstractTestHelper {
             intent.putExtra(BatteryTestReceiver.STATE, true);
             context.sendBroadcast(intent);
 
-            scanner.startScan(startScanCallback);
+            ScanSettings scanSettings = new ScanSettings.Builder()
+                    .setScanMode(ScanSettings.SCAN_MODE_LOW_POWER)
+                    .build();
+            List<ScanFilter> scanFilters = new ArrayList<>();
+            scanFilters.add(new ScanFilter.Builder()
+                    //.setServiceUuid(ParcelUuid.fromString("5C3A1523-897E-45E1-B016-007107C96DF6"))
+                    .build());
+
+            isScanning = true;
+            Log.i(TAG, "startScan");
+            scanner.startScan(scanFilters, scanSettings, scanCallback);
         } else {
             isScanning = false;
-            scanner.stopScan(stopScanCallback);
+            Log.i(TAG, "stopScan");
+            scanner.stopScan(scanCallback);
+            scanner.flushPendingScanResults(scanCallback);
             Log.i(TAG, String.format("[Response] Number of BLE devices: %d", devices.size()));
         }
     }
