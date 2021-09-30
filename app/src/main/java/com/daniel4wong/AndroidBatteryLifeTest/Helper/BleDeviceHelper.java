@@ -33,7 +33,7 @@ public class BleDeviceHelper extends AbstractTestHelper {
     public static final String TYPE = "BLE";
 
     public static final int REQUEST_ENABLE_BT = 1;
-    public static final int SCAN_PERIOD = AppContext.bleScanTimeout * 0000;
+    public static final int SCAN_PERIOD = AppContext.bleScanTimeout * 1000;
     private Context context;
     private BluetoothManager bluetoothManager;
     private BluetoothAdapter bluetoothAdapter;
