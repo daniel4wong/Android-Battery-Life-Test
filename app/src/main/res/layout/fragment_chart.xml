@@ -37,7 +37,7 @@
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
                     android:text="@string/label_for_text_date" />
-                <com.daniel4wong.AndroidBatteryLifeTest.Control.InputButton
+                <com.daniel4wong.core.Ui.InputButton
                     android:id="@+id/buttonPickDate"
                     android:tag="@string/pref_chart_date"
                     android:layout_width="wrap_content"
@@ -56,7 +56,7 @@
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
                     android:text="@string/label_for_text_time" />
-                <com.daniel4wong.AndroidBatteryLifeTest.Control.InputButton
+                <com.daniel4wong.core.Ui.InputButton
                     android:id="@+id/buttonPickTime"
                     android:tag="@string/pref_chart_time"
                     android:layout_width="wrap_content"

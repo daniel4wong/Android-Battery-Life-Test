@@ -9,10 +9,11 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.Toast;
 
-import com.daniel4wong.AndroidBatteryLifeTest.Core.AppPreferences;
-import com.daniel4wong.AndroidBatteryLifeTest.Core.BroadcastReceiver.BatteryTestReceiver;
-import com.daniel4wong.AndroidBatteryLifeTest.Helper.LayoutHelper;
-import com.daniel4wong.AndroidBatteryLifeTest.Helper.PermissionHelper;
+import com.daniel4wong.AndroidBatteryLifeTest.AppPreference;
+import com.daniel4wong.AndroidBatteryLifeTest.BroadcastReceiver.BatteryTestReceiver;
+import com.daniel4wong.core.Activity.BaseActivity;
+import com.daniel4wong.core.Helper.LayoutHelper;
+import com.daniel4wong.core.Helper.PermissionHelper;
 import com.daniel4wong.AndroidBatteryLifeTest.Manager.BatteryTestManager;
 
 import androidx.annotation.NonNull;
@@ -24,11 +25,11 @@ import androidx.navigation.ui.NavigationUI;
 
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.daniel4wong.AndroidBatteryLifeTest.MainApplication;
-import com.daniel4wong.AndroidBatteryLifeTest.AppContext;
+import com.daniel4wong.core.BaseContext;
 import com.daniel4wong.AndroidBatteryLifeTest.R;
 import com.daniel4wong.AndroidBatteryLifeTest.databinding.ActivityMainBinding;
 import com.daniel4wong.AndroidBatteryLifeTest.Database.AppDatabase;
-import com.daniel4wong.AndroidBatteryLifeTest.Helper.LocaleHelper;
+import com.daniel4wong.core.Helper.LocaleHelper;
 
 public class MainActivity extends BaseActivity {
 
@@ -58,7 +59,7 @@ public class MainActivity extends BaseActivity {
 
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
-        AppContext.getInstance().window = getWindow();
+        BaseContext.getInstance().window = getWindow();
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
 
         AppBarConfiguration appBarConfiguration = new AppBarConfiguration.Builder(
@@ -75,10 +76,10 @@ public class MainActivity extends BaseActivity {
         filter.addAction(BatteryTestReceiver.ACTION_STATE_CHANGE);
         registerReceiver(receiver, filter);
 
-        if (Long.valueOf(AppPreferences.getInstance().getPreference(R.string.pref_test_period_seconds, "0")) <= 0)
-            AppPreferences.getInstance().savePreference(R.string.flag_state_test_started, false);
+        if (Long.valueOf(AppPreference.getInstance().getPreference(R.string.pref_test_period_seconds, "0")) <= 0)
+            AppPreference.getInstance().savePreference(R.string.flag_state_test_started, false);
 
-        if (AppPreferences.getInstance().isTestStarted())
+        if (AppPreference.isTestStarted())
             BatteryTestManager.Job.startJob();
     }
 
@@ -101,11 +102,11 @@ public class MainActivity extends BaseActivity {
             switch (optionMenu.getItem(i).getItemId()) {
                 case R.id.menu_start:
                     menuStart = optionMenu.getItem(i);
-                    menuStart.setVisible(!AppPreferences.getInstance().isTestStarted());
+                    menuStart.setVisible(!AppPreference.isTestStarted());
                     break;
                 case R.id.menu_stop:
                     menuStop = optionMenu.getItem(i);
-                    menuStop.setVisible(AppPreferences.getInstance().isTestStarted());
+                    menuStop.setVisible(AppPreference.isTestStarted());
                     break;
             }
         }
@@ -122,23 +123,20 @@ public class MainActivity extends BaseActivity {
                 buttonLanguageChinese.setOnClickListener(view -> {
                     dialog.cancel();
 
-                    if (AppContext.getInstance().getLanguageCode().equals(getString(R.string.lang_chinese)))
-                        return;
+                    if (AppPreference.Store.setLanguageCode(com.daniel4wong.core.R.string.language_chinese)) {
+                        LocaleHelper.setLocale(MainApplication.currentActivity, AppPreference.Store.getLanguageCode());
+                        MainApplication.restart(this);
+                    }
 
-                    AppPreferences.getInstance().savePreference(buttonLanguageChinese, getString(R.string.lang_chinese));
-                    LocaleHelper.updateLocale();
-                    MainApplication.restart(this);
                 });
                 Button buttonLanguageEnglish = dialog.findViewById(R.id.button_language_english);
                 buttonLanguageEnglish.setOnClickListener(view -> {
                     dialog.cancel();
 
-                    if (AppContext.getInstance().getLanguageCode().equals(getString(R.string.lang_english)))
-                        return;
-
-                    AppPreferences.getInstance().savePreference(buttonLanguageEnglish, getString(R.string.lang_english));
-                    LocaleHelper.updateLocale();
-                    MainApplication.restart(this);
+                    if (AppPreference.Store.setLanguageCode(com.daniel4wong.core.R.string.language_english)) {
+                        LocaleHelper.setLocale(MainApplication.currentActivity, AppPreference.Store.getLanguageCode());
+                        MainApplication.restart(this);
+                    }
                 });
                 dialog.show();
                 break;
@@ -148,7 +146,7 @@ public class MainActivity extends BaseActivity {
                         Manifest.permission.WRITE_EXTERNAL_STORAGE
                 };
                 PermissionHelper.requirePermission(permissions, () -> {
-                    AppDatabase.getInstance().copyDatabase();
+                    AppDatabase.getInstance().copyDatabase(MainApplication.currentActivity, getString(R.string.msg_database_downloaded_success));
                 }, () -> {
                     Toast.makeText(this, R.string.msg_permissions_not_grant, Toast.LENGTH_LONG).show();
                 });

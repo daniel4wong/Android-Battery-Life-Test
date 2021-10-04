@@ -14,12 +14,14 @@ import android.content.Intent;
 import android.os.Handler;
 import android.util.Log;
 
-import com.daniel4wong.AndroidBatteryLifeTest.AppContext;
-import com.daniel4wong.AndroidBatteryLifeTest.Core.AppPreferences;
+import com.daniel4wong.core.BaseContext;
+import com.daniel4wong.AndroidBatteryLifeTest.AppPreference;
 import com.daniel4wong.AndroidBatteryLifeTest.MainApplication;
-import com.daniel4wong.AndroidBatteryLifeTest.Core.BroadcastReceiver.BatteryTestReceiver;
+import com.daniel4wong.AndroidBatteryLifeTest.BroadcastReceiver.BatteryTestReceiver;
 import com.daniel4wong.AndroidBatteryLifeTest.Model.Constant.LogType;
 import com.daniel4wong.AndroidBatteryLifeTest.R;
+import com.daniel4wong.core.Helper.FormatHelper;
+import com.daniel4wong.core.Helper.PermissionHelper;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -33,7 +35,7 @@ public class BleDeviceHelper extends AbstractTestHelper {
     public static final String TYPE = "BLE";
 
     public static final int REQUEST_ENABLE_BT = 1;
-    public static final int SCAN_PERIOD = AppContext.bleScanTimeout * 1000;
+    public static final int SCAN_PERIOD = BaseContext.bleScanTimeout * 1000;
     private Context context;
     private BluetoothManager bluetoothManager;
     private BluetoothAdapter bluetoothAdapter;
@@ -97,7 +99,7 @@ public class BleDeviceHelper extends AbstractTestHelper {
 
                     intent.putExtra(BatteryTestReceiver.TEST_RESULT, data.toString());
 
-                    AppPreferences.getInstance().savePreference(R.string.data_ble_device_count, data.toString());
+                    AppPreference.getInstance().savePreference(R.string.data_ble_device_count, data.toString());
                 }
                 context.sendBroadcast(intent);
 

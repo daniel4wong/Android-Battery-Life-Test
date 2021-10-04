@@ -10,11 +10,12 @@ import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
-import com.daniel4wong.AndroidBatteryLifeTest.Core.AppPreferences;
-import com.daniel4wong.AndroidBatteryLifeTest.Core.BroadcastReceiver.BatteryTestReceiver;
+import com.daniel4wong.AndroidBatteryLifeTest.AppPreference;
+import com.daniel4wong.AndroidBatteryLifeTest.BroadcastReceiver.BatteryTestReceiver;
 import com.daniel4wong.AndroidBatteryLifeTest.Manager.DeviceManager;
 import com.daniel4wong.AndroidBatteryLifeTest.Model.Constant.LogType;
 import com.daniel4wong.AndroidBatteryLifeTest.R;
+import com.daniel4wong.core.Helper.FormatHelper;
 
 import java.util.function.Consumer;
 
@@ -41,10 +42,10 @@ public class WebRequestHelper extends AbstractTestHelper {
         JSONObject postData = new JSONObject();
         try {
             postData.put("androidId",  androidId);
-            postData.put("level", AppPreferences.getInstance().getPreference(R.string.data_web_battery_level, ""));
-            postData.put("web",  AppPreferences.getInstance().getPreference(R.string.data_web_request, ""));
-            postData.put("gps", AppPreferences.getInstance().getPreference(R.string.data_gps_location, ""));
-            postData.put("ble",  AppPreferences.getInstance().getPreference(R.string.data_ble_device_count, ""));
+            postData.put("level", AppPreference.getInstance().getPreference(R.string.data_web_battery_level, ""));
+            postData.put("web",  AppPreference.getInstance().getPreference(R.string.data_web_request, ""));
+            postData.put("gps", AppPreference.getInstance().getPreference(R.string.data_gps_location, ""));
+            postData.put("ble",  AppPreference.getInstance().getPreference(R.string.data_ble_device_count, ""));
             postData.put("doze", DeviceManager.Power.isDozing());
         } catch (JSONException e) {
             e.printStackTrace();
@@ -66,7 +67,7 @@ public class WebRequestHelper extends AbstractTestHelper {
                 e.printStackTrace();
             }
             intent.putExtra(BatteryTestReceiver.TEST_RESULT, response.toString());
-            AppPreferences.getInstance().savePreference(R.string.data_web_request, response.toString());
+            AppPreference.getInstance().savePreference(R.string.data_web_request, response.toString());
             context.sendBroadcast(intent);
         }, error -> {
             if (consumer != null)

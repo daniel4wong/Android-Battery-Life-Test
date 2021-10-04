@@ -22,11 +22,15 @@ import com.daniel4wong.AndroidBatteryLifeTest.Activity.BlackScreenActivity;
 import com.daniel4wong.AndroidBatteryLifeTest.Database.AppDatabase;
 import com.daniel4wong.AndroidBatteryLifeTest.Model.TestHistory;
 import com.daniel4wong.AndroidBatteryLifeTest.R;
-import com.daniel4wong.AndroidBatteryLifeTest.Core.AppPreferences;
-import com.daniel4wong.AndroidBatteryLifeTest.Core.BroadcastReceiver.BatteryTestReceiver;
+import com.daniel4wong.AndroidBatteryLifeTest.AppPreference;
+import com.daniel4wong.AndroidBatteryLifeTest.BroadcastReceiver.BatteryTestReceiver;
 import com.daniel4wong.AndroidBatteryLifeTest.Helper.*;
 import com.daniel4wong.AndroidBatteryLifeTest.databinding.FragmentHomeBinding;
 import com.daniel4wong.AndroidBatteryLifeTest.Manager.BatteryTestManager;
+import com.daniel4wong.core.Helper.AnimationHelper;
+import com.daniel4wong.core.Helper.FormatHelper;
+import com.daniel4wong.core.Helper.LayoutHelper;
+import com.daniel4wong.core.Ui.InputButton;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -115,7 +119,7 @@ public class HomeFragment extends Fragment {
                 binding.buttonScreenTime,
                 binding.buttonTestFrequency
         };
-        InputButtonHelper.prepareInputs(views);
+        InputButton.prepareInputs(views);
 
         // test buttons
         buttonPlanTest = binding.buttonPlanTest;
@@ -128,7 +132,7 @@ public class HomeFragment extends Fragment {
             startActivity(new Intent(getActivity(), BlackScreenActivity.class));
         });
         binding.buttonOnce.setOnClickListener(view -> {
-            Integer _screenTime = Integer.valueOf(AppPreferences.getInstance().getPreference(R.string.pref_screen_seconds, "0"));
+            Integer _screenTime = Integer.valueOf(AppPreference.getInstance().getPreference(R.string.pref_screen_seconds, "0"));
             BatteryTestManager.getInstance().runTestOnce(_screenTime);
         });
         binding.buttonClear.setOnClickListener(view ->  {
@@ -179,8 +183,8 @@ public class HomeFragment extends Fragment {
         if (!BatteryTestManager.canRunTest())
             return;
 
-        String textDate = AppPreferences.getInstance().getPreference(R.string.pref_test_bgn_date, "");
-        String textTime = AppPreferences.getInstance().getPreference(R.string.pref_test_bgn_time, "");
+        String textDate = AppPreference.getInstance().getPreference(R.string.pref_test_bgn_date, "");
+        String textTime = AppPreference.getInstance().getPreference(R.string.pref_test_bgn_time, "");
 
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm");
         Calendar planTime = Calendar.getInstance();
@@ -217,7 +221,7 @@ public class HomeFragment extends Fragment {
     }
 
     public boolean checkConfig() {
-        if (Integer.valueOf(AppPreferences.getInstance().getPreference(R.string.pref_test_period_seconds, "0")) < 1) {
+        if (Integer.valueOf(AppPreference.getInstance().getPreference(R.string.pref_test_period_seconds, "0")) < 1) {
             Toast.makeText(getActivity(), R.string.msg_frequency_warning, Toast.LENGTH_LONG).show();
             return false;
         }
@@ -226,7 +230,7 @@ public class HomeFragment extends Fragment {
     }
 
     public void updateTestConfigView() {
-        boolean isStart = AppPreferences.getInstance().getPreference(R.string.flag_state_test_started, false);
+        boolean isStart = AppPreference.getInstance().getPreference(R.string.flag_state_test_started, false);
 
         LayoutHelper.setTouchablesEnable(layoutTestConfig, !isStart);
         buttonStopTest.setEnabled(true);

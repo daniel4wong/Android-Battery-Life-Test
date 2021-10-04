@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="language_chinese" translatable="false">zh</string>
+    <string name="language_english" translatable="false">en</string>
+    <string name="preference_language_code" translatable="false">preference_language_code</string>
+</resources>

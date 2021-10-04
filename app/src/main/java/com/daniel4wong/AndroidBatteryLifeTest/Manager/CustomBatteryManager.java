@@ -7,13 +7,14 @@ import android.content.IntentFilter;
 import android.os.BatteryManager;
 import android.util.Log;
 
-import com.daniel4wong.AndroidBatteryLifeTest.Core.BroadcastReceiver.CustomBatteryReceiver;
+import com.daniel4wong.AndroidBatteryLifeTest.AppPreference;
 import com.daniel4wong.AndroidBatteryLifeTest.Helper.NotificationHelper;
 import com.daniel4wong.AndroidBatteryLifeTest.MainApplication;
-import com.daniel4wong.AndroidBatteryLifeTest.Core.*;
 import com.daniel4wong.AndroidBatteryLifeTest.Database.AppDatabase;
 import com.daniel4wong.AndroidBatteryLifeTest.Model.BatteryHistory;
 import com.daniel4wong.AndroidBatteryLifeTest.R;
+import com.daniel4wong.core.ISingleton;
+import com.daniel4wong.core.Singleton;
 
 import java.util.Date;
 
@@ -49,7 +50,7 @@ public class CustomBatteryManager extends Singleton implements ISingleton {
                 return;
 
             Log.i(TAG, String.format("Log battery level: %d", model.btryLvl));
-            AppPreferences.getInstance().savePreference(R.string.data_web_battery_level, model.btryLvl.toString());
+            AppPreference.getInstance().savePreference(R.string.data_web_battery_level, model.btryLvl.toString());
 
             AppDatabase.getInstance().batteryHistoryDao().getList(fromDate, toDate)
                     .subscribeOn(Schedulers.computation())
@@ -76,7 +77,6 @@ public class CustomBatteryManager extends Singleton implements ISingleton {
         filter.addAction(Intent.ACTION_BATTERY_CHANGED);
         filter.addAction(Intent.ACTION_POWER_CONNECTED);
         filter.addAction(Intent.ACTION_POWER_DISCONNECTED);
-        filter.addAction(CustomBatteryReceiver.ACTION_SHOW_NOTIFICATION);
         getContext().registerReceiver(this.batteryReceiver, filter);
     }
 

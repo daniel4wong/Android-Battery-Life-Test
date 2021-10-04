@@ -14,10 +14,11 @@ import android.text.format.Formatter;
 import android.view.WindowManager;
 
 import com.daniel4wong.AndroidBatteryLifeTest.MainApplication;
-import com.daniel4wong.AndroidBatteryLifeTest.AppContext;
+import com.daniel4wong.core.BaseContext;
 import com.daniel4wong.AndroidBatteryLifeTest.Activity.BlackScreenActivity;
-import com.daniel4wong.AndroidBatteryLifeTest.Core.ISingleton;
-import com.daniel4wong.AndroidBatteryLifeTest.Core.Singleton;
+
+import com.daniel4wong.core.ISingleton;
+import com.daniel4wong.core.Singleton;
 
 import androidx.annotation.Nullable;
 
@@ -75,9 +76,9 @@ public class DeviceManager extends Singleton implements ISingleton {
     }
 
     public void setBrightness(float brightness) {
-        WindowManager.LayoutParams params = AppContext.getInstance().window.getAttributes();
+        WindowManager.LayoutParams params = BaseContext.getInstance().window.getAttributes();
         params.screenBrightness = brightness;
-        AppContext.getInstance().window.setAttributes(params);
+        BaseContext.getInstance().window.setAttributes(params);
     }
 
     public boolean isWiFiEnabled(@Nullable boolean shouldEnabled) {

@@ -5,12 +5,10 @@ import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
-import com.daniel4wong.AndroidBatteryLifeTest.Core.Annotation.RuntimeColumnInfo;
-import com.daniel4wong.AndroidBatteryLifeTest.Core.Annotation.RuntimeEntity;
+import com.daniel4wong.core.Model.Annotation.RuntimeColumnInfo;
+import com.daniel4wong.core.Model.Annotation.RuntimeEntity;
 import com.daniel4wong.AndroidBatteryLifeTest.Model.Constant.EntityTable;
-import com.daniel4wong.AndroidBatteryLifeTest.Model.Core.BaseModel;
-
-import org.jetbrains.annotations.NotNull;
+import com.daniel4wong.core.Model.Core.BaseModel;
 
 import java.io.Serializable;
 

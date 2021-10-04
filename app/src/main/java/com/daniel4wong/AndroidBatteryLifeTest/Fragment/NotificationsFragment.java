@@ -11,7 +11,7 @@ import androidx.fragment.app.Fragment;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.daniel4wong.AndroidBatteryLifeTest.Adapter.LogAdapter;
-import com.daniel4wong.AndroidBatteryLifeTest.Core.Data.CriteriaMap;
+import com.daniel4wong.core.Dao.Data.CriteriaMap;
 import com.daniel4wong.AndroidBatteryLifeTest.Database.AppDatabase;
 import com.daniel4wong.AndroidBatteryLifeTest.Model.TestHistory;
 import com.daniel4wong.AndroidBatteryLifeTest.databinding.FragmentNotificationsBinding;

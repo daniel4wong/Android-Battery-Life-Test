@@ -11,7 +11,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import com.daniel4wong.AndroidBatteryLifeTest.Helper.FormatHelper;
+import com.daniel4wong.core.Helper.FormatHelper;
 import com.daniel4wong.AndroidBatteryLifeTest.Model.TestHistory;
 import com.daniel4wong.AndroidBatteryLifeTest.R;
 

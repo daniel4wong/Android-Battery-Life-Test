@@ -5,13 +5,11 @@
     android:layout_height="match_parent">
     <Button
         android:id="@+id/button_language_chinese"
-        android:tag="@string/pref_language_code"
         android:text="@string/button_language_chinese"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
     <Button
         android:id="@+id/button_language_english"
-        android:tag="@string/pref_language_code"
         android:text="@string/button_language_english"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />

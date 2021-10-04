@@ -3,10 +3,10 @@ package com.daniel4wong.AndroidBatteryLifeTest.Dao;
 import androidx.room.Query;
 import androidx.room.TypeConverters;
 
-import com.daniel4wong.AndroidBatteryLifeTest.Core.TypeConverter.DateTypeConverter;
-import com.daniel4wong.AndroidBatteryLifeTest.Dao.Core.IWritableRepositoryDao;
+import com.daniel4wong.core.Dao.Core.IWritableRepositoryDao;
 import com.daniel4wong.AndroidBatteryLifeTest.Model.*;
 import com.daniel4wong.AndroidBatteryLifeTest.Model.Display.*;
+import com.daniel4wong.core.Model.TypeConverter.DateTypeConverter;
 
 import java.util.Date;
 import java.util.List;

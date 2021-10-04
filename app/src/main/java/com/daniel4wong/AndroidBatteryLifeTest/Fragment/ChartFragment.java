@@ -5,11 +5,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.daniel4wong.AndroidBatteryLifeTest.Core.AppPreferences;
-import com.daniel4wong.AndroidBatteryLifeTest.Helper.FormatHelper;
-import com.daniel4wong.AndroidBatteryLifeTest.Helper.InputButtonHelper;
+import com.daniel4wong.AndroidBatteryLifeTest.AppPreference;
+import com.daniel4wong.core.Helper.FormatHelper;
 import com.daniel4wong.AndroidBatteryLifeTest.databinding.FragmentChartBinding;
 import com.daniel4wong.AndroidBatteryLifeTest.Helper.LineChartHelper;
+import com.daniel4wong.core.Ui.InputButton;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -36,7 +36,7 @@ public class ChartFragment extends Fragment {
                 binding.buttonPickTime,
                 binding.radioGroupChartType
         };
-        InputButtonHelper.prepareInputs(views);
+        InputButton.prepareInputs(views);
 
         lineChartHelper = new LineChartHelper();
         lineChartHelper.initChart(getActivity(), binding.lineChart);
@@ -55,8 +55,8 @@ public class ChartFragment extends Fragment {
         binding.buttonReset.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                AppPreferences.getInstance().savePreference(binding.buttonPickDate, "");
-                AppPreferences.getInstance().savePreference(binding.buttonPickTime, "");
+                AppPreference.getInstance().savePreference(binding.buttonPickDate, "");
+                AppPreference.getInstance().savePreference(binding.buttonPickTime, "");
                 lineChartHelper.setTimeRange(null, null);
             }
         });

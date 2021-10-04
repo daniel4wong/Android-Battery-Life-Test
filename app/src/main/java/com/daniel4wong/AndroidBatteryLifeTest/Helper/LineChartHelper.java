@@ -7,8 +7,8 @@ import android.graphics.Typeface;
 import android.util.Log;
 import android.util.Pair;
 
-import com.daniel4wong.AndroidBatteryLifeTest.AppContext;
-import com.daniel4wong.AndroidBatteryLifeTest.Core.AppPreferences;
+import com.daniel4wong.core.BaseContext;
+import com.daniel4wong.AndroidBatteryLifeTest.AppPreference;
 import com.daniel4wong.AndroidBatteryLifeTest.Database.AppDatabase;
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.*;
@@ -39,8 +39,8 @@ public class LineChartHelper {
     private ChartType chartType;
 
     public LineChartHelper() {
-        Context _context = AppContext.getInstance().getContext();
-        setChartType(AppPreferences.getInstance().getPreference(
+        Context _context = BaseContext.getInstance().getContext();
+        setChartType(AppPreference.getInstance().getPreference(
                 _context.getString(R.string.pref_chart_type), _context.getString(R.string.chart_minute)), false);
     }
 
@@ -204,13 +204,13 @@ public class LineChartHelper {
         this.bgnTime = bgnTime;
         this.endTime = endTime;
 
-        setChartType(AppPreferences.getInstance().getPreference(
+        setChartType(AppPreference.getInstance().getPreference(
                 activity.getString(R.string.pref_chart_type), activity.getString(R.string.chart_minute)), true);
         refreshData();
     }
 
     public void setChartType(String chartType, boolean initialChartIfRequired) {
-        Context _context = AppContext.getInstance().getContext();
+        Context _context = BaseContext.getInstance().getContext();
 
         ChartType _chartType = chartType.equals(_context.getString(R.string.chart_hour))
             ? ChartType.Day : ChartType.Hour;

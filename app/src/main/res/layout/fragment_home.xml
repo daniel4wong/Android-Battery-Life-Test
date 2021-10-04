@@ -28,7 +28,7 @@
                     android:layout_centerVertical="true"
                     android:tag="@string/pref_test_bgn_date"
                     android:text="@string/label_for_text_date" />
-                <com.daniel4wong.AndroidBatteryLifeTest.Control.InputButton
+                <com.daniel4wong.core.Ui.InputButton
                     android:id="@+id/buttonPickDate"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -48,7 +48,7 @@
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
                     android:text="@string/label_for_text_time" />
-                <com.daniel4wong.AndroidBatteryLifeTest.Control.InputButton
+                <com.daniel4wong.core.Ui.InputButton
                     android:id="@+id/buttonPickTime"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -77,7 +77,7 @@
                         android:layout_height="wrap_content" />
                 </LinearLayout>
 
-                <com.daniel4wong.AndroidBatteryLifeTest.Control.InputButton
+                <com.daniel4wong.core.Ui.InputButton
                     android:id="@+id/buttonTestFrequency"
                     android:tag="@string/pref_test_period_seconds"
                     android:layout_width="wrap_content"
@@ -120,7 +120,7 @@
                         android:layout_height="wrap_content" />
                 </LinearLayout>
 
-                <com.daniel4wong.AndroidBatteryLifeTest.Control.InputButton
+                <com.daniel4wong.core.Ui.InputButton
                     android:id="@+id/buttonScreenTime"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"

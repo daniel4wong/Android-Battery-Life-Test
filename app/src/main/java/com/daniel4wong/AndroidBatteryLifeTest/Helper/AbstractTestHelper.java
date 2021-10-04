@@ -2,6 +2,8 @@ package com.daniel4wong.AndroidBatteryLifeTest.Helper;
 
 import android.content.Context;
 
+import com.daniel4wong.core.Helper.PermissionHelper;
+
 public abstract class AbstractTestHelper {
 
     public abstract String[] getRequiredPermissions();

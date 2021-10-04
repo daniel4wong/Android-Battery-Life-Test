@@ -11,10 +11,13 @@ import android.location.LocationManager;
 import android.os.Build;
 import android.util.Log;
 
-import com.daniel4wong.AndroidBatteryLifeTest.Core.AppPreferences;
-import com.daniel4wong.AndroidBatteryLifeTest.Core.BroadcastReceiver.BatteryTestReceiver;
+import com.daniel4wong.AndroidBatteryLifeTest.AppPreference;
+import com.daniel4wong.AndroidBatteryLifeTest.BroadcastReceiver.BatteryTestReceiver;
 import com.daniel4wong.AndroidBatteryLifeTest.Model.Constant.LogType;
 import com.daniel4wong.AndroidBatteryLifeTest.R;
+import com.daniel4wong.core.Helper.AsyncHelper;
+import com.daniel4wong.core.Helper.FormatHelper;
+import com.daniel4wong.core.Helper.PermissionHelper;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 
@@ -98,7 +101,7 @@ public class GpsLocationHelper extends AbstractTestHelper {
         context.sendBroadcast(_intent);
         locationManager.removeUpdates(locationListener);
 
-        AppPreferences.getInstance().savePreference(R.string.data_gps_location, data.toString());
+        AppPreference.getInstance().savePreference(R.string.data_gps_location, data.toString());
     }
 
     @Override

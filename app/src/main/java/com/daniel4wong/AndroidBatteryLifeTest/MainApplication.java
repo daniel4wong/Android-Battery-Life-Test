@@ -5,16 +5,14 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 
-import com.daniel4wong.AndroidBatteryLifeTest.Core.BroadcastReceiver.CustomBatteryReceiver;
 import com.daniel4wong.AndroidBatteryLifeTest.Database.AppDatabase;
-import com.daniel4wong.AndroidBatteryLifeTest.Helper.LocaleHelper;
+import com.daniel4wong.core.BaseContext;
+import com.daniel4wong.core.BaseApplication;
+import com.daniel4wong.core.Helper.LocaleHelper;
 import com.daniel4wong.AndroidBatteryLifeTest.Helper.NotificationHelper;
-import com.daniel4wong.AndroidBatteryLifeTest.Job.TestJobCreator;
 import com.daniel4wong.AndroidBatteryLifeTest.Manager.CustomBatteryManager;
-import com.evernote.android.job.JobManager;
 
 public class MainApplication extends BaseApplication {
-    public static Context context;
 
     @Override
     public void onCreate() {
@@ -22,9 +20,8 @@ public class MainApplication extends BaseApplication {
         MainApplication.context = getApplicationContext();
         this.registerActivityLifecycleCallbacks(this);
 
-        AppDatabase.init(getApplicationContext());
+        AppDatabase.init(getApplicationContext(), getString(R.string.msg_database_downloaded_success));
         CustomBatteryManager.getInstance().start();
-        JobManager.create(this).addJobCreator(new TestJobCreator());
     }
 
     @Override
@@ -45,9 +42,10 @@ public class MainApplication extends BaseApplication {
 
     @Override
     protected void attachBaseContext(Context base) {
-        MainApplication.context = base;
-        AppContext.getInstance().setContext(base);
-        LocaleHelper.setLocale(base, AppContext.getInstance().getLanguageCode());
+        setContext(base);
+
+        BaseContext.getInstance().setContext(base);
+        LocaleHelper.setLocale(base, AppPreference.Store.getLanguageCode());
         super.attachBaseContext(base);
     }
 
@@ -58,6 +56,5 @@ public class MainApplication extends BaseApplication {
 
     @Override
     protected void onEnterBackground() {
-        sendBroadcast(new Intent(CustomBatteryReceiver.ACTION_SHOW_NOTIFICATION));
     }
 }
