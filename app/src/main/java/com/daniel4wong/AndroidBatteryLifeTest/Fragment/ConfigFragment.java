@@ -1,4 +1,4 @@
-package com.daniel4wong.AndroidBatteryLifeTest.Fragment.config;
+package com.daniel4wong.AndroidBatteryLifeTest.Fragment;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -14,16 +14,14 @@ import com.daniel4wong.AndroidBatteryLifeTest.databinding.FragmentConfigBinding;
 
 public class ConfigFragment extends Fragment {
 
-    private ConfigViewModel dashboardViewModel;
     private FragmentConfigBinding binding;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-        dashboardViewModel =
-                new ViewModelProvider(this).get(ConfigViewModel.class);
 
         binding = FragmentConfigBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
+
         return root;
     }
 

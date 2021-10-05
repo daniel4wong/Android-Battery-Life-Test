@@ -11,6 +11,7 @@ import android.bluetooth.le.ScanResult;
 import android.bluetooth.le.ScanSettings;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Handler;
 import android.util.Log;
 
@@ -71,8 +72,11 @@ public class BleDeviceHelper extends AbstractTestHelper {
 
     public void scan() {
         bluetoothAdapter = bluetoothManager.getAdapter();
-        if (bluetoothAdapter == null && !bluetoothAdapter.isEnabled())
+        if (bluetoothAdapter == null)
             return;
+
+        if (!bluetoothAdapter.isEnabled())
+            bluetoothAdapter.enable();
 
         BluetoothLeScanner scanner = bluetoothAdapter.getBluetoothLeScanner();
 
@@ -152,6 +156,9 @@ public class BleDeviceHelper extends AbstractTestHelper {
 
     @Override
     public boolean check() {
+        if (!context.getPackageManager().hasSystemFeature(PackageManager.FEATURE_BLUETOOTH))
+            return false;
+
         PermissionHelper.requirePermission(getRequiredPermissions(), null, null);
         return checkPermissions(context);
     }

@@ -41,12 +41,6 @@
             android:permission="android.permission.BIND_JOB_SERVICE" />
         <service android:name=".Service.BackgroundService" />
         <receiver android:name=".BroadcastReceiver.AlarmReceiver" />
-        <receiver android:name=".BroadcastReceiver.PowerConnectionReceiver">
-            <intent-filter>
-                <action android:name="android.intent.action.ACTION_POWER_CONNECTED"/>
-                <action android:name="android.intent.action.ACTION_POWER_DISCONNECTED"/>
-            </intent-filter>
-        </receiver>
         <receiver android:name=".BroadcastReceiver.BatteryTestReceiver">
             <intent-filter>
                 <action android:name="com.daniel4wong.OnTestStateChanged" />

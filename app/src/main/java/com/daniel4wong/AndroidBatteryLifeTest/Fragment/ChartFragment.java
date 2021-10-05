@@ -45,6 +45,8 @@ public class ChartFragment extends Fragment {
         binding.buttonSearch.setOnClickListener(view -> {
             String dateText = String.format("%s %s", binding.textViewDate.getText(), binding.textViewTime.getText());
             Date bgnDate = FormatHelper.stringToDate(dateText);
+            if (bgnDate == null)
+                return;
             Calendar calendar = Calendar.getInstance();
             calendar.setTime(bgnDate);
             calendar.add(Calendar.HOUR, 1);

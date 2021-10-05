@@ -13,7 +13,7 @@
 
     <fragment
         android:id="@+id/navigation_config"
-        android:name="com.daniel4wong.AndroidBatteryLifeTest.Fragment.config.ConfigFragment"
+        android:name="com.daniel4wong.AndroidBatteryLifeTest.Fragment.ConfigFragment"
         android:label="@string/title_config"
         tools:layout="@layout/fragment_config" />
 
