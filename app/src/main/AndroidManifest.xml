@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="com.daniel4wong.AndroidBatteryLifeTest">
 
     <!-- Background -->
@@ -34,24 +35,20 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.BatteryTest">
-        <service
-            android:name=".Service.BackgroundJobService"
-            android:enabled="true"
-            android:exported="true"
-            android:permission="android.permission.BIND_JOB_SERVICE" />
+
+        <service android:name=".Service.BackgroundJobService" android:permission="android.permission.BIND_JOB_SERVICE" />
         <service android:name=".Service.BackgroundService" />
-        <receiver android:name=".BroadcastReceiver.AlarmReceiver" />
-        <receiver android:name=".BroadcastReceiver.BatteryTestReceiver">
+        <service android:name=".Service.AppFirebaseMessagingService" android:exported="false">
             <intent-filter>
-                <action android:name="com.daniel4wong.OnTestStateChanged" />
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
-        </receiver>
+        </service>
+
+        <receiver android:name=".BroadcastReceiver.AlarmReceiver" />
+        <receiver android:name=".BroadcastReceiver.BatteryReceiver" tools:ignore="Instantiatable" />
 
         <activity
-            android:name=".Activity.BlackScreenActivity"
-            android:exported="true"
-            android:screenOrientation="portrait"
-            android:theme="@style/Theme.FullScreen" />
+            android:name=".Activity.BlackScreenActivity" android:screenOrientation="portrait" />
         <activity
             android:name=".Activity.MainActivity"
             android:configChanges="orientation|keyboardHidden"

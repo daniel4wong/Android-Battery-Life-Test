@@ -10,6 +10,9 @@ import org.junit.runner.RunWith;
 
 import static org.junit.Assert.*;
 
+import com.google.firebase.messaging.FirebaseMessaging;
+import com.google.firebase.messaging.RemoteMessage;
+
 /**
  * Instrumented test, which will execute on an Android device.
  *
@@ -22,5 +25,16 @@ public class ExampleInstrumentedTest {
         // Context of the app under test.
         Context appContext = InstrumentationRegistry.getInstrumentation().getTargetContext();
         assertEquals("com.daniel4wong.AndroidBatteryLife", appContext.getPackageName());
+    }
+
+    @Test
+    public void sendFcmMessage() {
+        Integer messageId = 0;
+        FirebaseMessaging.getInstance().send(new RemoteMessage.Builder("691411424289@fcm.googleapis.com")
+                .setMessageId(Integer.toString(messageId))
+                .addData("my_message", "Hello World")
+                .addData("my_action", "SAY_HELLO")
+                .build()
+        );
     }
 }

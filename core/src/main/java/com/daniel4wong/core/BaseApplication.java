@@ -21,9 +21,17 @@ public abstract class BaseApplication extends Application implements Application
 
     protected abstract void onEnterForeground();
     protected abstract void onEnterBackground();
+    protected abstract void onSubscribe();
 
     public void setContext(Context context) {
         BaseApplication.context = context;
+    }
+
+    @Override
+    public void onCreate() {
+        super.onCreate();
+
+        onSubscribe();
     }
 
     @Override

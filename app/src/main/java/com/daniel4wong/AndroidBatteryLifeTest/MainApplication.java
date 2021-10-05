@@ -4,15 +4,18 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.util.Log;
 
 import com.daniel4wong.AndroidBatteryLifeTest.Database.AppDatabase;
 import com.daniel4wong.core.BaseContext;
 import com.daniel4wong.core.BaseApplication;
 import com.daniel4wong.core.Helper.LocaleHelper;
-import com.daniel4wong.AndroidBatteryLifeTest.Helper.NotificationHelper;
+import com.daniel4wong.core.Helper.NotificationHelper;
 import com.daniel4wong.AndroidBatteryLifeTest.Manager.CustomBatteryManager;
+import com.google.firebase.messaging.FirebaseMessaging;
 
 public class MainApplication extends BaseApplication {
+    private static final String TAG = MainApplication.class.getSimpleName();
 
     @Override
     public void onCreate() {
@@ -56,5 +59,26 @@ public class MainApplication extends BaseApplication {
 
     @Override
     protected void onEnterBackground() {
+    }
+
+    @Override
+    protected void onSubscribe() {
+        FirebaseMessaging.getInstance().getToken()
+                .addOnCompleteListener(task -> {
+                    if (!task.isSuccessful()) {
+                        Log.d(TAG, "getToken fail");
+                    } else {
+                        String token = task.getResult();
+                        Log.d(TAG, String.format("getToken ok: %s", token));
+                    }
+                });
+        FirebaseMessaging.getInstance().subscribeToTopic("developer")
+                .addOnCompleteListener(task -> {
+                    if (!task.isSuccessful()) {
+                        Log.d(TAG, "subscribeToTopic fail");
+                    } else {
+                        Log.d(TAG, "subscribeToTopic ok");
+                    }
+                });
     }
 }

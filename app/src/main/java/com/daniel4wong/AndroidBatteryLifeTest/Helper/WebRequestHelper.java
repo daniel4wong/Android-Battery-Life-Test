@@ -6,7 +6,7 @@ import android.provider.Settings;
 import android.util.Log;
 
 import com.daniel4wong.AndroidBatteryLifeTest.AppPreference;
-import com.daniel4wong.AndroidBatteryLifeTest.BroadcastReceiver.BatteryTestReceiver;
+import com.daniel4wong.AndroidBatteryLifeTest.BroadcastReceiver.BatteryReceiver;
 import com.daniel4wong.AndroidBatteryLifeTest.Manager.DeviceManager;
 import com.daniel4wong.AndroidBatteryLifeTest.Model.Constant.LogType;
 import com.daniel4wong.AndroidBatteryLifeTest.R;
@@ -32,9 +32,9 @@ public class WebRequestHelper extends AbstractTestHelper {
 
     public void httpGet(String url, @Nullable Consumer<String> consumer) {
         Log.i(TAG, "[Request] Making a web request...");
-        context.sendBroadcast(new Intent(BatteryTestReceiver.ACTION_TEST_CHANGE)
-                .putExtra(BatteryTestReceiver.STATE, true)
-                .putExtra(BatteryTestReceiver.TYPE, TYPE)
+        context.sendBroadcast(new Intent(BatteryReceiver.ACTION_TEST_CHANGE)
+                .putExtra(BatteryReceiver.STATE, true)
+                .putExtra(BatteryReceiver.TYPE, TYPE)
         );
 
         JSONObject postData = new JSONObject();
@@ -61,10 +61,10 @@ public class WebRequestHelper extends AbstractTestHelper {
                 e.printStackTrace();
             }
             AppPreference.getInstance().savePreference(R.string.data_web_request, response.toString());
-            context.sendBroadcast(new Intent(BatteryTestReceiver.ACTION_STATE_CHANGE)
-                    .putExtra(BatteryTestReceiver.STATE, false)
-                    .putExtra(BatteryTestReceiver.TYPE, TYPE)
-                    .putExtra(BatteryTestReceiver.TEST_RESULT, response.toString())
+            context.sendBroadcast(new Intent(BatteryReceiver.ACTION_STATE_CHANGE)
+                    .putExtra(BatteryReceiver.STATE, false)
+                    .putExtra(BatteryReceiver.TYPE, TYPE)
+                    .putExtra(BatteryReceiver.TEST_RESULT, response.toString())
             );
         }, error -> {
             if (consumer != null)
@@ -72,10 +72,10 @@ public class WebRequestHelper extends AbstractTestHelper {
 
             Log.i(TAG, String.format("[Error] %s", error.toString()));
             AppPreference.getInstance().savePreference(R.string.data_web_request, error.toString());
-            context.sendBroadcast(new Intent(BatteryTestReceiver.ACTION_TEST_CHANGE)
-                    .putExtra(BatteryTestReceiver.STATE, false)
-                    .putExtra(BatteryTestReceiver.TYPE, TYPE)
-                    .putExtra(BatteryTestReceiver.TEST_RESULT, error.toString())
+            context.sendBroadcast(new Intent(BatteryReceiver.ACTION_TEST_CHANGE)
+                    .putExtra(BatteryReceiver.STATE, false)
+                    .putExtra(BatteryReceiver.TYPE, TYPE)
+                    .putExtra(BatteryReceiver.TEST_RESULT, error.toString())
             );
         });
 
@@ -89,6 +89,6 @@ public class WebRequestHelper extends AbstractTestHelper {
 
     @Override
     public boolean check() {
-        return DeviceManager.getInstance().isWiFiEnabled(true);
+        return DeviceManager.Network.isWiFiEnabled(true);
     }
 }

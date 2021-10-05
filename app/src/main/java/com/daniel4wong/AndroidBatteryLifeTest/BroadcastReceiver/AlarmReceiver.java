@@ -8,11 +8,11 @@ import android.content.Intent;
 import android.os.Build;
 import android.util.Log;
 
-import com.daniel4wong.AndroidBatteryLifeTest.AppPreference;
 import com.daniel4wong.core.Helper.FormatHelper;
+import com.daniel4wong.AndroidBatteryLifeTest.AppPreference;
+import com.daniel4wong.AndroidBatteryLifeTest.Model.Constant.LogType;
 import com.daniel4wong.AndroidBatteryLifeTest.R;
 import com.daniel4wong.AndroidBatteryLifeTest.Service.BackgroundService;
-import com.daniel4wong.AndroidBatteryLifeTest.Model.Constant.LogType;
 import com.daniel4wong.AndroidBatteryLifeTest.Service.BackgroundJobService;
 
 import java.util.UUID;
@@ -120,8 +120,7 @@ public class AlarmReceiver extends BroadcastReceiver {
     }
 
     public void run(Context context, Long periodInSecond, String jobId) {
-        Class _class = BackgroundJobService.class;
-        _class = BackgroundService.class;
+        Class _class = BackgroundService.class; //BackgroundJobService.class;
         Intent intent = new Intent(context, _class);
 
         Log.i(TAG, String.format("run %s", _class.getSimpleName()));

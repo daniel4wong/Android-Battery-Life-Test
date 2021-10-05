@@ -18,7 +18,7 @@ import android.util.Log;
 import com.daniel4wong.core.BaseContext;
 import com.daniel4wong.AndroidBatteryLifeTest.AppPreference;
 import com.daniel4wong.AndroidBatteryLifeTest.MainApplication;
-import com.daniel4wong.AndroidBatteryLifeTest.BroadcastReceiver.BatteryTestReceiver;
+import com.daniel4wong.AndroidBatteryLifeTest.BroadcastReceiver.BatteryReceiver;
 import com.daniel4wong.AndroidBatteryLifeTest.Model.Constant.LogType;
 import com.daniel4wong.AndroidBatteryLifeTest.R;
 import com.daniel4wong.core.Helper.FormatHelper;
@@ -85,9 +85,9 @@ public class BleDeviceHelper extends AbstractTestHelper {
                 isScanning = false;
 
                 Intent intent = new Intent();
-                intent.setAction(BatteryTestReceiver.ACTION_TEST_CHANGE);
-                intent.putExtra(BatteryTestReceiver.STATE, false);
-                intent.putExtra(BatteryTestReceiver.TYPE, TYPE);
+                intent.setAction(BatteryReceiver.ACTION_TEST_CHANGE);
+                intent.putExtra(BatteryReceiver.STATE, false);
+                intent.putExtra(BatteryReceiver.TYPE, TYPE);
                 synchronized (devices) {
                     String message = String.format("Number of BLE devices: %d", devices.size());
                     Log.i(TAG, String.format("[Response] %s", message));
@@ -101,7 +101,7 @@ public class BleDeviceHelper extends AbstractTestHelper {
                         e.printStackTrace();
                     }
 
-                    intent.putExtra(BatteryTestReceiver.TEST_RESULT, data.toString());
+                    intent.putExtra(BatteryReceiver.TEST_RESULT, data.toString());
 
                     AppPreference.getInstance().savePreference(R.string.data_ble_device_count, data.toString());
                 }
@@ -119,9 +119,9 @@ public class BleDeviceHelper extends AbstractTestHelper {
 
             Log.i(TAG, "[Request] Scanning BLE devices...");
             Intent intent = new Intent();
-            intent.setAction(BatteryTestReceiver.ACTION_TEST_CHANGE);
-            intent.putExtra(BatteryTestReceiver.TYPE, TYPE);
-            intent.putExtra(BatteryTestReceiver.STATE, true);
+            intent.setAction(BatteryReceiver.ACTION_TEST_CHANGE);
+            intent.putExtra(BatteryReceiver.TYPE, TYPE);
+            intent.putExtra(BatteryReceiver.STATE, true);
             context.sendBroadcast(intent);
 
             ScanSettings scanSettings = new ScanSettings.Builder()

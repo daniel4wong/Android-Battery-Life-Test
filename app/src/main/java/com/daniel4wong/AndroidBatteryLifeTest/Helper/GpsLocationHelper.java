@@ -12,7 +12,7 @@ import android.os.Build;
 import android.util.Log;
 
 import com.daniel4wong.AndroidBatteryLifeTest.AppPreference;
-import com.daniel4wong.AndroidBatteryLifeTest.BroadcastReceiver.BatteryTestReceiver;
+import com.daniel4wong.AndroidBatteryLifeTest.BroadcastReceiver.BatteryReceiver;
 import com.daniel4wong.AndroidBatteryLifeTest.Model.Constant.LogType;
 import com.daniel4wong.AndroidBatteryLifeTest.R;
 import com.daniel4wong.core.Helper.AsyncHelper;
@@ -50,9 +50,9 @@ public class GpsLocationHelper extends AbstractTestHelper {
     public void getCurrentLocation() {
         Log.i(TAG, "[Request] Requesting GPS location...");
         Intent intent = new Intent();
-        intent.setAction(BatteryTestReceiver.ACTION_TEST_CHANGE);
-        intent.putExtra(BatteryTestReceiver.STATE, true);
-        intent.putExtra(BatteryTestReceiver.TYPE, TYPE);
+        intent.setAction(BatteryReceiver.ACTION_TEST_CHANGE);
+        intent.putExtra(BatteryReceiver.STATE, true);
+        intent.putExtra(BatteryReceiver.TYPE, TYPE);
         context.sendBroadcast(intent);
 
         AsyncHelper.run(() -> {
@@ -94,10 +94,10 @@ public class GpsLocationHelper extends AbstractTestHelper {
         }
 
         Intent _intent = new Intent();
-        _intent.setAction(BatteryTestReceiver.ACTION_TEST_CHANGE);
-        _intent.putExtra(BatteryTestReceiver.STATE, false);
-        _intent.putExtra(BatteryTestReceiver.TYPE, TYPE);
-        _intent.putExtra(BatteryTestReceiver.TEST_RESULT, data.toString());
+        _intent.setAction(BatteryReceiver.ACTION_TEST_CHANGE);
+        _intent.putExtra(BatteryReceiver.STATE, false);
+        _intent.putExtra(BatteryReceiver.TYPE, TYPE);
+        _intent.putExtra(BatteryReceiver.TEST_RESULT, data.toString());
         context.sendBroadcast(_intent);
         locationManager.removeUpdates(locationListener);
 

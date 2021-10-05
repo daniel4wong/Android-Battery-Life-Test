@@ -1,4 +1,4 @@
-package com.daniel4wong.AndroidBatteryLifeTest.Helper;
+package com.daniel4wong.core.Helper;
 
 import android.app.Notification;
 import android.app.NotificationChannel;
@@ -11,23 +11,31 @@ import android.provider.Settings;
 
 import androidx.core.app.NotificationCompat;
 
-import com.daniel4wong.AndroidBatteryLifeTest.Activity.MainActivity;
-import com.daniel4wong.AndroidBatteryLifeTest.MainApplication;
-import com.daniel4wong.AndroidBatteryLifeTest.R;
+import com.daniel4wong.core.BaseApplication;
+
+import java.util.function.Function;
 
 public class NotificationHelper {
-    private static final int NotificationId = 0;
-    private static final String BatteryStatusChannelId = "NotificationHelper::BatteryStatusChannelId";
-    private static final String TestStatusChannelId = "NotificationHelper::TestStatusChannelId";
+    protected static final int NotificationId = 0;
+
+    public static void notify(Notification notification) {
+        NotificationManager notificationManager = (NotificationManager) BaseApplication.context.getSystemService(Context.NOTIFICATION_SERVICE);
+        notificationManager.notify(NotificationId, notification);
+    }
 
     public static Notification createNotification(Context context, String channelId, String name, String description) {
+        return createNotification(context, channelId, name, description, null);
+    }
+
+    public static Notification createNotification(Context context, String channelId, String name, String description,
+                                                  Function<NotificationCompat.Builder, NotificationCompat.Builder> onBuild) {
         NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             NotificationChannel channel = notificationManager.getNotificationChannel(channelId);
             if (channel == null) {
-                String _name = context.getString(R.string.app_name);
-                String _description = context.getString(R.string.msg_background_task_is_running);
+                String _name = name;
+                String _description = description;
                 channel = new NotificationChannel(
                         channelId,
                         _name,
@@ -37,35 +45,21 @@ public class NotificationHelper {
             }
         }
 
-        Intent intent = new Intent(context, MainActivity.class);
+        Intent intent = new Intent(context, BaseApplication.currentActivity.getClass());
         PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent,
                 PendingIntent.FLAG_UPDATE_CURRENT);
 
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context, channelId)
-                .setSmallIcon(R.drawable.ic_battery_white_24dp)
                 .setContentTitle(name)
                 .setContentText(description)
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT)
                 .setCategory(NotificationCompat.CATEGORY_STATUS)
                 .setContentIntent(pendingIntent);
+
+        if (onBuild != null)
+            builder = onBuild.apply(builder);
+
         Notification notification = builder.build();
-        return notification;
-    }
-
-    public static Notification showBatteryNotification(String name, String description) {
-        Context context = MainApplication.context;
-        Notification notification = createNotification(context, BatteryStatusChannelId, name, description);
-
-        NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-        notificationManager.notify(NotificationId, notification);
-
-        return notification;
-    }
-
-    public static Notification getTestNotification(String name, String description) {
-        Context context = MainApplication.context;
-        Notification notification = createNotification(context, TestStatusChannelId, name, description);
-
         return notification;
     }
 

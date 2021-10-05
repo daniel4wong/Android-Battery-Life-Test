@@ -10,7 +10,7 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import com.daniel4wong.AndroidBatteryLifeTest.AppPreference;
-import com.daniel4wong.AndroidBatteryLifeTest.BroadcastReceiver.BatteryTestReceiver;
+import com.daniel4wong.AndroidBatteryLifeTest.BroadcastReceiver.BatteryReceiver;
 import com.daniel4wong.core.Activity.BaseActivity;
 import com.daniel4wong.core.Helper.LayoutHelper;
 import com.daniel4wong.core.Helper.PermissionHelper;
@@ -23,6 +23,7 @@ import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
+import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.daniel4wong.AndroidBatteryLifeTest.MainApplication;
 import com.daniel4wong.core.BaseContext;
@@ -38,8 +39,8 @@ public class MainActivity extends BaseActivity {
     private MenuItem menuStart;
     private MenuItem menuStop;
 
-    BatteryTestReceiver receiver = new BatteryTestReceiver(intent -> {
-        boolean isStart = intent.getBooleanExtra(BatteryTestReceiver.STATE, false);
+    BatteryReceiver receiver = new BatteryReceiver(intent -> {
+        boolean isStart = intent.getBooleanExtra(BatteryReceiver.STATE, false);
         if (optionMenu != null) {
             for(int i = 0; i < optionMenu.size(); i++) {
                 MenuItem item = optionMenu.getItem(i);
@@ -73,7 +74,7 @@ public class MainActivity extends BaseActivity {
         NavigationUI.setupWithNavController(binding.navView, navController);
 
         IntentFilter filter = new IntentFilter();
-        filter.addAction(BatteryTestReceiver.ACTION_STATE_CHANGE);
+        filter.addAction(BatteryReceiver.ACTION_STATE_CHANGE);
         registerReceiver(receiver, filter);
 
         if (Long.valueOf(AppPreference.getInstance().getPreference(R.string.pref_test_period_seconds, "0")) <= 0)
@@ -81,6 +82,8 @@ public class MainActivity extends BaseActivity {
 
         if (AppPreference.isTestStarted())
             BatteryTestManager.Job.startJob();
+
+        GoogleApiAvailability.getInstance().makeGooglePlayServicesAvailable(this);
     }
 
     @Override

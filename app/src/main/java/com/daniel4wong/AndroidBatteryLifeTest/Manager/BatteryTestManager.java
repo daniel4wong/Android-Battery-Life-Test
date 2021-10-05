@@ -13,7 +13,7 @@ import com.daniel4wong.AndroidBatteryLifeTest.MainApplication;
 import com.daniel4wong.core.BaseContext;
 import com.daniel4wong.AndroidBatteryLifeTest.Model.Constant.LogType;
 import com.daniel4wong.AndroidBatteryLifeTest.R;
-import com.daniel4wong.AndroidBatteryLifeTest.BroadcastReceiver.BatteryTestReceiver;
+import com.daniel4wong.AndroidBatteryLifeTest.BroadcastReceiver.BatteryReceiver;
 import com.daniel4wong.AndroidBatteryLifeTest.Helper.*;
 import com.daniel4wong.core.ISingleton;
 import com.daniel4wong.core.Singleton;
@@ -146,8 +146,8 @@ public class BatteryTestManager extends Singleton implements ISingleton {
             manager.alarmReceiver.createAlert(manager.getContext(), period, true);
 
             Intent intent = new Intent();
-            intent.setAction(BatteryTestReceiver.ACTION_STATE_CHANGE);
-            intent.putExtra(BatteryTestReceiver.STATE, true);
+            intent.setAction(BatteryReceiver.ACTION_STATE_CHANGE);
+            intent.putExtra(BatteryReceiver.STATE, true);
             manager.getContext().sendBroadcast(intent);
 
             return true;
@@ -161,8 +161,8 @@ public class BatteryTestManager extends Singleton implements ISingleton {
             manager.alarmReceiver.stopAlarm();
 
             Intent intent = new Intent();
-            intent.setAction(BatteryTestReceiver.ACTION_STATE_CHANGE);
-            intent.putExtra(BatteryTestReceiver.STATE, false);
+            intent.setAction(BatteryReceiver.ACTION_STATE_CHANGE);
+            intent.putExtra(BatteryReceiver.STATE, false);
             manager.getContext().sendBroadcast(intent);
 
             return true;

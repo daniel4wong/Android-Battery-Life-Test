@@ -18,12 +18,12 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
-import com.daniel4wong.AndroidBatteryLifeTest.Activity.BlackScreenActivity;
 import com.daniel4wong.AndroidBatteryLifeTest.Database.AppDatabase;
+import com.daniel4wong.AndroidBatteryLifeTest.Manager.DeviceManager;
 import com.daniel4wong.AndroidBatteryLifeTest.Model.TestHistory;
 import com.daniel4wong.AndroidBatteryLifeTest.R;
 import com.daniel4wong.AndroidBatteryLifeTest.AppPreference;
-import com.daniel4wong.AndroidBatteryLifeTest.BroadcastReceiver.BatteryTestReceiver;
+import com.daniel4wong.AndroidBatteryLifeTest.BroadcastReceiver.BatteryReceiver;
 import com.daniel4wong.AndroidBatteryLifeTest.Helper.*;
 import com.daniel4wong.AndroidBatteryLifeTest.databinding.FragmentHomeBinding;
 import com.daniel4wong.AndroidBatteryLifeTest.Manager.BatteryTestManager;
@@ -52,13 +52,13 @@ public class HomeFragment extends Fragment {
         @Override
         public void onReceive(Context context, Intent intent) {
             String action = intent.getAction();
-            Boolean state = intent.getBooleanExtra(BatteryTestReceiver.STATE, false);
+            Boolean state = intent.getBooleanExtra(BatteryReceiver.STATE, false);
 
-            if (action.equals(BatteryTestReceiver.ACTION_STATE_CHANGE)) {
+            if (action.equals(BatteryReceiver.ACTION_STATE_CHANGE)) {
                 updateTestConfigView();
             } else {
-                String type = intent.getStringExtra(BatteryTestReceiver.TYPE);
-                String result = intent.getStringExtra(BatteryTestReceiver.TEST_RESULT);
+                String type = intent.getStringExtra(BatteryReceiver.TYPE);
+                String result = intent.getStringExtra(BatteryReceiver.TEST_RESULT);
                 String date = FormatHelper.dateToString();
 
                 if (!state) {
@@ -129,7 +129,7 @@ public class HomeFragment extends Fragment {
         buttonStopTest = binding.buttonStopTest;
         buttonStopTest.setOnClickListener(view -> stopTest());
         binding.buttonBlack.setOnClickListener(view -> {
-            startActivity(new Intent(getActivity(), BlackScreenActivity.class));
+            DeviceManager.getInstance().screenOff(false);
         });
         binding.buttonOnce.setOnClickListener(view -> {
             Integer _screenTime = Integer.valueOf(AppPreference.getInstance().getPreference(R.string.pref_screen_seconds, "0"));
@@ -156,8 +156,8 @@ public class HomeFragment extends Fragment {
         super.onStart();
 
         IntentFilter filter = new IntentFilter();
-        filter.addAction(BatteryTestReceiver.ACTION_TEST_CHANGE);
-        filter.addAction(BatteryTestReceiver.ACTION_STATE_CHANGE);
+        filter.addAction(BatteryReceiver.ACTION_TEST_CHANGE);
+        filter.addAction(BatteryReceiver.ACTION_STATE_CHANGE);
         getActivity().registerReceiver(broadcastReceiver, filter);
     }
 

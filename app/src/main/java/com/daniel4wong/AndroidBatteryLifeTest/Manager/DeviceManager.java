@@ -41,10 +41,15 @@ public class DeviceManager extends Singleton implements ISingleton {
     private Intent intent;
 
     public void screenOff() {
+        screenOff(true);
+    }
+
+    public void screenOff(boolean setBrightness) {
         try {
             MainApplication.currentActivity.runOnUiThread(() -> {
                 MainApplication.currentActivity.startActivity(intent);
-                setBrightness(0f);
+                if (setBrightness)
+                    Screen.setBrightness(0f);
             });
         } catch (Exception e) {
             e.printStackTrace();
@@ -56,7 +61,7 @@ public class DeviceManager extends Singleton implements ISingleton {
             MainApplication.currentActivity.runOnUiThread(() -> {
                 if (MainApplication.currentActivity instanceof BlackScreenActivity)
                     MainApplication.currentActivity.finish();
-                setBrightness(1f);
+                Screen.setBrightness(1f);
             });
         } catch (Exception e) {
             e.printStackTrace();
@@ -68,58 +73,68 @@ public class DeviceManager extends Singleton implements ISingleton {
             MainApplication.currentActivity.runOnUiThread(() -> {
                 if (MainApplication.currentActivity instanceof BlackScreenActivity)
                     MainApplication.currentActivity.finish();
-                setBrightness(-1f);
+                Screen.setBrightness(-1f);
             });
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    public void setBrightness(float brightness) {
-        WindowManager.LayoutParams params = BaseContext.getInstance().window.getAttributes();
-        params.screenBrightness = brightness;
-        BaseContext.getInstance().window.setAttributes(params);
-    }
-
-    public boolean isWiFiEnabled(@Nullable boolean shouldEnabled) {
-        WifiManager wifiManager = (WifiManager) getContext().getSystemService(Context.WIFI_SERVICE);
-        boolean isWifiEnabled = wifiManager.isWifiEnabled();
-        if (!isWifiEnabled && shouldEnabled) {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-                Intent intent = new Intent(Settings.Panel.ACTION_INTERNET_CONNECTIVITY);
-                MainApplication.currentActivity.startActivityForResult(intent, 0);
-            } else {
-                wifiManager.setWifiEnabled(true);
-            }
+    public static class Screen {
+        public static void setBrightness(float brightness) {
+            WindowManager.LayoutParams params = BaseContext.getInstance().window.getAttributes();
+            params.screenBrightness = brightness;
+            BaseContext.getInstance().window.setAttributes(params);
         }
-        return isWifiEnabled;
     }
 
-    public String getWiFiIpAddress() {
-        WifiManager wifiManager = (WifiManager) getContext().getSystemService(Context.WIFI_SERVICE);
-        return Formatter.formatIpAddress(wifiManager.getConnectionInfo().getIpAddress());
-    }
+    public static class Network {
+        public static String getWiFiIpAddress() {
+            Context context = DeviceManager.getInstance().getContext();
 
-    public boolean isCharging() {
-        Intent intent = getContext().getApplicationContext()
-                .registerReceiver(null, new IntentFilter(Intent.ACTION_BATTERY_CHANGED));
-        if (intent != null) {
-            int status = intent.getIntExtra(BatteryManager.EXTRA_STATUS, 0);
-            switch (status) {
-                case BatteryManager.BATTERY_STATUS_CHARGING:
-                case BatteryManager.BATTERY_STATUS_FULL:
-                    return true;
-                case BatteryManager.BATTERY_STATUS_UNKNOWN:
-                case BatteryManager.BATTERY_STATUS_DISCHARGING:
-                case BatteryManager.BATTERY_STATUS_NOT_CHARGING:
-                default:
-                    return false;
-            }
+            WifiManager wifiManager = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
+            return Formatter.formatIpAddress(wifiManager.getConnectionInfo().getIpAddress());
         }
-        return false;
+
+        public static boolean isWiFiEnabled(@Nullable boolean shouldEnabled) {
+            Context context = DeviceManager.getInstance().getContext();
+
+            WifiManager wifiManager = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
+            boolean isWifiEnabled = wifiManager.isWifiEnabled();
+            if (!isWifiEnabled && shouldEnabled) {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                    Intent intent = new Intent(Settings.Panel.ACTION_INTERNET_CONNECTIVITY);
+                    MainApplication.currentActivity.startActivityForResult(intent, 0);
+                } else {
+                    wifiManager.setWifiEnabled(true);
+                }
+            }
+            return isWifiEnabled;
+        }
     }
 
     public static class Power {
+        public static boolean isCharging() {
+            Context context = DeviceManager.getInstance().getContext();
+
+            Intent intent = context.getApplicationContext()
+                    .registerReceiver(null, new IntentFilter(Intent.ACTION_BATTERY_CHANGED));
+            if (intent != null) {
+                int status = intent.getIntExtra(BatteryManager.EXTRA_STATUS, 0);
+                switch (status) {
+                    case BatteryManager.BATTERY_STATUS_CHARGING:
+                    case BatteryManager.BATTERY_STATUS_FULL:
+                        return true;
+                    case BatteryManager.BATTERY_STATUS_UNKNOWN:
+                    case BatteryManager.BATTERY_STATUS_DISCHARGING:
+                    case BatteryManager.BATTERY_STATUS_NOT_CHARGING:
+                    default:
+                        return false;
+                }
+            }
+            return false;
+        }
+
         public static boolean isIgnoringBatteryOptimizations() {
             Context context = DeviceManager.getInstance().getContext();
 
