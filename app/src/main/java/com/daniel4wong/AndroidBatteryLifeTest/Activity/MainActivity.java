@@ -1,6 +1,7 @@
 package com.daniel4wong.AndroidBatteryLifeTest.Activity;
 
 import android.Manifest;
+import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
 import android.view.Menu;
@@ -12,6 +13,7 @@ import android.widget.Toast;
 import com.daniel4wong.AndroidBatteryLifeTest.AppPreference;
 import com.daniel4wong.AndroidBatteryLifeTest.BroadcastReceiver.BatteryReceiver;
 import com.daniel4wong.core.Activity.BaseActivity;
+import com.daniel4wong.core.Activity.HidActivity;
 import com.daniel4wong.core.Helper.LayoutHelper;
 import com.daniel4wong.core.Helper.PermissionHelper;
 import com.daniel4wong.AndroidBatteryLifeTest.Manager.BatteryTestManager;
