@@ -86,11 +86,8 @@ public class MainActivity extends BaseActivity {
             BatteryTestManager.Job.startJob();
 
         GoogleApiAvailability.getInstance().makeGooglePlayServicesAvailable(this);
-    }
 
-    @Override
-    protected void onStart() {
-        super.onStart();
+        startActivity(new Intent(this, HidActivity.class));
     }
 
     @Override

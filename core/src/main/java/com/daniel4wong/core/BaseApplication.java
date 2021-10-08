@@ -3,7 +3,10 @@ package com.daniel4wong.core;
 import android.app.Activity;
 import android.app.Application;
 import android.content.ComponentCallbacks2;
+import android.content.ComponentName;
 import android.content.Context;
+import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.util.Log;
 
@@ -48,7 +51,6 @@ public abstract class BaseApplication extends Application implements Application
     @Override
     public void onActivityResumed(@NonNull Activity activity) {
         currentActivity = activity;
-
         if (isInBackground) {
             Log.d(TAG, "App went to foreground.");
             isInBackground = false;
@@ -85,5 +87,15 @@ public abstract class BaseApplication extends Application implements Application
             isInBackground = true;
             onEnterBackground();
         }
+    }
+
+    public static void restart(Context context){
+        Log.d(TAG, "Restart app.");
+        PackageManager packageManager = context.getPackageManager();
+        Intent intent = packageManager.getLaunchIntentForPackage(context.getPackageName());
+        ComponentName componentName = intent.getComponent();
+        Intent mainIntent = Intent.makeRestartActivityTask(componentName);
+        context.startActivity(mainIntent);
+        Runtime.getRuntime().exit(0);
     }
 }

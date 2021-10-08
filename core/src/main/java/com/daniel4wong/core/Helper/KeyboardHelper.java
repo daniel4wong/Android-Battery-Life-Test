@@ -3,7 +3,6 @@ package com.daniel4wong.core.Helper;
 import android.app.Activity;
 import android.content.Context;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 
@@ -15,6 +14,10 @@ public class KeyboardHelper {
             if (context instanceof Activity) {
                 Activity activity = (Activity) context;
                 View view = LayoutHelper.findChildren(activity, EditText.class).get(0);
+                view.setFocusable(false);
+                view.setFocusableInTouchMode(false);
+                view.setFocusable(true);
+                view.setFocusableInTouchMode(true);
                 view.requestFocus();
                 inputMethodManager.showSoftInputFromInputMethod(view.getWindowToken(), InputMethodManager.SHOW_FORCED);
             } else {

@@ -10,12 +10,12 @@ import android.util.AttributeSet;
 import android.view.KeyEvent;
 import android.widget.EditText;
 
-import com.daniel4wong.core.Bluetooth.Helper.HidKeyboardHelper;
+import com.daniel4wong.core.Bluetooth.Input.HidKeyboardHelper;
 
 @SuppressLint("AppCompatCustomView")
 public class VirtualKeyboard extends EditText {
 
-    private boolean isHidden = true;
+    private boolean isHidden = false;
 
     public VirtualKeyboard(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -65,9 +65,7 @@ public class VirtualKeyboard extends EditText {
     public interface VirtualKeyboardListener {
         void onKeyPress(Object key);
     }
-
     VirtualKeyboardListener eventListener;
-
     public void setVirtualKeyboardListener(VirtualKeyboardListener eventListener) {
         this.eventListener = eventListener;
     }

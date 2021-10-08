@@ -17,7 +17,7 @@ public class BluetoothUtils {
     private static final Method methodSetScanMode = lookupSetScanMode();
 
     /** Cancel an in-progress bonding request started with {@link #createBond}. */
-    static boolean cancelBondProcess(BluetoothDevice device) {
+    public static boolean cancelBondProcess(BluetoothDevice device) {
         if (methodCancelBondProcess != null) {
             try {
                 return (Boolean) methodCancelBondProcess.invoke(device);
@@ -34,7 +34,7 @@ public class BluetoothUtils {
      * <p>Delete the link key associated with the remote device, and immediately terminate
      * connections to that device that require authentication and encryption.
      */
-    static boolean removeBond(BluetoothDevice device) {
+    public static boolean removeBond(BluetoothDevice device) {
         if (methodRemoveBond != null) {
             try {
                 return (Boolean) methodRemoveBond.invoke(device);
@@ -55,7 +55,7 @@ public class BluetoothUtils {
      * </code> seconds. For example, 120 seconds should be enough for a remote device to initiate
      * and complete its discovery process.
      */
-    static boolean setScanMode(BluetoothAdapter adapter, int mode, int duration) {
+    public static boolean setScanMode(BluetoothAdapter adapter, int mode, int duration) {
         if (methodSetScanMode != null) {
             try {
                 return (Boolean) methodSetScanMode.invoke(adapter, mode, duration);
@@ -64,6 +64,16 @@ public class BluetoothUtils {
             }
         }
         return false;
+    }
+
+    public static boolean isConnected(BluetoothDevice device) {
+        try {
+            Method m = device.getClass().getMethod("isConnected", (Class[]) null);
+            boolean connected = (boolean) m.invoke(device, (Object[]) null);
+            return connected;
+        } catch (Exception e) {
+            throw new IllegalStateException(e);
+        }
     }
 
     @Nullable

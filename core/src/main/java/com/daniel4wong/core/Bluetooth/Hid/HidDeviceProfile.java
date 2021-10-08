@@ -1,6 +1,6 @@
 package com.daniel4wong.core.Bluetooth.Hid;
 
-import static androidx.core.util.Preconditions.checkNotNull;
+import static com.google.common.base.Preconditions.checkNotNull;
 
 import android.annotation.SuppressLint;
 import android.bluetooth.BluetoothAdapter;

@@ -1,6 +1,6 @@
-package com.daniel4wong.core.Bluetooth.Helper;
+package com.daniel4wong.core.Bluetooth.Input;
 
-import static androidx.core.util.Preconditions.checkNotNull;
+import static com.google.common.base.Preconditions.checkNotNull;
 
 import android.annotation.SuppressLint;
 
