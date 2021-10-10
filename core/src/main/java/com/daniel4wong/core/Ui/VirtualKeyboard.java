@@ -8,9 +8,11 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.AttributeSet;
 import android.view.KeyEvent;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 
 import com.daniel4wong.core.Bluetooth.Input.HidKeyboardHelper;
+import com.daniel4wong.core.Helper.KeyboardHelper;
 
 @SuppressLint("AppCompatCustomView")
 public class VirtualKeyboard extends EditText {
@@ -28,8 +30,18 @@ public class VirtualKeyboard extends EditText {
         }
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
             this.addOnUnhandledKeyEventListener((view, keyEvent) -> {
-                if (keyEvent.getAction() == KeyEvent.ACTION_UP && keyEvent.getKeyCode() == KeyEvent.KEYCODE_DEL) {
-                    eventListener.onKeyPress(HidKeyboardHelper.Key.BACKSPACE);
+                if (keyEvent.getAction() == KeyEvent.ACTION_UP) {
+                    switch (keyEvent.getKeyCode()) {
+                        case KeyEvent.KEYCODE_DEL:
+                            eventListener.onKeyPress(HidKeyboardHelper.Key.BACKSPACE);
+                            break;
+                        case KeyEvent.KEYCODE_ENTER:
+                            eventListener.onKeyPress(HidKeyboardHelper.Key.ENTER);
+                            this.setText("");
+                            this.requestFocus();
+                            KeyboardHelper.showKeyboard(this);
+                            break;
+                    }
                     return true;
                 }
                 return false;

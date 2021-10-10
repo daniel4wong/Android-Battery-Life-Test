@@ -195,6 +195,17 @@ public class HidDataSender implements MouseReport.MouseDataSender, KeyboardRepor
         }
     }
 
+
+    @MainThread
+    public void toggleConnect(BluetoothDevice device) {
+        synchronized (lock) {
+            if (isConnected())
+                requestDisconnect(device);
+            else
+                requestConnect(device);
+        }
+    }
+
     @Override
     @WorkerThread
     public void sendMouse(boolean left, boolean right, boolean middle, int dX, int dY, int dWheel) {

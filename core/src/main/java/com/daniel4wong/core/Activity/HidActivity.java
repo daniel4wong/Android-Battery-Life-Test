@@ -1,15 +1,18 @@
 package com.daniel4wong.core.Activity;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothProfile;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
 import android.widget.ListView;
+import android.widget.SimpleAdapter;
 import android.widget.Toast;
 
 import androidx.annotation.MainThread;
@@ -25,7 +28,10 @@ import com.daniel4wong.core.Ui.VirtualKeyboard;
 import com.daniel4wong.core.Ui.VirtualTouchpad;
 
 import java.util.ArrayList;
-import java.util.List;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Set;
 
 public class HidActivity extends BaseActivity {
@@ -38,46 +44,59 @@ public class HidActivity extends BaseActivity {
     private VirtualTouchpad virtualTouchpad;
     private ImageButton keyboardButton;
     private ImageButton mouseButton;
+    private ProgressDialog progressDialog;
 
     private HidDataSender hidDataSender;
     private HidKeyboardHelper hidKeyboardHelper;
 
-    private List<String> names = new ArrayList<>();
-    private List<BluetoothDevice> devices = new ArrayList<>();
-    private ArrayAdapter<String> adapter;
+    private ArrayList<Map<String, String>> names = new ArrayList<>();
+    private ArrayList<BluetoothDevice> devices = new ArrayList<>();
+    private SimpleAdapter adapter;
 
-    private final HidDataSender.ProfileListener profileListener =
-            new HidDataSender.ProfileListener() {
-                @Override
-                @MainThread
-                public void onConnectionStateChanged(BluetoothDevice device, int state) {
-                    Log.d(TAG, "onConnectionStateChanged");
-                    switch (state) {
-                        case BluetoothProfile.STATE_CONNECTED:
-                            KeyboardHelper.showKeyboard(BaseApplication.currentActivity);
-                            Toast.makeText(getApplicationContext(), String.format("%s connected", device.getName()), Toast.LENGTH_LONG).show();
-                            break;
-                        case BluetoothProfile.STATE_DISCONNECTED:
-                            KeyboardHelper.closeKeyboard(BaseApplication.currentActivity);
-                            Toast.makeText(getApplicationContext(), String.format("%s disconnected", device.getName()), Toast.LENGTH_LONG).show();
-                            break;
-                        default:
-                            break;
-                    }
-                }
+    private final String deviceName = "deviceName";
+    private final String macAddress = "macAddress";
 
-                @Override
-                @MainThread
-                public void onAppStatusChanged(boolean registered) {
-                    Log.d(TAG, "onAppStatusChanged");
+    private final HidDataSender.ProfileListener profileListener = new HidDataSender.ProfileListener() {
+            @Override
+            @MainThread
+            public void onConnectionStateChanged(BluetoothDevice device, int state) {
+                Log.d(TAG, "onConnectionStateChanged");
+                switch (state) {
+                    case BluetoothProfile.STATE_CONNECTED:
+                        KeyboardHelper.showKeyboard(BaseApplication.currentActivity);
+                        Toast.makeText(getApplicationContext(), String.format("%s connected", device.getName()), Toast.LENGTH_LONG).show();
+                        progressDialog.cancel();
+                        break;
+                    case BluetoothProfile.STATE_DISCONNECTED:
+                        KeyboardHelper.closeKeyboard(BaseApplication.currentActivity);
+                        Toast.makeText(getApplicationContext(), String.format("%s disconnected", device.getName()), Toast.LENGTH_LONG).show();
+                        progressDialog.cancel();
+                        break;
+                    case BluetoothProfile.STATE_CONNECTING:
+                        progressDialog.setMessage("Connecting...");
+                        progressDialog.show();
+                        break;
+                    case BluetoothProfile.STATE_DISCONNECTING:
+                        progressDialog.setMessage("Disconnecting...");
+                        progressDialog.show();
+                        break;
+                    default:
+                        break;
                 }
+            }
 
-                @Override
-                @MainThread
-                public void onServiceStateChanged(BluetoothProfile proxy) {
-                    Log.d(TAG, "onServiceStateChanged");
-                }
-            };
+            @Override
+            @MainThread
+            public void onAppStatusChanged(boolean registered) {
+                Log.d(TAG, "onAppStatusChanged");
+            }
+
+            @Override
+            @MainThread
+            public void onServiceStateChanged(BluetoothProfile proxy) {
+                Log.d(TAG, "onServiceStateChanged");
+            }
+        };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -91,21 +110,24 @@ public class HidActivity extends BaseActivity {
         keyboardButton = findViewById(R.id.imageButtonKeyboard);
         mouseButton = findViewById(R.id.imageButtonMouse);
 
+        progressDialog = new ProgressDialog(this);
+        progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
             hidDataSender = HidDataSender.getInstance();
             hidDataSender.register(this, profileListener);
             hidKeyboardHelper = new HidKeyboardHelper(hidDataSender);
         }
 
-        adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, names);
+        adapter = new SimpleAdapter(this, names,
+                android.R.layout.simple_list_item_2,
+                new String[] { deviceName, macAddress },
+                new int[] {android.R.id.text1, android.R.id.text2 });
         listView.setAdapter(adapter);
         listView.setOnItemClickListener((adapterView, view, i, l) -> {
             BluetoothDevice device = devices.get(i);
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-                if (!BluetoothUtils.isConnected(device))
-                    hidDataSender.requestConnect(device);
-                else
-                    hidDataSender.requestDisconnect(device);
+                hidDataSender.toggleConnect(device);
             }
         });
 
@@ -122,11 +144,21 @@ public class HidActivity extends BaseActivity {
         });
 
         Activity activity = this;
+        virtualKeyboard.setVisibility(View.GONE);
         keyboardButton.setOnClickListener(view -> {
+            boolean visible = virtualKeyboard.getVisibility() == View.VISIBLE;
+            virtualKeyboard.setVisibility(visible ? View.GONE : View.VISIBLE);
+
             if (!isKeyboardActive)
                 KeyboardHelper.showKeyboard(activity);
             else
                 KeyboardHelper.closeKeyboard(activity);
+        });
+
+        virtualTouchpad.setVisibility(View.GONE);
+        mouseButton.setOnClickListener(view -> {
+            boolean visible = virtualTouchpad.getVisibility() == View.VISIBLE;
+            virtualTouchpad.setVisibility(visible ? View.GONE : View.VISIBLE);
         });
     }
 
@@ -142,6 +174,7 @@ public class HidActivity extends BaseActivity {
     protected void onDestroy() {
         super.onDestroy();
 
+        KeyboardHelper.closeKeyboard(this);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
             hidDataSender.unregister(this, profileListener);
         }
@@ -153,9 +186,15 @@ public class HidActivity extends BaseActivity {
 
         Set<BluetoothDevice> pairedDevices = BluetoothAdapter.getDefaultAdapter().getBondedDevices();
         for (BluetoothDevice bluetoothDevice : pairedDevices) {
-            names.add(bluetoothDevice.getName());
+            Map<String, String> listItem = new HashMap<>();
+            listItem.put(deviceName, bluetoothDevice.getName());
+            listItem.put(macAddress, bluetoothDevice.getAddress());
+            names.add(listItem);
             devices.add(bluetoothDevice);
         }
+
+        Collections.sort(names, Comparator.comparing(t -> t.get(deviceName)));
+        Collections.sort(devices, Comparator.comparing(BluetoothDevice::getName));
 
         adapter.notifyDataSetChanged();
     }
